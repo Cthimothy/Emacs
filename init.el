@@ -173,7 +173,7 @@
   
   (setq org-capture-templates `(
                                 ("t" "General Tasks To Do" entry
-                                 (file+headline "~/Dropbox/Org/Projects/Projects.org"
+                                 (file+headline "~/Dropbox/Org/Projects/Tasks.org"
                                                 "To Do") "* TODO %i%? :todo:"))))
   ;; ---End Org config
 
