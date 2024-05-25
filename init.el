@@ -1,3 +1,5 @@
+;; init.el - tjbw
+
 (setq debug-on-error t)
 ;; Start Emacs in server mode
 (load "server")
