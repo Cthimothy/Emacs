@@ -1,6 +1,7 @@
 ;; init.el - tjbw
 
 (setq debug-on-error t)
+
 ;; Start Emacs in server mode
 (load "server")
 (unless (server-running-p) (server-start))
@@ -9,7 +10,6 @@
 (setq frame-resize-pixelwise t)
 ;; set browser to emacs default
 (setq browse-url-browser-function 'browse-url-default-browser)
-;;(add-hook 'emacs-startup-hook (lambda () (split-window-right) ))
 
 ;; Begin package installation and configuarion
 (require 'package)
@@ -31,16 +31,17 @@
 (show-paren-mode t)
 (prettify-symbols-mode)
 (fringe-mode 0)
+
 ;; Always split windows vertically
 (setq
  split-width-threshold 0
  split-height-threshold nil)
+
+;; Set sensible margins
 (setq
  left-margin-width 1
  right-margin-width 1)
 (set-window-buffer (selected-window) (current-buffer))
-;;(tab-bar-mode nil)
-;;(setq tab-bar-show nil)
 
 (use-package doom-themes
   :ensure t
@@ -127,7 +128,7 @@
   (setq org-blank-before-new-entry '((heading) (plain-list-item)))
   (setq org-agenda-span 4)
   
-  (defun tw-org-skip-subtree-if-priority (priority)
+  (defun tw/org-skip-subtree-if-priority (priority)
     "Skip an agenda subtree if it has a priority of PRIORITY.
 
      PRIORITY may be one of the characters ?A, ?B, or ?C."
@@ -157,7 +158,7 @@
             (agenda "")
             (alltodo ""
                      ((org-agenda-skip-function
-                       '(or (tw-org-skip-subtree-if-priority ?A)
+                       '(or (tw/org-skip-subtree-if-priority ?A)
                             (org-agenda-skip-if nil '(scheduled deadline))))))))))
   
 ;; (setq org-agenda-custom-commands '(("e" "List EMACS tasks" tags "+emacs+TODO=\"TODO\"")
