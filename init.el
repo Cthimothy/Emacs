@@ -25,12 +25,17 @@
 ;;(load-theme 'doom-spacegrey t)
 ;;(load-theme 'doom-xcode t)
 
-(use-package timu-macos-theme
+;; (use-package timu-macos-theme
+;;   :ensure t
+;;   :config
+;;   (customize-set-variable 'timu-macos-flavour "light")
+;;   (load-theme 'timu-macos t))
+
+(use-package catppuccin-theme
   :ensure t
   :config
-  (customize-set-variable 'timu-macos-flavour "light")
-  (load-theme 'timu-macos t))
-
+  (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha
+(catppuccin-reload))
 
 ;; Set some built-in minor modes
 (menu-bar-mode -1)
