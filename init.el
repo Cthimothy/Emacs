@@ -1,7 +1,6 @@
 ;; init.el - tjbw
 
 (setq debug-on-error t)
-
 ;; Start Emacs in server mode
 (load "server")
 (unless (server-running-p) (server-start))
@@ -22,6 +21,16 @@
 (eval-and-compile
   (setq use-package-always-ensure t
         use-package-expand-minimally t))
+ 
+;;(load-theme 'doom-spacegrey t)
+;;(load-theme 'doom-xcode t)
+
+(use-package timu-macos-theme
+  :ensure t
+  :config
+  (customize-set-variable 'timu-macos-flavour "light")
+  (load-theme 'timu-macos t))
+
 
 ;; Set some built-in minor modes
 (menu-bar-mode -1)
@@ -30,31 +39,163 @@
 (blink-cursor-mode 0)
 (show-paren-mode t)
 (prettify-symbols-mode)
-(fringe-mode 0)
+;;(fringe-mode 0)
+
+(setq backup-directory-alist `(("." . "~/.emacs.d/.backups"))
+      backup-by-copying t
+      version-control t
+      delete-old-versions t
+      auto-save-default t
+      auto-save-timeout 20
+      auto-save-interval 200
+      kept-new-versions 10
+      kept-old-versions 2)
 
 ;; Always split windows vertically
-(setq
- split-width-threshold 0
- split-height-threshold nil)
+; (setq
+; split-width-threshold 0
+; tsplit-height-threshold nil) 
 
 ;; Set sensible margins
-(setq
- left-margin-width 1
- right-margin-width 1)
+(setq left-margin-width 1)
+(setq right-margin-width 1)
 (set-window-buffer (selected-window) (current-buffer))
+(set-window-buffer nil (current-buffer))
 
-(use-package doom-themes
-  :ensure t
-  :config
-  (load-theme 'doom-nord t)
-  (setq custom-safe-themes t)
-  (set-face-attribute 'default nil :family "Ubuntu Mono" :height 100)
-  (set-face-attribute 'mode-line nil :family "Ubuntu Mono" :height 100))
+
+
+(global-set-key (kbd "<pinch>") 'ignore)
+(global-set-key (kbd "<C-wheel-up>") 'ignore)
+(global-set-key (kbd "<C-wheel-down>") 'ignore)
+
+(setq ring-bell-function 'ignore)
+(setq tab-bar-close-button-show nil
+      tab-bar-new-button-show nil
+      tab-bar-show nil)
+(setq dired-kill-when-opening-new-dired-buffer t)
+(setq diredp-hide-details-initially-flag nil)
+(setq switch-to-buffer-obey-display-actions t)
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+(setq create-lockfiles nil)
+(setq inhibit-startup-message t)
+(setq initial-scratch-message "")
+(setq scroll-margin 5 scroll-conservatively 9999 scroll-step 5)
+(setq scroll-conservatively 10000)
+(setq highlight-indentation-mode nil)
+(setq find-name-arg "-iname")
+;;(setq comint-prompt-read-only t)
+(setq isearch-lazy-count t)
+(setq lazy-count-prefix-format nil)
+(setq lazy-count-suffix-format "   (%s/%s)")
+(setq backup-directory-alist '(("." . "~/.emacs.d/Backups")))
+(setq backup-by-copying t)
+(setq user-full-name '"Timothy Welch")
+(setq user-mail-address '"t.welch2@exeter.ac.uk")
+(setq gnus-select-method '(nntp "news.eternal-september.org"))
+(setq dired-listing-switches "-lahF")
+;;(setq dired-listing-switches "-lahF --group-directories-first")
+;;(setq dired-listing-switches "-lahFog --group-directories-first")
+(setq dired-dwim-target t)
+(setq-default indent-tabs-mode nil)
+(setq toggle-diredp-find-file-reuse-dir t)
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Set custom key bindings
+(global-set-key (kbd "C-.") 'avy-goto-char-timer)
+(global-set-key (kbd "C-c f") 'tw/dired-filter-files)
+(global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
+(global-set-key (kbd "C-c d s") 'dired-mark-files-regexp)
+(global-set-key (kbd "C-c c c") 'org-capture)
+;(global-set-key (kbd "C-c C-d C-n") 'denote-create-note)
+(global-set-key (kbd "C-c C-d C-s") 'consult-notes)
+;; (global-set-key (kbd "C-c d d") 'eyebrowse-switch-to-window-config)
+;;(global-set-key (kbd "C-c d d") 'tab-switch)
+;;(global-set-key (kbd "C-c c d") 'consult-bookmark)
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-c y") 'clipboard-yank)
+(global-set-key (kbd "C-c c w") 'clipboard-kill-ring-save)
+(global-set-key (kbd "C-x C-a") 'mark-whole-buffer)
+(global-set-key (kbd "C-x a") 'org-agenda)
+(global-set-key (kbd "C-x k") 'kill-buffer)
+(global-set-key (kbd "M-n") 'scroll-up-command)
+(global-set-key (kbd "M-p") 'scroll-down-command)
+(global-set-key (kbd "M-,") 'beginning-of-buffer)
+(global-set-key (kbd "M-.") 'end-of-buffer)
+(global-set-key (kbd "M-g M-g") 'goto-line)
+(global-set-key (kbd "C-c C-f") 'find-name-dired)
+(global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
+(global-set-key (kbd "C-x r e") 'eval-region)
+(global-set-key (kbd "C-c C-l") 'package-list-packages)
+(global-set-key (kbd "C-c h") 'dired-dotfiles-toggle)
+(global-set-key (kbd "C-c y") 'popup-kill-ring)
+(global-set-key (kbd "C-c w") 'make-frame)
+(global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows)
+(global-set-key (kbd "C-s") 'swiper-isearch)
+(global-set-key (kbd "C-r") 'swiper-isearch-backward)
+(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
+(global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
+(global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
+(global-set-key (kbd "C-c m") 'tw/set-margins)
+;;(global-set-key (kbd "C-c s s") 'consult-notes)
+;;(global-set-key (kbd "C-c l") 'linum-mode)
+;;(global-set-key (kbd "C-x n") 'tab-next)
+;;(global-set-key (kbd "C-x <right>") 'windmove-right)
+;;(global-set-key (kbd "C-x <left>"q) 'windmove-left)
+;;(global-set-key (kbd "C-x <up>")    'windmove-up)
+;;(global-set-key (kbd "C-x <down>")  'windmove-down)
+;;(global-set-key (kbd "C-x l") 'windmove-right)
+;;(global-set-key (kbd "C-x h") 'windmove-left)
+;;(global-set-key (kbd "C-x k") 'windmove-up)
+;;(global-set-key (kbd "C-x j") 'windmove-down)
+ 
+;; Hook some modes
+(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
+(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
+(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'tw/dired-find-file-other-window)))
+(add-hook 'dired-mode-hook 'hl-line-mode)
+(add-hook 'prog-mode-hook 'hl-line-mode)
+;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
+(add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
+(add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
+(add-hook 'org-agenda-mode 'hl-line-mode)
+(add-hook 'org-mode 'hl-line-mode)
+
+;;(makunbound display-line-numbers)
+
+;; (use-package doom-themes
+;;   :ensure t
+;;   :config
+;;   (load-theme 'doom-nord t)
+;;   (setq custom-safe-themes t)
+;;   (set-face-attribute 'default nil :family "Ubuntu Mono" :height 100)
+;;   (set-face-attribute 'mode-line nil :family "Ubuntu Mono" :height 100)
+
+(use-package swiper
+  :ensure t)
+
+(use-package olivetti
+  :ensure t)
 
 (use-package doom-modeline
   :ensure t
   :config
   (doom-modeline-mode))
+
+(use-package denote
+  :ensure t
+  :custom
+  (denote-directory "~/Dropbox/Denote"))
+
+(use-package helpful
+  :ensure t)
+
+;; (use-package god-mode
+;;   :ensure t
+;;   :config
+;;   (god-mode)
+;;   (global-set-key (kbd "C-<escape>") 'god-local-mode))
 
 (use-package ace-window
   :ensure t
@@ -93,6 +234,21 @@
   :config
   (ivy-mode t))
 
+(use-package ivy-posframe
+  :ensure t
+  :config
+  ;; display at `ivy-posframe-style'
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  (setq ivy-posframe-parameters
+      '((left-fringe . 8)
+        (right-fringe . 8)))
+  (ivy-posframe-mode 1))
+
 (use-package company
   :defer 2
   :diminish
@@ -113,25 +269,23 @@
 (use-package winner
   :ensure t)
 
-(use-package org-side-tree
-  :ensure t)
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install))
+
+
+
+;;(use-package org-side-tree
+;;  :ensure t)
 
 (use-package org
   :mode (("\\.org$" . org-mode))
   :ensure t
   :init
-  (setq org-agenda-files '("~/Dropbox/Org/Projects/Projects.org" "~/Dropbox/Org/Projects/Tasks.org"))
-  (setq org-archive-location "~/Dropbox/Org/Archive/archive.org::")
-  (setq org-directory "~/Dropbox/Org/Projects/")
-  (setq org-insert-heading-respect-content t)
-  (setq org-goto-interface 'outline-path-completion)
-  (setq org-blank-before-new-entry '((heading) (plain-list-item)))
-  (setq org-agenda-span 4)
-  
-  (defun tw/org-skip-subtree-if-priority (priority)
+    (defun tw/org-skip-subtree-if-priority (priority)
     "Skip an agenda subtree if it has a priority of PRIORITY.
-
-     PRIORITY may be one of the characters ?A, ?B, or ?C."
+    PRIORITY may be one of the characters ?A, ?B, or ?C."
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
           (pri-value (* 1000 (- org-lowest-priority priority)))
           (pri-current (org-get-priority (thing-at-point 'line t))))
@@ -139,50 +293,103 @@
           subtree-end
         nil)))
 
-;;  :config
+  (defun tw/org-agenda-skip-high-priority ()
+  "Skip all tasks with priority 'A'."
+  (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+    (if (member (org-entry-get nil "PRIORITY") '("A"))
+        next-headline
+      nil)))
+  
   ;; (setq org-agenda-start-with-follow-mode t)
   ;; (setq org-adapt-indentation t)
-  ;; (setq org-agenda-custom-commands
-  ;;       '(("c" "Simple agenda view"
-  ;;          ((tags "PRIORITY=\"A\""
-  ;;                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-  ;;                  (org-agenda-overriding-header "High-priority unfinished tasks:")))
-  ;;           (agenda "")
-  ;;           (alltodo "")))))
+  (setq org-base-path "/Users/t.welch2/Library/CloudStorage/Dropbox")
+  (setq org-directory (concat org-base-path "/Org/"))
+  (setq org-agenda-files '(
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org"))
+  (setq org-archive-location "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Archive.org::")
+  (setq org-refile-targets
+        '(("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org" :maxlevel . 1)
+          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org" :maxlevel . 1)
+          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Atheism.org" :maxlevel . 1)
+          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org" :maxlevel . 1)
+          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org" :maxlevel . 1)))
 
-  (setq org-agenda-custom-commands
-        '(("c" "Simple agenda view"
-           ((tags "PRIORITY=\"A\""
-                  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                   (org-agenda-overriding-header "High-priority unfinished tasks:")))
-            (agenda "")
-            (alltodo ""
-                     ((org-agenda-skip-function
-                       '(or (tw/org-skip-subtree-if-priority ?A)
-                            (org-agenda-skip-if nil '(scheduled deadline))))))))))
-  
-;; (setq org-agenda-custom-commands '(("e" "List EMACS tasks" tags "+emacs+TODO=\"TODO\"")
-;;                                    ("r" "List RPG tasks" tags "+rpg+TODO=\"TODO\"")
-;;                                    ("h" "List HOUSE tasks" tags "+house+TODO=\"TODO\"")))))
-  
+  (setq org-insert-heading-respect-content t)
+  (setq org-goto-interface 'outline-path-completion)
+  (setq org-blank-before-new-entry '((heading) (plain-list-item)))
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s")
           (todo   . " ")
           (tags   . " %i %-12:c")
           (search . " %i %-12:c")))
+
+;;  (makunbound org-agenda-prefix-format)
+
+  (setq org-todo-keyword-faces
+      '(("PROJECT" . "#ffaa8e")))
+
+  (setq org-agenda-span 4)
+  (setq org-agenda-start-on-weekday nil)
+  (setq org-agenda-start-day "+0d")
+;  (setq org-agenda-custom-commands '())
   
+  (add-hook 'org-mode-hook (lambda () (olivetti-mode 1) (setq olivetti-body-width 150)))
+  (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
+
+  (setq org-agenda-custom-commands
+       '(
+         ("c" "Two weeks and tasks  agenda view"
+          (
+           (tags "PRIORITY=\"A\""
+                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                  (org-agenda-overriding-header "High-priority tasks:")))
+
+           (agenda "")
+
+           (alltodo ""
+                    ((org-agenda-skip-function
+                      '(or (tw/org-skip-subtree-if-priority ?A)
+                           (org-agenda-skip-if nil '(scheduled deadline))))))))))
+            
+;;(setq org-agenda-custom-commands '(("e" "List EMACS tasks" tags "+emacs+TODO=\"TODO\"")))
+;;                                    ("r" "List RPG tasks" tags "+rpg+TODO=\"TODO\"")
+;;                                    ("h" "List HOUSE tasks" tags "+house+TODO=\"TODO\"")))
+ 
   (setq org-capture-templates `(
                                 ("t" "General Tasks To Do" entry
-                                 (file+headline "~/Dropbox/Org/Projects/Tasks.org"
+                                 (file+headline "~/Org/Tasks.org"
                                                 "To Do") "* TODO %i%? :todo:"))))
-  ;; ---End Org config
+
+(use-package denote
+  :ensure t
+  :custom
+  (denote-directory "~/Dropbox/Org/Denote/")
+;;  (denote-rename-buffer-function 'dw/denote-rename-buffer-with-prefixed-title)
+  :config
+  (denote-rename-buffer-mode)
+  (add-hook 'dired-mode-hook #'denote-dired-mode)
+  (require 'denote-org-dblock)
+
+  (with-eval-after-load 'org-capture
+    (add-to-list 'org-capture-templates
+                 '("n" "New note (with Denote)" plain
+                   (file denote-last-path)
+                   #'denote-org-capture
+                   :no-save t
+                   :immediate-finish nil
+                   :kill-buffer t
+                   :jump-to-captured nil))))
 
 (use-package org-superstar
   :ensure t
   :config
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.25))))
+   '(org-level-1 ((t (:inherit outline-1 :height 1.25)))) ;
    '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
    '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
@@ -190,34 +397,37 @@
   (setq org-superstar-leading-bullet ?\s)
   (org-superstar-mode t))
 
-;; (use-package smartparens
-;;   :ensure t  ;; install the package
-;;   :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
-;;   :config
-;;   ;; load default config
-;;   :config
-;;   (smartparens-global-mode))
+(use-package smartparens
+  :ensure t  ;; install the package
+  :hook (prog-mode text-mode markdown-mode org-mode) ;; add `smartparens-mode` to these hooks
+  :config
+  ;; load default config
+  :config
+  (smartparens-global-mode))
 
 ;; (use-package org-notify
 ;;   :ensure t
 ;;   :config
 ;;   (org-notify-start))
 
-(use-package nerd-icons-ibuffer
-  :ensure t
-  :config
-  (nerd-icons-ibuffer-mode t))
+(use-package nerd-icons
+  :ensure t)
+;; 
+;; (use-package nerd-icons-ibuffer
+;;   :ensure t
+;;   :config
+;;   (nerd-icons-ibuffer-mode t))
 
-(use-package all-the-icons-ibuffer
-  :ensure t
-  :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
+;; (use-package all-the-icons-ibuffer
+;;   :ensure t
+;;   :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
 
-(setq ibuffer-saved-filter-groups
-      (quote (("default"
-               ("Dired" (mode . dired-mode))
-               ("Org" (mode . org-mode))
-               ("System" (name . "^\*.*\*$"))))))
-(add-hook 'ibuffer-mode-hook (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
+;; (setq ibuffer-saved-filter-groups
+;;       (quote (("default"
+;;                ("Dired" (mode . dired-mode))
+;;                ("Org" (mode . org-mode))
+;;                ("System" (name . "^\*.*\*$"))))))
+;; (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region)
@@ -233,8 +443,8 @@
   :config
   (marginalia-mode t))
 
-;; (use-package popup-kill-ring
-;;   :ensure t)
+(use-package popup-kill-ring
+  :ensure t)
 
 (use-package vterm
   :config
@@ -256,95 +466,8 @@
   (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
 ;  (add-hook 'ielm-mode-hook 'g-ielm-init-history))
 
-
-;; Hook some modes
-(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
-(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
-(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'tw/dired-find-file-other-window)))
-(add-hook 'dired-mode-hook 'hl-line-mode)
-(add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-hook 'prog-mode-hook 'hl-line-mode)
-(add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
-
-(setq tab-bar-close-button-show nil
-      tab-bar-new-button-show nil
-      tab-bar-show nil)
-(setf dired-kill-when-opening-new-dired-buffer t)
-(setq diredp-hide-details-initially-flag nil)
-(setq switch-to-buffer-obey-display-actions t)
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-(setq create-lockfiles nil)
-(setq inhibit-startup-message t)
-(setq initial-scratch-message "")
-(setq scroll-margin 5 scroll-conservatively 9999 scroll-step 5)
-(setq scroll-conservatively 10000)
-(setq highlight-indentation-mode nil)
-(setq find-name-arg "-iname")
-;;(setq comint-prompt-read-only t)
-(setq isearch-lazy-count t)
-(setq lazy-count-prefix-format nil)
-(setq lazy-count-suffix-format "   (%s/%s)")
-(setq backup-directory-alist '(("." . "~/.emacs.d/Backups")))
-(setq backup-by-copying t)
-(setq user-full-name '"Timothy Welch")
-(setq user-mail-address '"timjbw@protonmail.ch")
-(setq gnus-select-method '(nntp "news.eternal-september.org"))
-(setq dired-listing-switches "-lahF --group-directories-first")
-;(setq dired-listing-switches "-lahFog --group-directories-first")
-(setq dired-dwim-target t)
-(setq-default indent-tabs-mode nil)
-(toggle-diredp-find-file-reuse-dir t)
-(setq diredp-hide-details-initially-flag nil)
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; Set custom key bindings
-(global-set-key (kbd "C-c f") 'tw/dired-filter-files)
-(global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
-(global-set-key (kbd "C-c d s") 'dired-mark-files-regexp)
-(global-set-key (kbd "C-c c c") 'org-capture)
-;(global-set-key (kbd "C-c C-d C-n") 'denote-create-note)
-(global-set-key (kbd "C-c C-d C-s") 'consult-notes)
-;; (global-set-key (kbd "C-c d d") 'eyebrowse-switch-to-window-config)
-;;(global-set-key (kbd "C-c d d") 'tab-switch)
-;;(global-set-key (kbd "C-c c d") 'consult-bookmark)
-
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-c y") 'clipboard-yank)
-(global-set-key (kbd "C-c c w") 'clipboard-kill-ring-save)
-(global-set-key (kbd "C-x C-a") 'mark-whole-buffer)
-(global-set-key (kbd "C-x a") 'org-agenda)
-(global-set-key (kbd "C-x k") 'kill-buffer)
-(global-set-key (kbd "M-n") 'scroll-up-command)
-(global-set-key (kbd "M-p") 'scroll-down-command)
-(global-set-key (kbd "M-,") 'beginning-of-buffer)
-(global-set-key (kbd "M-.") 'end-of-buffer)
-(global-set-key (kbd "M-g M-g") 'goto-line)
-(global-set-key (kbd "C-c C-f") 'find-name-dired)
-(global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
-(global-set-key (kbd "C-x r e") 'eval-region)
-(global-set-key (kbd "C-c C-l") 'package-list-packages)
-(global-set-key (kbd "C-c h") 'dired-dotfiles-toggle)
-(global-set-key (kbd "C-c y") 'popup-kill-ring)
-(global-set-key (kbd "C-c w") 'make-frame)
-(global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows)
-(global-set-key (kbd "C-s") 'swiper-isearch)
-(global-set-key (kbd "C-r") 'swiper-isearch-backward)
-(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
-(global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-above)))
-(global-set-key (kbd "M-RET") 'tw/smart-open-line-below)
-;;(global-set-key (kbd "C-c s s") 'consult-notes)
-;;(global-set-key (kbd "C-c l") 'linum-mode)
-;;(global-set-key (kbd "C-x n") 'tab-next)
-;;(global-set-key (kbd "C-x <right>") 'windmove-right)
-;;(global-set-key (kbd "C-x <left>") 'windmove-left)
-;;(global-set-key (kbd "C-x <up>")    'windmove-up)
-;;(global-set-key (kbd "C-x <down>")  'windmove-down)
-;;(global-set-key (kbd "C-x l") 'windmove-right)
-;;(global-set-key (kbd "C-x h") 'windmove-left)
-;;(global-set-key (kbd "C-x k") 'windmove-up)
-;;(global-set-key (kbd "C-x j") 'windmove-down)
+;;(load (expand-file-name "~/.quicklisp/slime-helper.el"))
+;;(setq inferior-lisp-program "sbcl")
 
 ;; (defun tw/dired-ediff-marked-files ()
 ;;   "Run ediff-files on a pair of files marked in dired buffer"
@@ -355,8 +478,15 @@
 ;;       (ediff-files (nth 0 marked-files)
 ;;                    (nth 1 marked-files)))))
 
+(defun tw/set-margins ()
+(interactive)
+(setq left-margin-width 1)
+(setq right-margin-width 1)
+(set-window-buffer (selected-window) (current-buffer))
+(set-window-buffer nil (current-buffer)))
+
+
 (defun tw/dired-find-file-other-application ()
-  "In dired, open the file named on this line."
   (interactive)
   (let* ((file (dired-get-filename nil t)))
     (message "Opening %s..." file)
@@ -371,21 +501,17 @@
     (find-file file)))
 
 (defun tw/dired-filter-files (string)
-  "Filter Dired to display only files containing STRING."
-  (interactive "sFilter Dired for files containing string: ")
+  (interactive "Filter Dired for files containing string: ")
   (dired-mark-files-regexp string)
   (dired-toggle-marks)
   (dired-do-kill-lines))
 
 (defun tw/toggle-window-dedication ()
-  "Toggles window dedication in the selected window."
   (interactive)
   (set-window-dedicated-p (selected-window)
                           (not (window-dedicated-p (selected-window)))))
 
 (defun tw/smart-open-line-above ()
-  "Insert an empty line above the current line. Position the cursor at it's beginning, according to the
-   current mode."
   (interactive)
   (move-beginning-of-line nil)
   (newline-and-indent)
@@ -393,18 +519,39 @@
   (indent-according-to-mode))
 
 (defun tw/smart-open-line-below ()
-  "Insert an empty line after the current line. Position the cursor at its beginning, according to the
-   current mode."
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
 
 ;; Dired custom functions and configuration
 
-;(define-key dired-mode-map (kbd "<M-[>") 'dired-up-directory)
+(defun tw/toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+	     (next-win-buffer (window-buffer (next-window)))
+	     (this-win-edges (window-edges (selected-window)))
+	     (next-win-edges (window-edges (next-window)))
+	     (this-win-2nd (not (and (<= (car this-win-edges)
+					 (car next-win-edges))
+				     (<= (cadr this-win-edges)
+					 (cadr next-win-edges)))))
+	     (splitter
+	      (if (= (car this-win-edges)
+		     (car (window-edges (next-window))))
+		  'split-window-horizontally
+		'split-window-vertically)))
+	(delete-other-windows)
+	(let ((first-win (selected-window)))
+	  (funcall splitter)
+	  (if this-win-2nd (other-window 1))
+	  (set-window-buffer (selected-window) this-win-buffer)
+	  (set-window-buffer (next-window) next-win-buffer)
+	  (select-window first-win)
+	  (if this-win-2nd (other-window 1))))))
 
+ 
 (defun dired-dotfiles-toggle ()
-  "Show/hide dot-files"
   (interactive)
   (when (equal major-mode 'dired-mode)
     (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
@@ -426,15 +573,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(listen-directory "/mnt/music")
+ '(custom-safe-themes
+   '("e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0" default))
  '(package-selected-packages
-   '(org-side-tree all-the-icons-ibuffer listen treemacs-nerd-icons treemacs dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer denote-menu counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
+   '(timu-macos-theme selected-window-accent-mode pdf-tools magit true malyon org-side-tree all-the-icons-ibuffer listen dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer denote-menu counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
+ '(hl-line ((t (:extend t :background "gray27"))))
+ '(org-agenda-done ((t (:foreground "gray42"))))
  '(org-level-1 ((t (:inherit outline-1 :height 1.25))))
  '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
  '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
