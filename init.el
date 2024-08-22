@@ -244,14 +244,15 @@
   :config
   ;; display at `ivy-posframe-style'
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-center)))
   (setq ivy-posframe-parameters
-      '((left-fringe . 8)
-        (right-fringe . 8)))
+      '((left-fringe . 4)
+        (right-fringe . 4)))
   (ivy-posframe-mode 1))
 
 (use-package company
@@ -362,9 +363,12 @@
 
 (use-package marginalia
   :ensure t
-  :config
-  (marginalia-mode t))
-
+  :custom
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'right)
+  :init
+  (marginalia-mode))
+  
 (use-package popup-kill-ring
   :ensure t)
 
