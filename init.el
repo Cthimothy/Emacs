@@ -160,12 +160,15 @@
 (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
 (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'tw/dired-find-file-other-window)))
 (add-hook 'dired-mode-hook 'hl-line-mode)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'hl-line-mode)
+(add-hook 'org-agenda-mode 'hl-line-mode)
+(add-hook 'org-mode-hook 'hl-line-mode)
+(add-hook 'org-mode-hook 'display-line-numbers-mode)
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
-(add-hook 'org-agenda-mode 'hl-line-mode)
-(add-hook 'org-mode 'hl-line-mode)
+
 
 ;;(makunbound display-line-numbers)
 
@@ -509,10 +512,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
- '(hl-line ((t (:extend t :background "gray27"))))
+ '(hl-line ((t (:extend t :background "gray80"))))
  '(org-agenda-done ((t (:foreground "gray42"))))
- '(org-level-1 ((t (:inherit outline-1 :height 1.25))))
+ '(org-document-title ((t (:foreground "SpringGreen3" :weight bold :height 1.44))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
  '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
  '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+ '(org-todo ((t (:foreground "DarkOrange3"))))
+ '(swiper-line-face ((t (:background "gray76")))))
