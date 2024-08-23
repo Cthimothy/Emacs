@@ -48,29 +48,29 @@
 ;;   (run-with-idle-timer refresh-agenda-time-seconds t 'refresh-agenda-timer-function)
 
 ;;   ;;--- External org-capture routines using Automator
-;;     (defadvice org-capture-finalize 
-;;       (after delete-capture-frame activate)
-;;     "Advise capture-finalize to close the frame"
-;;     (if (equal "capture" (frame-parameter nil 'name))
-;;         (delete-frame)))
+    (defadvice org-capture-finalize 
+      (after delete-capture-frame activate)
+    "Advise capture-finalize to close the frame"
+    (if (equal "capture" (frame-parameter nil 'name))
+        (delete-frame)))
   
-;;   (defadvice org-capture-destroy
-;;       (after delete-capture-frame activate)
-;;     "Advise capture-destroy to close the frame"
-;;     (if (equal "capture" (frame-parameter nil 'name))
-;;         (delete-frame)))
+  (defadvice org-capture-destroy
+      (after delete-capture-frame activate)
+    "Advise capture-destroy to close the frame"
+    (if (equal "capture" (frame-parameter nil 'name))
+        (delete-frame)))
 
-;;   (use-package noflet
-;;     :ensure t)
+  (use-package noflet
+    :ensure t)
   
-;;   (defun make-capture-frame ()
-;;     "Create a new frame and run org-capture."
-;;     (interactive)
-;;     (make-frame '((name . "capture")))
-;;     (select-frame-by-name "capture")
-;;     (delete-other-windows)
-;;     (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
-;;       (org-capture)))
+  (defun make-capture-frame ()
+    "Create a new frame and run org-capture."
+    (interactive)
+    (make-frame '((name . "capture")))
+    (select-frame-by-name "capture")
+    (delete-other-windows)
+    (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
+      (org-capture)))
   
   ;; This is run from MacOS Automator
   ;; socketfile=$(lsof -c Emacs | grep server | /usr/local/opt/coreutils/libexec/gnubin/tr -s " " | /usr/local/opt/coreutils/libexec/gnubin/cut -d' ' -f8)
