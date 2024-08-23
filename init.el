@@ -73,7 +73,7 @@
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
 
-(setq mac-command-modifier 'control)
+(setq mac-command-modifier 'meta)
 (setq ring-bell-function 'ignore)
 (setq tab-bar-close-button-show nil
       tab-bar-new-button-show nil
