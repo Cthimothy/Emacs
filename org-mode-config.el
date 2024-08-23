@@ -25,30 +25,30 @@
         nil)))
   
   ;; ;; --- Org-agenda auto-refresh routines
-;;   (defvar refresh-agenda-time-seconds 3000000)
-;;   (defvar refresh-agenda-timer 3000000
-;;     "Timer for `refresh-agenda-timer-function' to reschedule itself, or nil.")
+  ;;   (defvar refresh-agenda-time-seconds 3000000)
+  ;;   (defvar refresh-agenda-timer 3000000
+  ;;     "Timer for `refresh-agenda-timer-function' to reschedule itself, or nil.")
 
-;;   (defun refresh-agenda-timer-function ()
-;;     ;; If the user types a command while refresh-agenda-timer
-;;     ;; is active, the next time this function is called from
-;;     ;; its main idle timer, deactivate refresh-agenda-timer.
-;;     (when refresh-agenda-timer
-;;       (cancel-timer refresh-agenda-timer))
+  ;;   (defun refresh-agenda-timer-function ()
+  ;;     ;; If the user types a command while refresh-agenda-timer
+  ;;     ;; is active, the next time this function is called from
+  ;;     ;; its main idle timer, deactivate refresh-agenda-timer.
+  ;;     (when refresh-agenda-timer
+  ;;       (cancel-timer refresh-agenda-timer))
 
-;; ;;    (org-agenda nil "w")
+  ;; ;;    (org-agenda nil "w")
 
-;;     (setq refresh-agenda-timer
-;;           (run-with-idle-timer
-;;            ;; Compute an idle time break-length
-;;            ;; more than the current value.
-;;            (time-add (current-idle-time) refresh-agenda-time-seconds)
-;;            nil
-;;            'refresh-agenda-timer-function)))
-;;   (run-with-idle-timer refresh-agenda-time-seconds t 'refresh-agenda-timer-function)
+  ;;     (setq refresh-agenda-timer
+  ;;           (run-with-idle-timer
+  ;;            ;; Compute an idle time break-length
+  ;;            ;; more than the current value.
+  ;;            (time-add (current-idle-time) refresh-agenda-time-seconds)
+  ;;            nil
+  ;;            'refresh-agenda-timer-function)))
+  ;;   (run-with-idle-timer refresh-agenda-time-seconds t 'refresh-agenda-timer-function)
 
 ;;   ;;--- External org-capture routines using Automator
-    (defadvice org-capture-finalize 
+  (defadvice org-capture-finalize 
       (after delete-capture-frame activate)
     "Advise capture-finalize to close the frame"
     (if (equal "capture" (frame-parameter nil 'name))
