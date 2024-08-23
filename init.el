@@ -109,6 +109,7 @@
 
 ;; Set custom key bindings
 (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
+(global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-c f") 'tw/dired-filter-files)
 (global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
 (global-set-key (kbd "C-c d s") 'dired-mark-files-regexp)
