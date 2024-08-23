@@ -257,6 +257,7 @@
   (setq ivy-posframe-parameters
       '((left-fringe . 4)
         (right-fringe . 4)))
+  (set-face-attribute 'ivy-posframe nil :foreground "white" :background "gray85")
   (ivy-posframe-mode 1))
 
 (use-package company
