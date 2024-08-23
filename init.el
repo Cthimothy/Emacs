@@ -160,7 +160,7 @@
 ;; Hook some modes
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
 (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
-(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'tw/dired-find-file-other-window)))
+(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'dired-find-file-other-window)))
 (add-hook 'dired-mode-hook 'hl-line-mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'hl-line-mode)
@@ -506,9 +506,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0" default))
+   '("2eca138bb4bd21c5de6f2f271038ae562a1c79ccfc006b9aa4f1d31139c8824d" "e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0" default))
  '(package-selected-packages
-   '(timu-macos-theme selected-window-accent-mode pdf-tools magit true malyon org-side-tree all-the-icons-ibuffer listen dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer denote-menu counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
+   '(denote-explore timu-macos-theme selected-window-accent-mode pdf-tools magit true malyon org-side-tree all-the-icons-ibuffer listen dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer denote-menu counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -517,11 +517,13 @@
  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
  '(hl-line ((t (:extend t :background "gray80"))))
  '(org-agenda-done ((t (:foreground "gray42"))))
- '(org-document-title ((t (:foreground "SpringGreen3" :weight bold :height 1.44))))
+ '(org-document-title ((t (:foreground "gray53" :weight bold :height 1.0))))
  '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
  '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
  '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
  '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+ '(org-level-8 ((t (:extend nil :foreground "#e64553" :weight normal))))
+ '(org-tag ((t (:foreground "light steel blue" :weight bold))))
  '(org-todo ((t (:foreground "DarkOrange3"))))
  '(swiper-line-face ((t (:background "gray76")))))
