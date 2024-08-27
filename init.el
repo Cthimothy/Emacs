@@ -344,10 +344,10 @@
 (use-package nerd-icons
   :ensure t)
 ;; 
-;; (use-package nerd-icons-ibuffer
-;;   :ensure t
-;;   :config
-;;   (nerd-icons-ibuffer-mode t))
+ (use-package nerd-icons-ibuffer
+   :ensure t
+   :config
+   :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
 
 ;; (use-package all-the-icons-ibuffer
 ;;   :ensure t
