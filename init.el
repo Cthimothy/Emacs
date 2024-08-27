@@ -132,7 +132,7 @@
 (global-set-key (kbd "M-p") 'scroll-down-command)
 (global-set-key (kbd "M-,") 'beginning-of-buffer)
 (global-set-key (kbd "M-.") 'end-of-buffer)
-(global-set-key (kbd "M-g M-g") 'goto-line)
+(global-set-key (kbd "C-x C-g") 'avy-goto-line)
 (global-set-key (kbd "C-c C-f") 'find-name-dired)
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
 (global-set-key (kbd "C-x r e") 'eval-region)
