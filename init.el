@@ -31,11 +31,13 @@
 ;;   (customize-set-variable 'timu-macos-flavour "light")
 ;;   (load-theme 'timu-macos t))
 
-(use-package catppuccin-theme
-  :ensure t
-  :config
-  (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha
-(catppuccin-reload))
+;; (use-package catppuccin-theme
+;;   :ensure t
+;;   :config
+;;   (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha
+;; (catppuccin-reload))
+
+(load-theme 'cloud)
 
 ;; Set some built-in minor modes
 (menu-bar-mode -1)
@@ -258,7 +260,7 @@
   (setq ivy-posframe-parameters
       '((left-fringe . 4)
         (right-fringe . 4)))
-  (set-face-attribute 'ivy-posframe nil :foreground "white" :background "gray85")
+  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#F2F2F2")
   (ivy-posframe-mode 1))
 
 (use-package company
@@ -433,7 +435,8 @@
     (find-file file)))
 
 (defun tw/dired-filter-files (string)
-  (interactive "Filter Dired for files containing string: ")
+  "Filter Dired for files containing string: "
+  (interactive "sFilter by substring: ")
   (dired-mark-files-regexp string)
   (dired-toggle-marks)
   (dired-do-kill-lines))
@@ -508,7 +511,7 @@
  '(custom-safe-themes
    '("2eca138bb4bd21c5de6f2f271038ae562a1c79ccfc006b9aa4f1d31139c8824d" "e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0" default))
  '(package-selected-packages
-   '(denote-explore timu-macos-theme selected-window-accent-mode pdf-tools magit true malyon org-side-tree all-the-icons-ibuffer listen dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer denote-menu counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
+   '(dired-hacks-utils denote-explore timu-macos-theme selected-window-accent-mode pdf-tools magit true malyon org-side-tree all-the-icons-ibuffer listen dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer denote-menu counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
