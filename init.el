@@ -31,13 +31,14 @@
 ;;   (customize-set-variable 'timu-macos-flavour "light")
 ;;   (load-theme 'timu-macos t))
 
-;; (use-package catppuccin-theme
-;;   :ensure t
-;;   :config
-;;   (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha
-;; (catppuccin-reload))
+(use-package catppuccin-theme
+  :ensure t
+  :config
+  (setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha
+  (catppuccin-reload))
 
-(load-theme 'cloud)
+
+;;(load-theme 'cloud)
 
 ;; Set some built-in minor modes
 (menu-bar-mode -1)
@@ -518,7 +519,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
- '(hl-line ((t (:extend t :background "gray80"))))
+ '(hl-line ((t (:inherit nil :extend t))))
  '(org-agenda-done ((t (:foreground "gray42"))))
  '(org-document-title ((t (:foreground "gray53" :weight bold :height 1.0))))
  '(org-level-1 ((t (:inherit outline-1 :height 1.0))))

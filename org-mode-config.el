@@ -148,7 +148,7 @@
              (tags-todo "@Work")))
            
           ("p" "Personal Tasks"
-           ((tags-todo "@personal"
+           ((tags-todo "@Personal"
                        ((org-agenda-overriding-header "Personal Tasks")))
             (agenda "")))
           
