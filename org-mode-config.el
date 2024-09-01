@@ -178,9 +178,9 @@
   (set-face-attribute 'org-headline-done nil :foreground "olive drab" :strike-through "indian red")(setq org-fontify-done-headline t)
 ;; (set-face-foreground 'org-done "Red")
 
-;;   (setq org-agenda-span 4)
-;;   (setq org-agenda-start-on-weekday nil)
-;;   (setq org-agenda-start-day "+0d")
+   (setq org-agenda-span 4)
+   (setq org-agenda-start-on-weekday nil)
+   (setq org-agenda-start-day "+0d")
 ;;   (setq org-agenda-custom-commands '())
   
 ;; 
