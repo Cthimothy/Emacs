@@ -3,10 +3,8 @@
   :ensure t
 
   :init
-  (use-package org-side-tree
-    :ensure t)
+  ;; --- Org-agenda functions
   
-  ;; --- Org-agenda routines
   (defun tw/org-skip-subtree-if-priority (priority)
     "Skip an agenda subtree if it has a priority of PRIORITY.
   PRIORITY may be one of the characters ?A, ?B, or ?C."
@@ -47,7 +45,7 @@
   ;;            'refresh-agenda-timer-function)))
   ;;   (run-with-idle-timer refresh-agenda-time-seconds t 'refresh-agenda-timer-function)
 
-;;   ;;--- External org-capture routines using Automator
+  ;;--- External org-capture routines using Automator
   (defadvice org-capture-finalize 
       (after delete-capture-frame activate)
     "Advise capture-finalize to close the frame"
@@ -59,10 +57,7 @@
     "Advise capture-destroy to close the frame"
     (if (equal "capture" (frame-parameter nil 'name))
         (delete-frame)))
-
-  (use-package noflet
-    :ensure t)
-  
+ 
   (defun make-capture-frame ()
     "Create a new frame and run org-capture."
     (interactive)
@@ -73,13 +68,16 @@
       (org-capture)))
   
   ;; This is run from MacOS Automator
-  ;; socketfile=$(lsof -c Emacs | grep server | /usr/local/opt/coreutils/libexec/gnubin/tr -s " " | /usr/local/opt/coreutils/libexec/gnubin/cut -d' ' -f8)
+  ;; socketfile=$(lsof -c Emacs | grep server | /usr/local/opt/coreutils/libexec/gnubin/tr -s " " |
+  ;; /usr/local/opt/coreutils/libexec/gnubin/cut -d' ' -f8)
   ;; /usr/local/bin/emacsclient -ne "(make-capture-frame)" -s $socketfile
   
   :config  
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
-
+  (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up)
+  (global-set-key (kbd "C-S-<down>") 'org-move-subtree-down)
+  
   (require 'color)
   (set-face-attribute 'org-block nil :background
                     (color-darken-name
@@ -97,10 +95,8 @@
   ;; (add-hook 'org-mode-hook (lambda ()
   ;;                            (olivetti-mode 1)
   ;;                            (setq olivetti-body-width 20)))
-;;  (remove-hook 'org-hook-mode 'olivetti-mode)
-;;  (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
-  (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up)
-  (global-set-key (kbd "C-S-<down>") 'org-move-subtree-down)
+  ;;  (remove-hook 'org-hook-mode 'olivetti-mode)
+  ;;  (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
 
   (setq org-tag-list
         '(("@Emacs" . ?e)
@@ -111,6 +107,7 @@
           ("@INBOX" . ?i)))
 
   (setq org-archive-location "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Archive.org::")
+  
   (setq org-agenda-files '(
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
@@ -167,9 +164,9 @@
                         ((org-agenda-overriding-header "INBOX")))
              (agenda "")))))
 
-   (setq org-insert-heading-respect-content t)
-   (setq org-goto-interface 'outline-path-completion)
-   (setq org-blank-before-new-entry '((heading) (plain-list-item)))
+  (setq org-insert-heading-respect-content t)
+  (setq org-goto-interface 'outline-path-completion)
+  (setq org-blank-before-new-entry '((heading) (plain-list-item)))
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s")
           (todo   . " ")
@@ -180,12 +177,13 @@
   (setq org-todo-keyword-faces
         '(("PROJECT" . "#4A90E2")
           ("org-headline-done" . "#ababab")))
-  (set-face-attribute 'org-headline-done nil :foreground "olive drab" :strike-through "indian red")(setq org-fontify-done-headline t)
+  (set-face-attribute 'org-headline-done nil :foreground "olive drab" :strike-through "indian red")
+  (setq org-fontify-done-headline t)
 ;; (set-face-foreground 'org-done "Red")
 
-   (setq org-agenda-span 'day)
-   (setq org-agenda-start-on-weekday nil)
-   (setq org-agenda-start-day "+0d")
+  (setq org-agenda-span 'day)
+  (setq org-agenda-start-on-weekday nil)
+  (setq org-agenda-start-day "+0d")
 ;;   (setq org-agenda-custom-commands '())
   
 ;; 

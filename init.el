@@ -185,6 +185,9 @@
 ;;   (set-face-attribute 'default nil :family "Ubuntu Mono" :height 100)
 ;;   (set-face-attribute 'mode-line nil :family "Ubuntu Mono" :height 100)
 
+(use-package noflet
+  :ensure t)
+
 (use-package swiper
   :ensure t)
 
