@@ -91,7 +91,7 @@
   (setq org-agenda-window-setup 'current-window)
   (setq org-adapt-xindentation t)
   (setq org-agenda-show-current-time-in-grid nil)
-  (setq org-agenda-time-grid '((daily today remove-match)
+  (setq org-agenda-time-grid '((daily today remove-match require-timed)
                              (800 900 1000 1100  1200 1300 1400 1500 1600 1700 1800)
                              "" "----------------------------------"))
   ;; (add-hook 'org-mode-hook (lambda ()
@@ -129,20 +129,22 @@
           ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org" :maxlevel . 1)))
         
   (setq org-capture-templates `(
-                                ("i" "Send to INBOX" entry
+                                ("i" "INBOX" entry
                                  (file+headline "~/Dropbox/Org/Inbox.org"
                                                 "Inbox") "* TODO %i%?")
-                                ("t" "General Tasks To Do" entry
+                                ("t" "General Task" entry
                                  (file+headline "~/Dropbox/Org/Tasks.org"
                                                 "To Do") "* TODO %i%?")
-                                ("w" "Work Tasks To Do" entry
+                                ("w" "Work Task" entry
                                  (file+headline "~/Dropbox/Org/Work.org"
-                                                "To Do") "* TODO %i%?")))
+                                                "Tasks") "* TODO %i%?")))
   (setq org-agenda-custom-commands
         '(
-          ("g" "Agenda and all tasks"
+          ("g" "Agenda for week and all tasks"
            ((agenda ""
-            ((org-agenda-overriding-header "Agenda and all tasks")))
+                    ((org-agenda-overriding-header "Agenda and all tasks")
+                     (org-agenda-span 'week)
+                     (org-agenda-start-day "0")))
            (alltodo "")))
            
            ("w" "Work Tasks"
@@ -181,7 +183,7 @@
   (set-face-attribute 'org-headline-done nil :foreground "olive drab" :strike-through "indian red")(setq org-fontify-done-headline t)
 ;; (set-face-foreground 'org-done "Red")
 
-   (setq org-agenda-span 4)
+   (setq org-agenda-span 'day)
    (setq org-agenda-start-on-weekday nil)
    (setq org-agenda-start-day "+0d")
 ;;   (setq org-agenda-custom-commands '())
