@@ -72,7 +72,8 @@
   ;; /usr/local/opt/coreutils/libexec/gnubin/cut -d' ' -f8)
   ;; /usr/local/bin/emacsclient -ne "(make-capture-frame)" -s $socketfile
   
-  :config  
+  :config
+  (setq org-hide-emphasis-markers t)
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
   (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up)
