@@ -109,6 +109,11 @@
 (setq-default indent-tabs-mode nil)
 (setq toggle-diredp-find-file-reuse-dir t)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq electric-pair-pairs '((?\( . ?\))
+                            (?\{ . ?\})
+                            (?\[ . ?\])
+                            (?\" . ?\")))
+
 
 ;; Set custom key bindings
 (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
@@ -167,6 +172,7 @@
 (add-hook 'dired-mode-hook 'hl-line-mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'hl-line-mode)
+(add-hook 'prog-mode-hook 'electric-pair-mode)
 (add-hook 'org-agenda-mode 'hl-line-mode)
 (add-hook 'org-mode-hook 'hl-line-mode)
 (add-hook 'org-mode-hook 'display-line-numbers-mode)
@@ -332,13 +338,13 @@
   (setq org-superstar-leading-bullet ?\s)
   (org-superstar-mode t))
 
-(use-package smartparens
-  :ensure t  ;; install the package
-  :hook (prog-mode text-mode markdown-mode org-mode) ;; add `smartparens-mode` to these hooks
-  :config
-  ;; load default config
-  :config
-  (smartparens-global-mode))
+;; (use-package smartparens
+;;   :ensure t  ;; install the package
+;;   :hook (prog-mode text-mode markdown-mode org-mode) ;; add `smartparens-mode` to these hooks
+;;   :config
+;;   ;; load default config
+;;   :config
+;;   (smartparens-global-mode))
 
 ;; (use-package org-notify
 ;;   :ensure t
