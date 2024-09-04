@@ -248,7 +248,6 @@
    ("C-c C-a C-a" . activities-resume)
    ("C-c C-a C-s" . activities-suspend)
    ("C-c C-a C-k" . activities-kill)
-;;   ("C-c C-a RET" . activities-switch)
    ("C-c C-a b" . activities-switch-buffer)
    ("C-c d d"  . activities-switch)
    ("C-c C-a g" . activities-revert)
