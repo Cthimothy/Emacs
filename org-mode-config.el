@@ -92,7 +92,7 @@
   (setq org-agenda-show-current-time-in-grid nil)
   (setq org-agenda-time-grid '((daily today remove-match require-timed)
                              (800 900 1000 1100  1200 1300 1400 1500 1600 1700 1800)
-                             "" "-"))
+                             "" ""))
   ;; (add-hook 'org-mode-hook (lambda ()
   ;;                            (olivetti-mode 1)
   ;;                            (setq olivetti-body-width 20)))
