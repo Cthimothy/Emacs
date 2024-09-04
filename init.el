@@ -34,7 +34,7 @@
 (use-package catppuccin-theme
   :ensure t
   :config
-  (setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha
+  (setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
   (catppuccin-reload))
 
 
@@ -261,22 +261,22 @@
   :config
   (ivy-mode t))
 
-(use-package ivy-posframe
-  :ensure t
-  :config
-  ;; display at `ivy-posframe-style'
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-center)))
-  (setq ivy-posframe-parameters
-      '((left-fringe . 4)
-        (right-fringe . 4)))
-  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#F2F2F2")
-  (ivy-posframe-mode 1))
+;; (use-package ivy-posframe
+;;   :ensure t
+;;   :config
+;;   ;; display at `ivy-posframe-style'
+;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-center)))
+;;   (setq ivy-posframe-parameters
+;;       '((left-fringe . 4)
+;;         (right-fringe . 4)))
+;;   (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#F2F2F2")
+;;   (ivy-posframe-mode 1))
 
 (use-package company
   :defer 2
