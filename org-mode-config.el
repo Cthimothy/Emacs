@@ -130,7 +130,7 @@
   (setq org-capture-templates `(
                                 ("i" "INBOX" entry
                                  (file+headline "~/Dropbox/Org/Inbox.org"
-                                                "Inbox") "* TODO %i%?")
+                                                "") "* TODO %i%?")
                                 ("t" "General Task" entry
                                  (file+headline "~/Dropbox/Org/Tasks.org"
                                                 "To Do") "* TODO %i%?")
@@ -142,9 +142,10 @@
           ("g" "Agenda for week and all tasks"
            ((agenda "" ((org-agenda-overriding-header "Agenda")
                         (org-agenda-span 'week)
+                        ; (org-agenda-start-day "0")
                         (org-agenda-start-on-weekday 1)
-;                        (org-agenda-start-day "0")
-                        ))
+                        (org-agenda-block-separator ?\n)))
+            
             (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")))
             (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
             (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
@@ -167,7 +168,8 @@
              (agenda "")))))
 
   (custom-set-faces
-   '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2")))))
+   '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2"))))
+   '(org-agenda-overriding-header ((t (:weight bold :foreground "green")))))
 
   (setq org-insert-heading-respect-content t)
   (setq org-goto-interface 'outline-path-completion)
