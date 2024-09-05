@@ -92,7 +92,7 @@
   (setq org-agenda-show-current-time-in-grid nil)
   (setq org-agenda-time-grid '((daily today remove-match require-timed)
                              (800 900 1000 1100  1200 1300 1400 1500 1600 1700 1800)
-                             "" ""))
+                             " -----" ""))
   ;; (add-hook 'org-mode-hook (lambda ()
   ;;                            (olivetti-mode 1)
   ;;                            (setq olivetti-body-width 20)))
@@ -115,7 +115,8 @@
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org"))
+        ;;        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org")
+        )
 
   (setq org-refile-targets
         '(("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org" :maxlevel . 1)
@@ -139,30 +140,25 @@
   (setq org-agenda-custom-commands
         '(
           ("g" "Agenda for week and all tasks"
-           ((agenda ""
-                    ((org-agenda-overriding-header "Agenda and all tasks")
-                     (org-agenda-span 'week)
-                     (org-agenda-start-day "0")))
-           (alltodo "")))
+           ((agenda "" ((org-agenda-overriding-header "Agenda and all tasks")
+                        (org-agenda-span 'week)
+                        (org-agenda-start-day "0")))
+            (alltodo "")))
            
            ("w" "Work Tasks"
-            ((agenda ""
-                        ((org-agenda-overriding-header "Work Tasks")))
+            ((agenda "" ((org-agenda-overriding-header "Work Tasks")))
              (tags-todo "@Work")))
            
           ("p" "Personal Tasks"
-           ((tags-todo "@Personal"
-                       ((org-agenda-overriding-header "Personal Tasks")))
+           ((tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
             (agenda "")))
           
           ("e" "Emacs"
-           ((tags-todo "@Emacs"
-                       ((org-agenda-overriding-header "Emacs Tasks")))
+           ((tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
             (agenda "")))
           
            ("i" "INBOX"
-            ((tags-todo "@INBOX"
-                        ((org-agenda-overriding-header "INBOX")))
+            ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
              (agenda "")))))
 
   (setq org-insert-heading-respect-content t)
