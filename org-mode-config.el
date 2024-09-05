@@ -140,10 +140,15 @@
   (setq org-agenda-custom-commands
         '(
           ("g" "Agenda for week and all tasks"
-           ((agenda "" ((org-agenda-overriding-header "Agenda and all tasks")
+           ((agenda "" ((org-agenda-overriding-header "Agenda")
                         (org-agenda-span 'week)
-                        (org-agenda-start-day "0")))
-            (alltodo "")))
+                        (org-agenda-start-on-weekday 1)
+;                        (org-agenda-start-day "0")
+                        ))
+            (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")))
+            (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
+            (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
+            (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))))
            
            ("w" "Work Tasks"
             ((agenda "" ((org-agenda-overriding-header "Work Tasks")))
@@ -160,6 +165,9 @@
            ("i" "INBOX"
             ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
              (agenda "")))))
+
+  (custom-set-faces
+   '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2")))))
 
   (setq org-insert-heading-respect-content t)
   (setq org-goto-interface 'outline-path-completion)
