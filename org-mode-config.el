@@ -116,7 +116,7 @@
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
         ;;        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org")
-        )
+        ))
 
   (setq org-refile-targets
         '(("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org" :maxlevel . 1)
@@ -184,6 +184,7 @@
   (setq org-todo-keyword-faces
         '(("PROJECT" . "#4A90E2")
           ("org-headline-done" . "#ababab")))
+  
   (set-face-attribute 'org-headline-done nil :foreground "olive drab" :strike-through "indian red")
   (setq org-fontify-done-headline t)
 ;; (set-face-foreground 'org-done "Red")
