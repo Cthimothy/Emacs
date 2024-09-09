@@ -1,5 +1,6 @@
 *
 !.gitignore
 !init.el
-!starship.toml
-!org-mode-config.el
+!init-macbook.el
+!init-org-mode.el
+
