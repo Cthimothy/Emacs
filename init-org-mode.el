@@ -232,18 +232,17 @@
   :ensure t
   :custom
   (denote-directory "~/Dropbox/Org/Denote/")
-  ;;  (denote-rename-buffer-function 'dw/denote-rename-buffer-with-prefixed-title)
   :config
 
   (defun tw/denote-journal ()
     "Create an entry tagged 'journal' with the date as its title."
     (interactive)
     (denote
-     (format-time-string "%A %e %B %Y")   ; format like Tuesday 14 June 2022
+     (format-time-string "%A %e %B %Y")
      '("journal")
      nil
      "~/Dropbox/Journal/")
-    (insert "* Thoughts\n\n* Tasks\n\n"))
+    (insert "* Today's Journal\n"))
 
   (denote-rename-buffer-mode)
   (add-hook 'dired-mode-hook #'denote-dired-mode)
