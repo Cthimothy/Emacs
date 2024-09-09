@@ -1,11 +1,10 @@
 (use-package org
   :mode (("\\.org$" . org-mode))
   :ensure t
-
   :init
+
   ;; --- Org-agenda functions
-  
-  (defun tw/org-skip-subtree-if-priority (priority)
+    (defun tw/org-skip-subtree-if-priority (priority)
     "Skip an agenda subtree if it has a priority of PRIORITY.
   PRIORITY may be one of the characters ?A, ?B, or ?C."
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
@@ -209,6 +208,12 @@
 ;;                     ((org-agenda-skip-function
 ;;                       '(or (tw/org-skip-subtree-if-priority ?A)
 ;;                            (org-agenda-skip-if nil '(scheduled deadline))))))))))
+) ; End of org-mode config
+
+;; (use-package org-notify
+;;   :ensure t
+;;   :config
+;;   (org-notify-start))
 
 (use-package org-superstar
   :ensure t
@@ -222,12 +227,6 @@
    '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
   (setq org-superstar-leading-bullet ?\s)
   (org-superstar-mode t))
-
-;; (use-package org-notify
-;;   :ensure t
-;;   :config
-;;   (org-notify-start))
-)
 
 (use-package denote
   :ensure t
