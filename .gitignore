@@ -1,6 +1,4 @@
 *
-!.gitignore
 !init.el
 !init-macbook.el
 !init-org-mode.el
-
