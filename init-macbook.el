@@ -36,9 +36,6 @@
 (setq right-margin-width 1)
 (set-window-buffer (selected-window) (current-buffer))
 (set-window-buffer nil (current-buffer))
-
-
-
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
@@ -81,7 +78,6 @@
                             (?\[ . ?\])
                             (?\" . ?\")))
 
-
 ;; Set custom key bindings
 (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
 (global-set-key (kbd "C-c o a") 'org-agenda)
@@ -91,10 +87,9 @@
 (global-set-key (kbd "C-c c c") 'org-capture)
 ;(global-set-key (kbd "C-c C-d C-n") 'denote-create-note)
 (global-set-key (kbd "C-c C-d C-s") 'consult-notes)
-;; (global-set-key (kbd "C-c d d") 'eyebrowse-switch-to-window-config)
-;;(global-set-key (kbd "C-c d d") 'tab-switch)
-;;(global-set-key (kbd "C-c c d") 'consult-bookmark)
-
+; (global-set-key (kbd "C-c d d") 'eyebrowse-switch-to-window-config)
+;(global-set-key (kbd "C-c d d") 'tab-switch)
+;(global-set-key (kbd "C-c c d") 'consult-bookmark)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-c y") 'clipboard-yank)
 (global-set-key (kbd "C-c c w") 'clipboard-kill-ring-save)
@@ -120,17 +115,17 @@
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
 (global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c m") 'tw/set-margins)
-;;(global-set-key (kbd "C-c s s") 'consult-notes)
-;;(global-set-key (kbd "C-c l") 'linum-mode)
-;;(global-set-key (kbd "C-x n") 'tab-next)
-;;(global-set-key (kbd "C-x <right>") 'windmove-right)
-;;(global-set-key (kbd "C-x <left>"q) 'windmove-left)
-;;(global-set-key (kbd "C-x <up>")    'windmove-up)
-;;(global-set-key (kbd "C-x <down>")  'windmove-down)
-;;(global-set-key (kbd "C-x l") 'windmove-right)
-;;(global-set-key (kbd "C-x h") 'windmove-left)
-;;(global-set-key (kbd "C-x k") 'windmove-up)
-;;(global-set-key (kbd "C-x j") 'windmove-down)
+;(global-set-key (kbd "C-c s s") 'consult-notes)
+;(global-set-key (kbd "C-c l") 'linum-mode)
+;(global-set-key (kbd "C-x n") 'tab-next)
+;(global-set-key (kbd "C-x <right>") 'windmove-right)
+;(global-set-key (kbd "C-x <left>"q) 'windmove-left)
+;(global-set-key (kbd "C-x <up>")    'windmove-up)
+;(global-set-key (kbd "C-x <down>")  'windmove-down)
+;(global-set-key (kbd "C-x l") 'windmove-right)
+;(global-set-key (kbd "C-x h") 'windmove-left)
+;(global-set-key (kbd "C-x k") 'windmove-up)
+;(global-set-key (kbd "C-x j") 'windmove-down)
  
 ;; Hook some modes
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
@@ -146,17 +141,6 @@
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
-
-
-;;(makunbound display-line-numbers)
-
-;; (use-package doom-themes
-;;   :ensure t
-;;   :config
-;;   (load-theme 'doom-nord t)
-;;   (setq custom-safe-themes t)
-;;   (set-face-attribute 'default nil :family "Ubuntu Mono" :height 100)
-;;   (set-face-attribute 'mode-line nil :family "Ubuntu Mono" :height 100)
 
 (use-package noflet
   :ensure t)
@@ -177,33 +161,8 @@
   :config
   (doom-modeline-mode))
 
-;; (use-package denote
-;;   :ensure t
-;;   :config
-;;   (add-hook 'dired-mode-hook #'denote-dired-mode)
-;; ;  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-;;   (denote-dired-mode t)
-;;   (global-set-key (kbd "C-c C-d C-n") 'denote-create-note)
-;;   (global-set-key (kbd "C-c C-d C-j") 'tw/denote-journal)
-
-;;   (defun tw/denote-journal ()
-;;     "Create an entry tagged 'journal' with the date as its title."
-;;     (interactive)
-;;     (denote
-;;      (format-time-string "%A %e %B %Y")   ; format like Tuesday 14 June 2022
-;;      '("journal")
-;;      nil
-;;      "~/Dropbox/Journal/")
-;;     (insert "* Thoughts\n\n* Tasks\n\n")))
-
 (use-package helpful
   :ensure t)
-
-;; (use-package god-mode
-;;   :ensure t
-;;   :config
-;;   (god-mode)
-;;   (global-set-key (kbd "C-<escape>") 'god-local-mode))
 
 (use-package ace-window
   :ensure t
@@ -381,7 +340,6 @@
 (set-window-buffer (selected-window) (current-buffer))
 (set-window-buffer nil (current-buffer)))
 
-
 (defun tw/dired-find-file-other-application ()
   (interactive)
   (let* ((file (dired-get-filename nil t)))
@@ -421,7 +379,6 @@
   (newline-and-indent))
 
 ;; Dired custom functions and configuration
-
 (defun tw/toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
@@ -446,7 +403,6 @@
 	  (set-window-buffer (next-window) next-win-buffer)
 	  (select-window first-win)
 	  (if this-win-2nd (other-window 1))))))
-
  
 (defun dired-dotfiles-toggle ()
   (interactive)
