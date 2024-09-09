@@ -40,7 +40,15 @@
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
 
+;; Some Macos nonsense
 (setq mac-command-modifier 'meta)
+(define-key key-translation-map (kbd "M-3") (kbd "#"))
+(define-key key-translation-map (kbd "M-£") (kbd "#"))
+(define-key key-translation-map (kbd "H-3") (kbd "#"))
+(define-key key-translation-map (kbd "H-£") (kbd "#"))
+(define-key key-translation-map (kbd "S-3") (kbd "#"))
+(define-key key-translation-map (kbd "S-£") (kbd "#"))
+
 (setq ring-bell-function 'ignore)
 (setq tab-bar-close-button-show nil
       tab-bar-new-button-show nil
