@@ -115,6 +115,7 @@
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
 (global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c m") 'tw/set-margins)
+(global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 ;(global-set-key (kbd "C-c s s") 'consult-notes)
 ;(global-set-key (kbd "C-c l") 'linum-mode)
 ;(global-set-key (kbd "C-x n") 'tab-next)
@@ -420,6 +421,11 @@
   (interactive)
   (mark-whole-buffer)
   (elfeed-search-untag-all-unread))
+
+(defun tw/insert-current-date ()
+  "Insert the current date in the format YYYY-MM-DD."
+  (interactive)
+  (insert (format-time-string "%Y-%B-%d")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
