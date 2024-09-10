@@ -6,7 +6,6 @@
   (setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
   (catppuccin-reload))
 
-
 ;;(load-theme 'cloud)
 
 ;; Set some built-in minor modes
@@ -27,6 +26,10 @@
       auto-save-interval 200
       kept-new-versions 10
       kept-old-versions 2)
+(setq backup-directory-alist '(("." . "~/.emacs.d/Backups")))
+(setq backup-by-copying t)
+(setq make-backup-files t)
+(setq auto-save-default nil)
 
 ;; Always split windows vertically
 ; (setq
@@ -58,8 +61,6 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq diredp-hide-details-initially-flag nil)
 (setq switch-to-buffer-obey-display-actions t)
-(setq make-backup-files nil)
-(setq auto-save-default nil)
 (setq create-lockfiles nil)
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
@@ -71,8 +72,6 @@
 (setq isearch-lazy-count t)
 (setq lazy-count-prefix-format nil)
 (setq lazy-count-suffix-format "   (%s/%s)")
-(setq backup-directory-alist '(("." . "~/.emacs.d/Backups")))
-(setq backup-by-copying t)
 (setq user-full-name '"Timothy Welch")
 (setq user-mail-address '"t.welch2@exeter.ac.uk")
 (setq gnus-select-method '(nntp "news.eternal-september.org"))
