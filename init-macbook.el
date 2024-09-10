@@ -173,7 +173,7 @@
 (use-package doom-modeline
   :ensure t
   :config
-  (doom-modeline-mode))
+  (doom-modeline-mode t))
 
 (use-package helpful
   :ensure t)
