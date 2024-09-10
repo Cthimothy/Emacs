@@ -1,4 +1,4 @@
-;; init-macbook.el / called from int.el
+;; init-macbook.el / called from init.el 2024-September-10
 
 (use-package catppuccin-theme
   :ensure t
@@ -152,6 +152,9 @@
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
+
+(use-package magit
+  :ensure t)
 
 (use-package noflet
   :ensure t)

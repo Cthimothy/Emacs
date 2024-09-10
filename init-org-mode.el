@@ -75,6 +75,7 @@
   (setq org-hide-emphasis-markers t)
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
+  (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
   (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up)
   (global-set-key (kbd "C-S-<down>") 'org-move-subtree-down)
   
@@ -96,7 +97,7 @@
   ;;                            (olivetti-mode 1)
   ;;                            (setq olivetti-body-width 20)))
   ;;  (remove-hook 'org-hook-mode 'olivetti-mode)
-  ;;  (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
+
 
   (setq org-tag-list
         '(("@Emacs" . ?e)
