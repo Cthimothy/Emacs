@@ -231,7 +231,7 @@
 (use-package denote
   :ensure t
   :custom
-  (denote-directory "~/Dropbox/Org/Denote/")
+  (denote-directory "~/Dropbox/Denote/")
   :config
 
   (defun tw/denote-journal ()
@@ -247,7 +247,6 @@
   (denote-rename-buffer-mode)
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   (require 'denote-org-extras)
-
   (with-eval-after-load 'org-capture
     (add-to-list 'org-capture-templates
                  '("n" "New note (with Denote)" plain
@@ -260,5 +259,5 @@
   (add-hook 'dired-mode-hook #'denote-dired-mode)
 ;  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
   (denote-dired-mode t)
-  (global-set-key (kbd "C-c C-d C-n") 'denote-create-note)
-  (global-set-key (kbd "C-c C-d C-j") 'tw/denote-journal))
+  (global-set-key (kbd "C-c C-c C-n") 'denote-create-note)
+  (global-set-key (kbd "C-c C-c C-j") 'tw/denote-journal))

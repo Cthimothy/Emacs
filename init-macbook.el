@@ -1,3 +1,5 @@
+;; init-macbook.el / called from int.el
+
 (use-package catppuccin-theme
   :ensure t
   :config
@@ -362,6 +364,17 @@
   (let ((file (dired-get-file-for-visit)))
     (select-window (split-window-right))
     (find-file file)))
+
+
+(defun my-dired-find-file-split ()
+  "Open the file in the right-hand vertical split."
+  (interactive)
+  (let ((buffer (dired-get-file-for-visit)))
+    ;; Check if the window split is valid
+    (let ((new-window (split-window-right)))
+      (when (window-live-p new-window)
+        (select-window new-window)))  ; Split vertically and move to the new window if it's live
+    (find-file buffer)))              ; Open the file in the new window
 
 (defun tw/dired-filter-files (string)
   "Filter Dired for files containing string: "
