@@ -1,12 +1,13 @@
 ;; init-macbook.el / called from init.el 2024-September-10
 
 ;; Look and feel
+;; (load-theme 'cloud)
 (use-package catppuccin-theme
   :ensure t
   :config
   (setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
   (catppuccin-reload))
-;;(load-theme 'cloud)
+
 (custom-set-faces
  '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                         :slant normal :weight medium :width normal)))))

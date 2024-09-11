@@ -137,6 +137,9 @@
                                 ("t" "General Task" entry
                                  (file+headline "~/Dropbox/Org/Tasks.org"
                                                 "To Do") "* TODO %i%?")
+                                ("A" "Atheism Note" entry
+                                 (file+headline "~/Dropbox/Org/Athiesm.org"
+                                                "INBOX") "** %i%?")
                                 ("w" "Work Task" entry
                                  (file+headline "~/Dropbox/Org/Work.org"
                                                 "Tasks") "* TODO %i%?")))
