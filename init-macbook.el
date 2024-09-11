@@ -15,6 +15,7 @@
 (blink-cursor-mode 0)
 (show-paren-mode t)
 (prettify-symbols-mode)
+(global-prettify-symbols-mode 1)
 ;;(fringe-mode 0)
 
 (setq backup-directory-alist `(("." . "~/.emacs.d/.backups"))
@@ -151,6 +152,9 @@
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
+(add-hook 'window-configuration-change-hook 'tw/set-margins)
+(use-package zygospore
+  :ensure t)
 
 (use-package magit
   :ensure t)
