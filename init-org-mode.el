@@ -111,10 +111,13 @@
   
   (setq org-agenda-files '(
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Journal.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
+        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org"
+
         ;;        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org")
         ))
 
@@ -148,6 +151,8 @@
             
             (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")))
             (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
+            (tags-todo "@Journal" ((org-agenda-overriding-header "Journal Tasks")))
+            (tags-todo "@Projects" ((org-agenda-overriding-header "Projects Tasks")))
             (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
             (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))))
            
