@@ -1,14 +1,16 @@
 ;; init-macbook.el / called from init.el 2024-September-10
 
+;; Look and feel
 (use-package catppuccin-theme
   :ensure t
   :config
   (setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
   (catppuccin-reload))
-
 ;;(load-theme 'cloud)
+(custom-set-faces
+ '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
+                        :slant normal :weight medium :width normal)))))
 
-;; Set some built-in minor modes
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -16,22 +18,7 @@
 (show-paren-mode t)
 (prettify-symbols-mode)
 (global-prettify-symbols-mode 1)
-;;(fringe-mode 0)
-
-(setq backup-directory-alist `(("." . "~/.emacs.d/.backups"))
-      backup-by-copying t
-      version-control t
-      delete-old-versions t
-      auto-save-default t
-      auto-save-timeout 20
-      auto-save-interval 200
-      kept-new-versions 10
-      kept-old-versions 2)
-(setq backup-directory-alist '(("." . "~/.emacs.d/Backups")))
-(setq backup-by-copying t)
-(setq make-backup-files t)
-(setq auto-save-default nil)
-
+;; (fringe-mode 0)
 ;; Always split windows vertically
 ; (setq
 ; split-width-threshold 0
@@ -54,6 +41,20 @@
 (define-key key-translation-map (kbd "H-£") (kbd "#"))
 (define-key key-translation-map (kbd "S-3") (kbd "#"))
 (define-key key-translation-map (kbd "S-£") (kbd "#"))
+
+(setq backup-directory-alist `(("." . "~/.emacs.d/.backups"))
+      backup-by-copying t
+      version-control t
+      delete-old-versions t
+      auto-save-default t
+      auto-save-timeout 20
+      auto-save-interval 200
+      kept-new-versions 10
+      kept-old-versions 2)
+(setq backup-directory-alist '(("." . "~/.emacs.d/Backups")))
+(setq backup-by-copying t)
+(setq make-backup-files t)
+(setq auto-save-default nil)
 
 (setq ring-bell-function 'ignore)
 (setq tab-bar-close-button-show nil
