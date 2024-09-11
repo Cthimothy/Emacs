@@ -55,52 +55,12 @@
 (setq backup-by-copying t)
 (setq make-backup-files t)
 (setq auto-save-default nil)
-
-(setq ring-bell-function 'ignore)
-(setq tab-bar-close-button-show nil
-      tab-bar-new-button-show nil
-      tab-bar-show nil)
-(setq dired-kill-when-opening-new-dired-buffer t)
-(setq diredp-hide-details-initially-flag nil)
-(setq switch-to-buffer-obey-display-actions t)
-(setq create-lockfiles nil)
-(setq inhibit-startup-message t)
-(setq initial-scratch-message "")
-(setq scroll-margin 5 scroll-conservatively 9999 scroll-step 5)
-(setq scroll-conservatively 10000)
-(setq highlight-indentation-mode nil)
-(setq find-name-arg "-iname")
-;;(setq comint-prompt-read-only t)
-(setq isearch-lazy-count t)
-(setq lazy-count-prefix-format nil)
-(setq lazy-count-suffix-format "   (%s/%s)")
-(setq user-full-name '"Timothy Welch")
-(setq user-mail-address '"t.welch2@exeter.ac.uk")
-(setq gnus-select-method '(nntp "news.eternal-september.org"))
-(setq dired-listing-switches "-lahF")
-;;(setq dired-listing-switches "-lahF --group-directories-first")
-;;(setq dired-listing-switches "-lahFog --group-directories-first")
-(setq dired-dwim-target t)
-(setq-default indent-tabs-mode nil)
-(setq toggle-diredp-find-file-reuse-dir t)
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq electric-pair-pairs '((?\( . ?\))
-                            (?\{ . ?\})
-                            (?\[ . ?\])
-                            (?\" . ?\")))
-
-;; Set custom key bindings
-(global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
-(global-set-key (kbd "C-c o a") 'org-agenda)
+`(global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-c f") 'tw/dired-filter-files)
 (global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
 (global-set-key (kbd "C-c d s") 'dired-mark-files-regexp)
 (global-set-key (kbd "C-c c c") 'org-capture)
-;(global-set-key (kbd "C-c C-d C-n") 'denote-create-note)
-(global-set-key (kbd "C-c C-d C-s") 'consult-notes)
-; (global-set-key (kbd "C-c d d") 'eyebrowse-switch-to-window-config)
-;(global-set-key (kbd "C-c d d") 'tab-switch)
-;(global-set-key (kbd "C-c c d") 'consult-bookmark)
+;;(global-set-key (kbd "C-c C-d C-s") 'consult-notes)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-c y") 'clipboard-yank)
 (global-set-key (kbd "C-c c w") 'clipboard-kill-ring-save)
@@ -127,17 +87,6 @@
 (global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c m") 'tw/set-margins)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
-;(global-set-key (kbd "C-c s s") 'consult-notes)
-;(global-set-key (kbd "C-c l") 'linum-mode)
-;(global-set-key (kbd "C-x n") 'tab-next)
-;(global-set-key (kbd "C-x <right>") 'windmove-right)
-;(global-set-key (kbd "C-x <left>"q) 'windmove-left)
-;(global-set-key (kbd "C-x <up>")    'windmove-up)
-;(global-set-key (kbd "C-x <down>")  'windmove-down)
-;(global-set-key (kbd "C-x l") 'windmove-right)
-;(global-set-key (kbd "C-x h") 'windmove-left)
-;(global-set-key (kbd "C-x k") 'windmove-up)
-;(global-set-key (kbd "C-x j") 'windmove-down)
  
 ;; Hook some modes
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
@@ -154,6 +103,7 @@
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
 (add-hook 'window-configuration-change-hook 'tw/set-margins)
+
 (use-package zygospore
   :ensure t)
 
@@ -171,8 +121,8 @@
 (use-package swiper
   :ensure t)
 
-(use-package olivetti
-  :ensure t)
+;; (use-package olivetti
+;;   :ensure t)
 
 (use-package doom-modeline
   :ensure t
@@ -262,31 +212,19 @@
   :config
   (pdf-tools-install))
 
-;;(use-package org-side-tree
-;;  :ensure t)
-
 (load-file "~/.emacs.d/init-org-mode.el")
-
-;; (use-package smartparens
-;;   :ensure t  ;; install the package
-;;   :hook (prog-mode text-mode markdown-mode org-mode) ;; add `smartparens-mode` to these hooks
-;;   :config
-;;   ;; load default config
-;;   :config
-;;   (smartparens-global-mode))
-
-;; (use-package org-notify
-;;   :ensure t
-;;   :config
-;;   (org-notify-start))
 
 (use-package nerd-icons
   :ensure t)
-;; 
- (use-package nerd-icons-ibuffer
-   :ensure t
-   :config
-   :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
+
+(use-package nerd-icons-dired
+  :ensure t
+  :config
+  (nerd-icons-dired-mode t))
+ 
+(use-package nerd-icons-ibuffer
+  :ensure t
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
 ;; (use-package all-the-icons-ibuffer
 ;;   :ensure t
