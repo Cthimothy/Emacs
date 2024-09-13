@@ -5,7 +5,7 @@
 (use-package catppuccin-theme
   :ensure t
   :config
-  (setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
+  (setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha
   (catppuccin-reload))
 
 (custom-set-faces
@@ -21,8 +21,7 @@
 (global-prettify-symbols-mode 1)
 ;; (fringe-mode 0)
 ;; Always split windows vertically
-; (setq
-; split-width-threshold 0
+; (setq split-width-threshold nil)
 ; tsplit-height-threshold nil) 
 
 ;; Set sensible margins
