@@ -22,14 +22,7 @@
   (setq use-package-always-ensure t
         use-package-expand-minimally t))
 
-(let ((host (system-name)))
-  (cond
-   ((string-equal host "azathoth")
-    (load "~/.emacs.d/init-azathoth.el"))
-   ((string-equal host "DHW392J4FQ")
-    (load "~/.emacs.d/init-macbook.el"))
-   (t
-    (message "No specific configuration for this host"))))
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -61,3 +54,12 @@
  '(org-tag ((t (:foreground "light steel blue" :weight bold))))
  '(org-todo ((t (:foreground "DarkOrange3"))))
  '(swiper-line-face ((t (:background "gray76")))))
+
+(let ((host (system-name)))
+  (cond
+   ((string-equal host "azathoth")
+    (load "~/.emacs.d/init-azathoth.el"))
+   ((string-equal host "DHW392J4FQ")
+    (load "~/.emacs.d/init-macbook.el"))
+   (t
+    (message "No specific configuration for this host"))))

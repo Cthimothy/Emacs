@@ -72,6 +72,13 @@
   ;; /usr/local/bin/emacsclient -ne "(make-capture-frame)" -s $socketfile
   
   :config
+(define-skeleton 1-journal-skeleton
+  "A journal skeleton" nil
+  "** Check Org-agenda tasks
+** Check ToListen/Today's Queue
+** Notes
+*** ")
+  
   (setq org-hide-emphasis-markers t)
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
@@ -117,8 +124,7 @@
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org"
-
-        ;;        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org")
+g        ;;        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org")
         ))
 
   (setq org-refile-targets
@@ -138,7 +144,7 @@
                                  (file+headline "~/Dropbox/Org/Tasks.org"
                                                 "To Do") "* TODO %i%?")
                                 ("A" "Atheism Note" entry
-                                 (file+headline "~/Dropbox/Org/Athiesm.org"
+                                 (file+headline "~/Dropbox/Org/Atheism.org"
                                                 "INBOX") "** %i%?")
                                 ("w" "Work Task" entry
                                  (file+headline "~/Dropbox/Org/Work.org"
@@ -147,9 +153,13 @@
         '(
           ("g" "Agenda for week and all tasks"
            ((agenda "" ((org-agenda-overriding-header "Agenda")
-                        (org-agenda-span 'week)
-                        ; (org-agenda-start-day "0")
-                        (org-agenda-start-on-weekday 1)
+                        (setq org-agenda-span 'day)
+                        (setq org-agenda-start-day "0")
+                        (setq org-agenda-start-on-weekday t)
+;			(setq org-agenda-restriction-lock-highlight-subtree nil)
+;			(setq org-agenda-todo-ignore-deadlines 'past)
+;			(setq org-agenda-todo-ignore-scheduled 'past)
+;			(setq org-agenda-todo-ignore-timestamp 'past)
                         (org-agenda-block-separator ?\n)))
             
             (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")))
