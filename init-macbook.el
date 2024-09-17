@@ -42,20 +42,20 @@
 (define-key key-translation-map (kbd "S-3") (kbd "#"))
 (define-key key-translation-map (kbd "S-£") (kbd "#"))
 
-(setq backup-directory-alist `(("." . "~/.emacs.d/.backups"))
-      backup-by-copying t
-      version-control t
-      delete-old-versions t
-      auto-save-default t
-      auto-save-timeout 20
-      auto-save-interval 200
-      kept-new-versions 10
-      kept-old-versions 2)
-(setq backup-directory-alist '(("." . "~/.emacs.d/Backups")))
-(setq backup-by-copying t)
-(setq make-backup-files t)
-(setq auto-save-default nil)
-`(global-set-key (kbd "C-c o a") 'org-agenda)
+;; (setq backup-directory-alist `(("." . "~/.emacs.d/.backups"))
+;;       backup-by-copying t
+;;       version-control t
+;;       delete-old-versions t
+;;       auto-save-default t
+;;       auto-save-timeout 20
+;;       auto-save-interval 200
+;;       kept-new-versions 10
+;;       kept-old-versions 2)
+;; (setq backup-directory-alist '(("." . "~/.emacs.d/Backups")))
+;; (setq backup-by-copying t)
+;; (setq make-backup-files t)
+;; (setq auto-save-default nil)
+(global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-c f") 'tw/dired-filter-files)
 (global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
 (global-set-key (kbd "C-c d s") 'dired-mark-files-regexp)
@@ -65,7 +65,7 @@
 (global-set-key (kbd "C-c y") 'clipboard-yank)
 (global-set-key (kbd "C-c c w") 'clipboard-kill-ring-save)
 (global-set-key (kbd "C-x C-a") 'mark-whole-buffer)
-(global-set-key (kbd "C-x a") 'org-agenda)
+(global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-x k") 'kill-buffer)
 (global-set-key (kbd "M-n") 'scroll-up-command)
 (global-set-key (kbd "M-p") 'scroll-down-command)
@@ -87,6 +87,7 @@
 (global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c m") 'tw/set-margins)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
+(global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
  
 ;; Hook some modes
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
@@ -102,7 +103,7 @@
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
-(add-hook 'window-configuration-change-hook 'tw/set-margins)
+
 
 (use-package zygospore
   :ensure t)
@@ -165,6 +166,7 @@
   :ensure t
   :init
   (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
   :config
   (ivy-mode t))
 
@@ -289,12 +291,26 @@
 ;;       (ediff-files (nth 0 marked-files)
 ;;                    (nth 1 marked-files)))))
 
+(defun tw/ivy-switch-to-window-by-buffer ()
+  "Use ivy to switch to a window displaying a selected buffer."
+  (interactive)
+  (let* ((window-buffer-alist
+          (mapcar (lambda (w)
+                    (cons (buffer-name (window-buffer w)) w))
+                  (window-list))))
+    (ivy-read "Switch to window displaying buffer: "
+              (mapcar #'car window-buffer-alist)
+              :action (lambda (buffer-name)
+                        (select-window (cdr (assoc buffer-name window-buffer-alist)))))))
+
 (defun tw/set-margins ()
 (interactive)
 (setq left-margin-width 1)
 (setq right-margin-width 1)
 (set-window-buffer (selected-window) (current-buffer))
 (set-window-buffer nil (current-buffer)))
+
+(add-hook 'window-configuration-change-hook 'tw/set-margins)
 
 (defun tw/dired-find-file-other-application ()
   (interactive)
@@ -422,3 +438,8 @@
  '(org-tag ((t (:foreground "light steel blue" :weight bold))))
  '(org-todo ((t (:foreground "DarkOrange3"))))
  '(swiper-line-face ((t (:background "gray76")))))
+
+(set-face-attribute 'mode-line nil
+;;                    :foreground "#ffffff"  ;; Text color
+                    :background "#684B71"  ;; Background color
+                    :box nil)              ;; Remove the box if desired
