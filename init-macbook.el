@@ -72,6 +72,7 @@
 (global-set-key (kbd "M-,") 'beginning-of-buffer)
 (global-set-key (kbd "M-.") 'end-of-buffer)
 (global-set-key (kbd "C-x C-g") 'avy-goto-line)
+(global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
 (global-set-key (kbd "C-c C-f") 'find-name-dired)
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
 (global-set-key (kbd "C-x r e") 'eval-region)
@@ -82,9 +83,9 @@
 (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows)
 (global-set-key (kbd "C-s") 'swiper-isearch)
 (global-set-key (kbd "C-r") 'swiper-isearch-backward)
-(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
+;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
-(global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
+q(global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c m") 'tw/set-margins)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
@@ -437,7 +438,7 @@
  '(org-level-8 ((t (:extend nil :foreground "#e64553" :weight normal))))
  '(org-tag ((t (:foreground "light steel blue" :weight bold))))
  '(org-todo ((t (:foreground "DarkOrange3"))))
- '(swiper-line-face ((t (:background "gray76")))))
+ '(swiper-line-face ((t (:background "gray35")))))
 
 (set-face-attribute 'mode-line nil
 ;;                    :foreground "#ffffff"  ;; Text color

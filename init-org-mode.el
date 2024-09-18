@@ -124,7 +124,7 @@
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org"
-g        ;;        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org")
+        ;; "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org")
         ))
 
   (setq org-refile-targets
@@ -156,6 +156,9 @@ g        ;;        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.o
                         (setq org-agenda-span 'day)
                         (setq org-agenda-start-day "0")
                         (setq org-agenda-start-on-weekday t)
+			(org-agenda-entry-types '(:deadline :scheduled :timestamp))
+			(org-agenda-skip-function
+			 '(org-agenda-skip-entry-if 'nottodo 'any))
 ;			(setq org-agenda-restriction-lock-highlight-subtree nil)
 ;			(setq org-agenda-todo-ignore-deadlines 'past)
 ;			(setq org-agenda-todo-ignore-scheduled 'past)
