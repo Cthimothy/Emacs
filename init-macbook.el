@@ -5,7 +5,7 @@
 (use-package catppuccin-theme
   :ensure t
   :config
-  (setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha
+  (setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha, 'frappe
   (catppuccin-reload))
 
 (custom-set-faces
@@ -85,7 +85,7 @@
 (global-set-key (kbd "C-r") 'swiper-isearch-backward)
 ;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
-q(global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
+(global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c m") 'tw/set-margins)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
@@ -148,7 +148,7 @@ q(global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
 (use-package activities
   :init
   (activities-mode)
-  (activities-tabs-mode)
+;  (activities-tabs-mode)
   ;; Prevent `edebug' default bindings from interfering.
   (setq edebug-inhibit-emacs-lisp-mode-bindings t)
 

@@ -119,7 +119,7 @@
   (setq org-agenda-files '(
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Journal.org"
+;        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Journal.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
         "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"

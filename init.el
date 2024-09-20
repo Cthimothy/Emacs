@@ -38,7 +38,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:height 140 :family "Inconsolata" :foundry "nil" :slant normal :weight medium :width normal))))
+; '(default ((t (:height 140 :family "Inconsolata" :foundry "nil" :slant normal :weight medium :width normal))))
  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
  '(hl-line ((t (:inherit nil :extend t))))
  '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2"))))
@@ -53,9 +53,10 @@
  '(org-level-8 ((t (:extend nil :foreground "#e64553" :weight normal))))
  '(org-tag ((t (:foreground "light steel blue" :weight bold))))
  '(org-todo ((t (:foreground "DarkOrange3"))))
- '(swiper-line-face ((t (:background "gray76")))))
+ '(swiper-line-face ((t (:background "gray35"))))
+ 
 
-(let ((host (system-name)))
+(Let ((Host (system-name)))
   (cond
    ((string-equal host "azathoth")
     (load "~/.emacs.d/init-azathoth.el"))
