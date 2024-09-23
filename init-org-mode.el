@@ -72,13 +72,6 @@
   ;; /usr/local/bin/emacsclient -ne "(make-capture-frame)" -s $socketfile
   
   :config
-(define-skeleton 1-journal-skeleton
-  "A journal skeleton" nil
-  "** Check Org-agenda tasks
-** Check ToListen/Today's Queue
-** Notes
-*** ")
-  
   (setq org-hide-emphasis-markers t)
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
@@ -250,36 +243,47 @@
   (setq org-superstar-leading-bullet ?\s)
   (org-superstar-mode t))
 
-(use-package denote
+(use-package org-journal
   :ensure t
-  :custom
-  (denote-directory "~/Dropbox/Denote/")
+  :defer t
+  :init
+  ;; Change default prefix key; needs to be set before loading org-journal
+  (setq org-journal-prefix-key "C-c j ")
   :config
+  (setq org-journal-dir "~/Dropbox/Journal"
+        org-journal-date-format "%A, %d %B %Y"))
 
-  (defun tw/denote-journal ()
-    "Create an entry tagged 'journal' with the date as its title."
-    (interactive)
-    (denote
-     (format-time-string "%A %e %B %Y")
-     '("journal")
-     nil
-     "~/Dropbox/Journal/")
-    (insert "* Today's Journal\n"))
+;; (use-package denote
+;;   :ensure t
+;;   :custom
+;;   (denote-directory "~/Dropbox/Denote/")
+;;   :config
 
-  (denote-rename-buffer-mode)
-  (add-hook 'dired-mode-hook #'denote-dired-mode)
-  (require 'denote-org-extras)
-  (with-eval-after-load 'org-capture
-    (add-to-list 'org-capture-templates
-                 '("n" "New note (with Denote)" plain
-                   (file denote-last-path)
-                   #'denote-org-capture
-                   :no-save t
-                   :immediate-finish nil
-                   :kill-buffer t
-                   :jump-to-captured nil)))
-  (add-hook 'dired-mode-hook #'denote-dired-mode)
-;  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-  (denote-dired-mode t)
-  (global-set-key (kbd "C-c C-c C-n") 'denote-create-note)
-  (global-set-key (kbd "C-c C-c C-j") 'tw/denote-journal))
+;;   (defun tw/denote-journal ()
+;;     "Create an entry tagged 'journal' with the date as its title."
+;;     (interactive)
+;;     (denote
+;;      (format-time-string "%A %e %B %Y")
+;;      '("journal")
+;;      nil
+;;      "~/Dropbox/Journal/")
+;;     (insert "* Today's Journal\n"))
+
+;;   (denote-rename-buffer-mode)
+;;   (add-hook 'dired-mode-hook #'denote-dired-mode)
+;;   (require 'denote-org-extras)
+;;   (with-eval-after-load 'org-capture
+;;     (add-to-list 'org-capture-templates
+;;                  '("n" "New note (with Denote)" plain
+;;                    (file denote-last-path)
+;;                    #'denote-org-capture
+;;                    :no-save t
+;;                    :immediate-finish nil
+;;                    :kill-buffer t
+;;                    :jump-to-captured nil)))
+;;   (add-hook 'dired-mode-hook #'denote-dired-mode)
+;; ;  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+;;   (denote-dired-mode t)
+;;   (global-set-key (kbd "C-c C-c C-n") 'denote-create-note)
+;;   (global-set-key (kbd "C-c C-c C-j") 'tw/denote-journal))
+

@@ -146,6 +146,7 @@
    ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "yellow"))))))
 
 (use-package activities
+  :ensure t
   :init
   (activities-mode)
 ;  (activities-tabs-mode)
@@ -444,3 +445,10 @@
 ;;                    :foreground "#ffffff"  ;; Text color
                     :background "#684B71"  ;; Background color
                     :box nil)              ;; Remove the box if desired
+
+(define-skeleton 1-journal-skeleton
+  "A journal skeleton" nil
+  "** Check Org-agenda tasks
+** Check ToListen/Today's Queue
+** Notes
+*** ")
