@@ -12,9 +12,15 @@
 ;;   (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha, 'frappe
 ;;   (catppuccin-reload))
 
-(use-package timu-macos-theme
-  :ensure t)
-(load-theme 'timu-macos)
+;; (use-package timu-macos-theme
+;;   :ensure t)
+;; (load-theme 'timu-macos)
+
+(use-package modus-themes
+  :ensure t
+  :config
+  (load-theme 'modus-vivendi))
+
 (custom-set-faces
  '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                         :slant normal :weight medium :width normal)))))
