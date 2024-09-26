@@ -31,7 +31,7 @@
   ;;     ;; is active, the next time this function is called from
   ;;     ;; its main idle timer, deactivate refresh-agenda-timer.
   ;;     (when refresh-agenda-timer
-  ;;       (cancel-timer refresh-agenda-timer))
+  ;;       (cancel-timer refresh-agenda-tim2er))
 
   ;; ;;    (org-agenda nil "w")
 

@@ -1,13 +1,20 @@
 ;; init-macbook.el / called from init.el 2024-September-10
 
 ;; Look and feel
-;; (load-theme 'cloud)
-(use-package catppuccin-theme
-  :ensure t
-  :config
-  (setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha, 'frappe
-  (catppuccin-reload))
 
+;; (use-package cloud-theme
+;;   :ensure t)
+;; (load-theme 'cloud)
+
+;; (use-package catppuccin-theme
+;;   :ensure t
+;;   :config
+;;   (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha, 'frappe
+;;   (catppuccin-reload))
+
+(use-package timu-macos-theme
+  :ensure t)
+(load-theme 'timu-macos)
 (custom-set-faces
  '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                         :slant normal :weight medium :width normal)))))
@@ -172,22 +179,22 @@
   :config
   (ivy-mode t))
 
-;; (use-package ivy-posframe
-;;   :ensure t
-;;   :config
-;;   ;; display at `ivy-posframe-style'
-;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-center)))
-;;   (setq ivy-posframe-parameters
-;;       '((left-fringe . 4)
-;;         (right-fringe . 4)))
-;;   (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#F2F2F2")
-;;   (ivy-posframe-mode 1))
+(use-package ivy-posframe
+  :ensure t
+  :config
+  ;; display at `ivy-posframe-style'
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-center)))
+  (setq ivy-posframe-parameters
+      '((left-fringe . 4)
+        (right-fringe . 4)))
+  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#F2F2F2")
+  (ivy-posframe-mode 1))
 
 (use-package company
   :defer 2
@@ -216,7 +223,7 @@
   :config
   (pdf-tools-install))
 
-(load-file "~/.emacs.d/init-org-mode.el")
+
 
 (use-package nerd-icons
   :ensure t)
@@ -270,6 +277,9 @@
   (tw/toggle-window-dedication))
 
 (use-package multi-vterm
+  :ensure t)
+
+(use-package treemacs
   :ensure t)
 
 (use-package paredit
@@ -441,14 +451,16 @@
  '(org-todo ((t (:foreground "DarkOrange3"))))
  '(swiper-line-face ((t (:background "gray35")))))
 
-(set-face-attribute 'mode-line nil
-;;                    :foreground "#ffffff"  ;; Text color
-                    :background "#684B71"  ;; Background color
-                    :box nil)              ;; Remove the box if desired
+;; (set-face-attribute 'mode-line nil
+;; ;;                    :foreground "#ffffff"  ;; Text color
+;;                     :background "#684B71"  ;; Background color
+;;                     :box nil)              ;; Remove the box if desired
 
-(define-skeleton 1-journal-skeleton
-  "A journal skeleton" nil
-  "** Check Org-agenda tasks
-** Check ToListen/Today's Queue
-** Notes
-*** ")
+;; (define-skeleton 1-journal-skeleton
+;;   "A journal skeleton" nil
+;;   "** Check Org-agenda tasks
+;; ** Check ToListen/Today's Queue
+;; ** Notes
+;; *** ")
+
+(load-file "~/.emacs.d/init-org-mode.el")
