@@ -99,7 +99,7 @@
 ;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
 (global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
-(global-set-key (kbd "C-c m") 'tw/set-margins)
+
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
  
@@ -138,6 +138,14 @@
 
 ;; (use-package olivetti
 ;;   :ensure t)
+
+(use-package multiple-cursors
+  :ensure t
+  :config
+  (global-set-key (kbd "C-c m") 'mc/edit-lines)
+  (global-set-key (kbd "C-c >") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-c <") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
 (use-package doom-modeline
   :ensure t
@@ -195,11 +203,11 @@
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-center)))
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
   (setq ivy-posframe-parameters
-      '((left-fringe . 4)
+      '((left-fringe . 1)
         (right-fringe . 4)))
-  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#F2F2F2")
+;;  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#000000")
   (ivy-posframe-mode 1))
 
 (use-package company
