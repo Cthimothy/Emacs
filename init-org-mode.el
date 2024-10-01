@@ -160,7 +160,7 @@
             
             (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")))
             (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
-            (tags-todo "@Journal" ((org-agenda-overriding-header "Journal Tasks")))
+;            (tags-todo "@Journal" ((org-agenda-overriding-header "Journal Tasks")))
             (tags-todo "@Projects" ((org-agenda-overriding-header "Projects Tasks")))
             (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
             (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))))
@@ -181,6 +181,9 @@
             ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
              (agenda "")))))
 
+  (setq org-agenda-block-separator "")
+  (set-face-attribute 'org-agenda-structure nil :underline t) 
+  
   (custom-set-faces
    '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2"))))
    '(org-agenda-overriding-header ((t (:weight bold :foreground "green")))))
