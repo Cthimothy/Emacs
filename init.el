@@ -1,4 +1,4 @@
-l(setq debug-on-error t)
+(setq debug-on-error t)
 
 ;; Start Emacs in server mode
 (load "server")

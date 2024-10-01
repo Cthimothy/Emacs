@@ -1,7 +1,6 @@
 ;; init-macbook.el / called from init.el 2024-September-10
 
 ;; Look and feel
-
 ;; (use-package cloud-theme
 ;;   :ensure t)
 ;; (load-theme 'cloud)
@@ -19,6 +18,7 @@
 (use-package modus-themes
   :ensure t
   :config
+  (setq modus-themes-italic-constructs t)
   (load-theme 'modus-vivendi))
 
 (custom-set-faces
@@ -54,7 +54,10 @@
 (define-key key-translation-map (kbd "H-£") (kbd "#"))
 (define-key key-translation-map (kbd "S-3") (kbd "#"))
 (define-key key-translation-map (kbd "S-£") (kbd "#"))
-
+(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-C-<down>") 'shrink-window)
+(global-set-key (kbd "S-C-<up>") 'enlarge-window)
 ;; (setq backup-directory-alist `(("." . "~/.emacs.d/.backups"))
 ;;       backup-by-copying t
 ;;       version-control t
@@ -68,6 +71,9 @@
 ;; (setq backup-by-copying t)
 ;; (setq make-backup-files t)
 ;; (setq auto-save-default nil)
+
+
+(global-set-key (kbd "C-x C-h") 'tw/highlight-line)
 (global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-c f") 'tw/dired-filter-files)
 (global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
@@ -99,7 +105,7 @@
 ;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
 (global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
-
+(global-set-key (kbd "C-c t h") 'tw/hide-org-tags)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
  
@@ -308,14 +314,33 @@
 ;;(load (expand-file-name "~/.quicklisp/slime-helper.el"))
 ;;(setq inferior-lisp-program "sbcl")
 
-;; (defun tw/dired-ediff-marked-files ()
-;;   "Run ediff-files on a pair of files marked in dired buffer"
-;;   (interactive)
-;;   (let ((marked-files (dired-get-marked-files nil)))
-;;     (if (not (= (length marked-files) 2))
-;;         (message "mark exactly 2 files")
-;;       (ediff-files (nth 0 marked-files)
-;;                    (nth 1 marked-files)))))
+;; Custom functions
+(defun tw/raycast-show-agenda ()
+  (interactive)
+  (let ((agenda-frame (make-frame-command)))
+    (select-frame agenda-frame)
+    (org-agenda-list)
+    (x-focus-frame agenda-frame)))
+
+; (defun tw/dired-ediff-marked-files ()
+;   "Run ediff-files on a pair of files marked in dired buffer"
+;   (interactive)
+;   (let ((marked-files (dired-get-marked-files nil)))
+;     (if (not (= (length marked-files) 2))
+;         (message "mark exactly 2 files")
+;       (ediff-files (nth 0 marked-files)
+;                    (nth 1 marked-files)))))
+
+(defun tw/hide-org-tags ()
+  (interactive)
+  (setq org-hide-tags t)
+  (org-set-tags nil))
+
+(defun tw/highlight-line ()
+  (interactive)
+  (move-beginning-of-line 1)
+  (set-mark-command nil)
+  (move-end-of-line 1))
 
 (defun tw/ivy-switch-to-window-by-buffer ()
   "Use ivy to switch to a window displaying a selected buffer."

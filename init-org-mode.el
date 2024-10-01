@@ -128,7 +128,7 @@
           ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org" :maxlevel . 1)
           ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org" :maxlevel . 3)
           ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org" :maxlevel . 1)))
-        
+
   (setq org-capture-templates `(
                                 ("i" "INBOX" entry
                                  (file+headline "~/Dropbox/Org/Inbox.org"
@@ -193,6 +193,7 @@
           (todo   . " ")
           (tags   . " %i %-12:c")
           (search . " %i %-12:c")))
+
 ;;  (makunbound 'org-agenda-prefix-format)
 
   (setq org-todo-keyword-faces
@@ -235,8 +236,8 @@
   :config
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+   '(org-level-1 ((t (:inherit outline-1 :height 1.0 :underline t))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold))))
    '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
    '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
