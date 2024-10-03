@@ -41,7 +41,7 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(blink-cursor-mode 0)
+(blink-cursor-mode 0) 
 (show-paren-mode t)
 (prettify-symbols-mode)
 (global-prettify-symbols-mode 1)
