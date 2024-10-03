@@ -15,22 +15,28 @@
 ;;   :ensure t)
 ;; (load-theme 'timu-macos)
 
+  (custom-set-faces
+   '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
+                          :slant normal :weight medium :width normal)))))
 (use-package modus-themes
   :ensure t
   :config
   (setq modus-themes-italic-constructs t)
 
-  (custom-set-faces
-   '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive")))))
-  (load-theme 'modus-operandi)
+  (global-set-key (kbd "C-c l l")
+		  (lambda ()
+		    (interactive)
+		    (custom-set-faces
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive")))))
+		    (load-theme 'modus-operandi)))
 
-  ;; (custom-set-faces
-  ;;  '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Yellow")))))
-  ;; (load-theme 'modus-vivendi)
-     
-  (custom-set-faces
-   '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
-                          :slant normal :weight medium :width normal)))))
+  (global-set-key (kbd "C-c l d")
+		  (lambda ()
+		    (interactive)
+		    (custom-set-faces
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "yellow")))))
+		    (load-theme 'modus-vivendi)))
+  )
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -102,7 +108,7 @@
 (global-set-key (kbd "C-c C-f") 'find-name-dired)
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
 (global-set-key (kbd "C-x r e") 'eval-region)
-(global-set-key (kbd "C-c C-l") 'package-list-packages)
+;(global-set-key (kbd "C-c C-l") 'package-list-packages)
 (global-set-key (kbd "C-c h") 'dired-dotfiles-toggle)
 (global-set-key (kbd "C-c y") 'popup-kill-ring)
 (global-set-key (kbd "C-c w") 'make-frame)
