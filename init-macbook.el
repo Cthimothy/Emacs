@@ -19,11 +19,18 @@
   :ensure t
   :config
   (setq modus-themes-italic-constructs t)
-  (load-theme 'modus-vivendi))
 
-(custom-set-faces
- '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
-                        :slant normal :weight medium :width normal)))))
+  (custom-set-faces
+   '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive")))))
+  (load-theme 'modus-operandi)
+
+  ;; (custom-set-faces
+  ;;  '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Yellow")))))
+  ;; (load-theme 'modus-vivendi)
+     
+  (custom-set-faces
+   '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
+                          :slant normal :weight medium :width normal)))))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -123,7 +130,6 @@
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
-
 
 (use-package zygospore
   :ensure t)
@@ -488,7 +494,7 @@
  '(org-level-8 ((t (:extend nil :foreground "#e64553" :weight normal))))
  '(org-tag ((t (:foreground "light steel blue" :weight bold))))
  '(org-todo ((t (:foreground "DarkOrange3"))))
- '(swiper-line-face ((t (:background "gray35")))))
+ '(swiper-line-face ((t (:background "gray70")))))
 
 ;; (set-face-attribute 'mode-line nil
 ;; ;;                    :foreground "#ffffff"  ;; Text color

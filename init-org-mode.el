@@ -141,7 +141,7 @@
                                                 "INBOX") "** %i%?")
                                 ("w" "Work Task" entry
                                  (file+headline "~/Dropbox/Org/Work.org"
-                                                "Tasks") "* TODO %i%?")))
+                                                "General Tasks") "* TODO %i%?")))
   (setq org-agenda-custom-commands
         '(
           ("g" "Agenda for week and all tasks"
