@@ -20,6 +20,17 @@
       (if (member (org-entry-get nil "PRIORITY") '("A"))
           next-headline
         nil)))
+
+  (defun tw/archive-all-done-tasks-in-agenda-files ()
+  "Archive all DONE tasks in all files listed in `org-agenda-files`."
+  (interactive)
+  (dolist (file org-agenda-files)
+    (with-current-buffer (find-file-noselect file)
+      (org-map-entries
+       (lambda ()
+         (org-archive-subtree))
+       "/DONE" 'file)
+      (save-buffer))))
   
   ;; ;; --- Org-agenda auto-refresh routines
   ;;   (defvar refresh-agenda-time-seconds 3000000)
@@ -72,6 +83,9 @@
   ;; /usr/local/bin/emacsclient -ne "(make-capture-frame)" -s $socketfile
   
   :config
+  (run-at-time "24:00" 86400
+               (lambda () (my-org-archive-done-tasks-in-agenda-files)))
+
   (setq org-hide-emphasis-markers t)
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
