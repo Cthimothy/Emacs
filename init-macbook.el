@@ -389,8 +389,7 @@
     (select-window (split-window-right))
     (find-file file)))
 
-
-(defun my-dired-find-file-split ()
+(defun tw/dired-find-file-split ()
   "Open the file in the right-hand vertical split."
   (interactive)
   (let ((buffer (dired-get-file-for-visit)))
