@@ -123,7 +123,7 @@
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
  
 ;; Hook some modes
-(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
+;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
 (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
 (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'dired-find-file-other-window)))
 (add-hook 'dired-mode-hook 'hl-line-mode)
@@ -312,7 +312,9 @@
   :ensure t)
 
 (use-package treemacs
-  :ensure t)
+  :ensure t
+  :config
+  (treemacs))
 
 (use-package paredit
   :ensure t
