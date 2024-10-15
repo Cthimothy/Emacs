@@ -247,37 +247,48 @@
   (setq org-journal-dir "~/Dropbox/Journal"
         org-journal-date-format "%A, %d %B %Y"))
 
-;; (use-package denote
-;;   :ensure t
-;;   :custom
-;;   (denote-directory "~/Dropbox/Denote/")
-;;   :config
+(use-package denote
+  :ensure t
+  :custom
+  (denote-directory "~/Dropbox/Denote/")
 
-;;   (defun tw/denote-journal ()
-;;     "Create an entry tagged 'journal' with the date as its title."
-;;     (interactive)
-;;     (denote
-;;      (format-time-string "%A %e %B %Y")
-;;      '("journal")
-;;      nil
-;;      "~/Dropbox/Journal/")
-;;     (insert "* Today's Journal\n"))
+  :config
+  (add-hook 'dired-mode-hook #'denote-dired-mode)
+;  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+  (denote-dired-mode t)
+  (global-set-key (kbd "C-c d n") 'denote-create-note)
+  (global-set-key (kbd "C-c d f") 'tw/denote-find-file)
+  (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
+  (global-set-key (kbd "C-c d o") (lambda () (interactive) (dired 'denote-directory))
+  (denote-rename-buffer-mode)
+  (add-hook 'dired-mode-hook #'denote-dired-mode)
 
-;;   (denote-rename-buffer-mode)
-;;   (add-hook 'dired-mode-hook #'denote-dired-mode)
-;;   (require 'denote-org-extras)
-;;   (with-eval-after-load 'org-capture
-;;     (add-to-list 'org-capture-templates
-;;                  '("n" "New note (with Denote)" plain
-;;                    (file denote-last-path)
-;;                    #'denote-org-capture
-;;                    :no-save t
-;;                    :immediate-finish nil
-;;                    :kill-buffer t
-;;                    :jump-to-captured nil)))
-;;   (add-hook 'dired-mode-hook #'denote-dired-mode)
-;; ;  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-;;   (denote-dired-mode t)
-;;   (global-set-key (kbd "C-c C-c C-n") 'denote-create-note)
-;;   (global-set-key (kbd "C-c C-c C-j") 'tw/denote-journal))
+  (require 'denote-org-extras)
+  (with-eval-after-load 'org-capture
+    (add-to-list 'org-capture-templates
+                 '("n" "New note (with Denote)" plain
+                   (file denote-last-path)
+                   #'denote-org-capture
+                   :no-save t
+                   :immediate-finish nil
+                   :kill-buffer t
+                   :jump-to-captured nil)))
+  
+  (defun tw/denote-journal ()
+    "Create an entry tagged 'journal' with the date as its title."
+    (interactive)
+    (denote
+     (format-time-string "%A %e %B %Y")
+     '("journal")
+     nil
+     "~/Dropbox/Journal/")
+    (insert "* Today's Journal\n"))
 
+  (defun tw/denote-find-file ()
+  "Use Ivy to find a Denote file."
+  (interactive)
+  (let ((default-directory denote-directory))
+    (ivy-read "Find Denote file: "
+              (directory-files denote-directory nil "^[^.].*\\.org$")
+              :action (lambda (file)
+                        (find-file (expand-file-name file denote-directory)))))))

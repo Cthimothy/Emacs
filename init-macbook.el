@@ -22,12 +22,12 @@
   :ensure t
   :config
   (setq modus-themes-italic-constructs t)
-
+  (global-set-key (kbd "C-c t t") 'modus-themes-toggle)
   (global-set-key (kbd "C-c l l")
 		  (lambda ()
 		    (interactive)
 		    (custom-set-faces
-		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive")))))
+		    '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive")))))
 		    (load-theme 'modus-operandi)))
 
   (global-set-key (kbd "C-c l d")
@@ -35,8 +35,7 @@
 		    (interactive)
 		    (custom-set-faces
 		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "yellow")))))
-		    (load-theme 'modus-vivendi)))
-  )
+		    (load-theme 'modus-vivendi))))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
