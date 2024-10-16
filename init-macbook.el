@@ -84,7 +84,7 @@
 ;; (setq make-backup-files t)
 ;; (setq auto-save-default nil)
 
-
+(global-set-key (kbd "C-c C-s") 'async-shell-command)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
 (global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-c f") 'tw/dired-filter-files)
