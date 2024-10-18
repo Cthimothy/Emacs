@@ -27,14 +27,20 @@
 		  (lambda ()
 		    (interactive)
 		    (custom-set-faces
-		    '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive")))))
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
+		     '(aw-leading-char-face
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
+		    (disable-theme 'modus-vivendi)
 		    (load-theme 'modus-operandi)))
 
   (global-set-key (kbd "C-c l d")
 		  (lambda ()
 		    (interactive)
 		    (custom-set-faces
-		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "yellow")))))
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "yellow"))))
+		    		     '(aw-leading-char-face
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkRed")))))
+		    (disable-theme 'modus-operandi)
 		    (load-theme 'modus-vivendi))))
 
 (menu-bar-mode -1)
