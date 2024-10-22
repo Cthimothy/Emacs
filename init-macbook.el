@@ -30,7 +30,7 @@
 		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
 		     '(aw-leading-char-face
 		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
-		    (disable-theme 'modus-vivendi)
+		    (disable-theme (car custom-enabled-themes))
 		    (load-theme 'modus-operandi)))
 
   (global-set-key (kbd "C-c l d")
@@ -39,11 +39,11 @@
 		    (custom-set-faces
 		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "yellow"))))
 		    		     '(aw-leading-char-face
-		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkRed")))))
-		    (disable-theme 'modus-operandi)
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
+		    (disable-theme (car custom-enabled-themes))
 		    (load-theme 'modus-vivendi))))
 
-(menu-bar-mode -1)
+(Menu-Bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (blink-cursor-mode 0) 
@@ -52,8 +52,14 @@
 (global-prettify-symbols-mode 1)
 ;; (fringe-mode 0)
 ;; Always split windows vertically
-; (setq split-width-threshold nil)
-; tsplit-height-threshold nil) 
+(setq split-width-threshold nil)
+(setq tsplit-height-threshold nil)
+
+
+(setq magit-display-buffer-function
+      (lambda (buffer)
+        (display-buffer buffer '(display-buffer-same-window))))
+
 
 ;; Set sensible margins
 (setq left-margin-width 1)
