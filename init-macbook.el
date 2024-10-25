@@ -43,7 +43,7 @@
 		    (disable-theme (car custom-enabled-themes))
 		    (load-theme 'modus-vivendi))))
 
-(Menu-Bar-mode -1)
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (blink-cursor-mode 0) 
@@ -97,6 +97,7 @@
 ;; (setq auto-save-default nil)
 
 (global-set-key (kbd "C-c C-s") 'async-shell-command)
+(global-set-key (kbd "C-c v t") 'multi-vterm)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
 (global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-c f") 'tw/dired-filter-files)
