@@ -1,5 +1,5 @@
 ;; init-macbook.el / called from init.el 2024-September-10
-
+(lambda )
 ;; Look and feel
 ;; (use-package cloud-theme
 ;;   :ensure t)
@@ -436,6 +436,8 @@
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
+
+;; check git status
 
 ;; Dired custom functions and configuration
 (defun tw/toggle-window-split ()

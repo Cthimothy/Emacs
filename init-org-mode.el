@@ -259,7 +259,9 @@
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'tw/denote-find-file)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
-  (global-set-key (kbd "C-c d o") (lambda () (interactive) (dired 'denote-directory)))
+  (global-set-key (kbd "C-c d o") (lambda ()
+				    (interactive)
+				    (dired 'denote-directory)))
   (denote-rename-buffer-mode)
   (add-hook 'dired-mode-hook #'denote-dired-mode)
 
