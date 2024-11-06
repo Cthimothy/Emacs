@@ -1,5 +1,5 @@
 ;; init-macbook.el / called from init.el 2024-September-10
-(lambda )
+
 ;; Look and feel
 ;; (use-package cloud-theme
 ;;   :ensure t)
@@ -129,7 +129,7 @@
 (global-set-key (kbd "C-r") 'swiper-isearch-backward)
 ;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
-(global-set-key (kbd "M-RET") 'tw/smart-open-line-above)
+(global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c t h") 'tw/hide-org-tags)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
@@ -153,7 +153,10 @@
   :ensure t)
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :config
+    (global-set-key (kbd "C-x g") 'magit))
+
 
 (use-package noflet
   :ensure t)
