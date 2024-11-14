@@ -263,7 +263,7 @@
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
   (global-set-key (kbd "C-c d o") (lambda ()
 				    (interactive)
-				    (dired 'denote-directory)))
+				    (dired denote-directory)))
   (denote-rename-buffer-mode)
   (add-hook 'dired-mode-hook #'denote-dired-mode)
 
