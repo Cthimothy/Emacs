@@ -97,19 +97,20 @@
           ("@RPG" . ?r)
           ("@INBOX" . ?i)))
 
-  (setq org-archive-location "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Archive.org::")
+  (setq org-archive-location "/Users/t.welch2/Library/Dropbox/Org/Archive.org::")
   
-  (setq org-agenda-files '(
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
-        "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org"
-        ;; "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/tjbw-gcal.org")
-	;; "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Journal.org"
-        ))
-
+  (setq org-agenda-files
+	(append
+	 '(
+			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
+			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
+			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org"
+			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
+			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
+			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org")
+			   (directory-files-recursively "/Users/t.welch2/Library/CloudStorage/Dropbox/Denote" "__journal\\.org$")
+			   ))
+  
   (setq org-refile-targets
         '(("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org" :maxlevel . 1)
           ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org" :maxlevel . 1)
@@ -182,7 +183,8 @@
   (setq org-goto-interface 'outline-path-completion)
   (setq org-blank-before-new-entry '((heading) (plain-list-item)))
   (setq org-agenda-prefix-format
-        '((agenda . " %i %-12:c%?-12t% s")
+;;        '((agenda . " %i %-12:c%?-12t% s")
+	'((agenda . " %i %?-12t% s")
           (todo   . " ")
           (tags   . " %i %-12:c")
           (search . " %i %-12:c")))
@@ -237,15 +239,15 @@
   (setq org-superstar-leading-bullet ?\s)
   (org-superstar-mode t))
 
-(use-package org-journal
-  :ensure t
-  :defer t
-  :init
-  ;; Change default prefix key; needs to be set before loading org-journal
-  (setq org-journal-prefix-key "C-c j ")
-  :config
-  (setq org-journal-dir "~/Dropbox/Journal"
-        org-journal-date-format "%A, %d %B %Y"))
+;; (use-package org-journal
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   ;; Change default prefix key; needs to be set before loading org-journal
+;;   (setq org-journal-prefix-key "C-c j ")
+;;   :config
+;;   (setq org-journal-dir "~/Dropbox/Journal"
+;;         org-journal-date-format "%A, %d %B %Y"))
 
 (use-package denote
   :ensure t
@@ -284,7 +286,7 @@
      '("journal")
      nil
      "~/Dropbox/Journal/")
-    (insert "* Today's Journal\n"))
+    (insert "* Today's Journal\n" "** Tasks\n\n" "** Notes"))
 
   (defun tw/denote-find-file ()
   "Use Ivy to find a Denote file."

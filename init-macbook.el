@@ -22,7 +22,7 @@
   :ensure t
   :config
   (setq modus-themes-italic-constructs t)
-  (global-set-key (kbd "C-c t t") 'modus-themes-toggle)
+;  (global-set-key (kbd "C-c t t") 'modus-themes-toggle)
   (global-set-key (kbd "C-c l l")
 		  (lambda ()
 		    (interactive)
@@ -37,7 +37,7 @@
 		  (lambda ()
 		    (interactive)
 		    (custom-set-faces
-		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "yellow"))))
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "blue"))))
 		    		     '(aw-leading-char-face
 		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
 		    (disable-theme (car custom-enabled-themes))
@@ -120,7 +120,8 @@
 (global-set-key (kbd "C-c C-f") 'find-name-dired)
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
 (global-set-key (kbd "C-x r e") 'eval-region)
-;(global-set-key (kbd "C-c C-l") 'package-list-packages)
+(global-set-key (kbd "C-x r b") 'eval-buffer)
+;(Global-Setkey (kbd "C-c C-l") 'package-list-packages)
 (global-set-key (kbd "C-c h") 'dired-dotfiles-toggle)
 (global-set-key (kbd "C-c y") 'popup-kill-ring)
 (global-set-key (kbd "C-c w") 'make-frame)
@@ -130,6 +131,11 @@
 ;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
 (global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
+
+
+;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
+;;(global-unset-key (kbd "M-<return>"))
+
 (global-set-key (kbd "C-c t h") 'tw/hide-org-tags)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
@@ -498,7 +504,7 @@
  '(custom-safe-themes
    '("2eca138bb4bd21c5de6f2f271038ae562a1c79ccfc006b9aa4f1d31139c8824d" "e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0" default))
  '(package-selected-packages
-   '(xclip gptel dired-hacks-utils denote-explore timu-macos-theme selected-window-accent-mode pdf-tools magit true malyon org-side-tree all-the-icons-ibuffer listen dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
+   '(xclip gptel dired-hacks-utils denoterg -explore timu-macos-theme selected-window-accent-mode pdf-tools magit true malyon org-side-tree all-the-icons-ibuffer listen dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
