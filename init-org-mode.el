@@ -67,7 +67,7 @@
   (add-hook 'org-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
   (add-hook 'org-mode-hook (lambda () (local-set-key (kbd "M-<return>") 'org-meta-return)))
-  (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up)
+  (Global-Set-Key (Kbd "C-S-<up>") 'org-move-subtree-up)
   (global-set-key (kbd "C-S-<down>") 'org-move-subtree-down)
   
   (require 'color)

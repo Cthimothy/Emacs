@@ -232,6 +232,16 @@
   :config
   (ivy-mode t))
 
+(use-package counsel
+  :ensure t
+  :config
+  (defun tw/counsel-org-todo ()
+    "Use `counsel-org-goto-all` to search only TODO items."
+  (interactive)
+  (let ((ivy-re-builders-alist '((t . ivy--regex-ignore-order))))
+    (counsel-org-goto-all)))
+  :bind (("C-c c f t" . tw/counsel-org-todo)))xg
+
 (use-package ivy-posframe
   :ensure t
   :config
