@@ -66,6 +66,7 @@
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
+  (add-hook 'org-mode-hook (lambda () (local-set-key (kbd "M-<return>") 'org-meta-return)))
   (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up)
   (global-set-key (kbd "C-S-<down>") 'org-move-subtree-down)
   
@@ -286,7 +287,13 @@
      '("journal")
      nil
      "~/Dropbox/Journal/")
-    (insert "* Today's Journal\n" "** Tasks\n\n" "** Notes"))
+    (insert "* Today's Journal\n" "** Tasks\n\n" "** Notes\n\n" "** Daily Morning Routine
+- Open new Denote journal
+- Check yesterday's journal
+- Check Outlook calendar
+- Check INBOX
+- Check To Listen
+"))
 
   (defun tw/denote-find-file ()
   "Use Ivy to find a Denote file."
