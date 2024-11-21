@@ -96,6 +96,15 @@
 ;; (setq make-backup-files t)
 ;; (setq auto-save-default nil)
 
+(setq backup-by-copying t      ; don't clobber symlinks
+      backup-directory-alist '(("." . "~/.emacs.d/Backups/"))    ; don't litter my fs tree
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)       ; use versioned backups
+(setq auto-save-file-name-transforms
+      `((".*" "~/.emacs.d/Backups/" t)))
+
 (global-set-key (kbd "C-c C-s") 'async-shell-command)
 (global-set-key (kbd "C-c v t") 'multi-vterm)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
@@ -131,6 +140,9 @@
 ;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
 (global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
+(global-set-key (kbd "C-c l c f") 'tw/list-files-changed-on-disk)
+
+
 
 
 ;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
@@ -258,6 +270,7 @@
         (right-fringe . 4)))
 ;;  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#000000")
   (ivy-posframe-mode 1))
+
 
 (use-package company
   :defer 2
@@ -505,6 +518,26 @@
   "Insert the current date in the format YYYY-MM-DD."
   (interactive)
   (insert (format-time-string "%Y-%B-%d")))
+
+(defun tw/list-files-changed-on-disk ()
+  "Display all files that have changed on disk but not in the buffer."
+  (interactive)
+  (let ((changed-files
+         (seq-filter
+          (lambda (buf)
+            (and (buffer-file-name buf) ; The buffer is visiting a file
+                 (not (verify-visited-file-modtime buf)))) ; File changed on disk
+          (buffer-list))))
+    (if changed-files
+        (with-current-buffer (get-buffer-create "*Files Changed on Disk*")
+          (setq buffer-read-only nil)
+          (erase-buffer)
+          (insert "Files changed on disk but not in buffer:\n\n")
+          (dolist (buf changed-files)
+            (insert (format "%s\n" (buffer-file-name buf))))
+          (setq buffer-read-only t)
+          (switch-to-buffer (current-buffer)))
+      (message "No files have changed on disk."))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

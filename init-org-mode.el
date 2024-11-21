@@ -67,7 +67,7 @@
   (add-hook 'org-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
   (add-hook 'org-mode-hook (lambda () (local-set-key (kbd "M-<return>") 'org-meta-return)))
-  (Global-Set-Key (Kbd "C-S-<up>") 'org-move-subtree-up)
+  (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up) 
   (global-set-key (kbd "C-S-<down>") 'org-move-subtree-down)
   
   (require 'color)
@@ -98,7 +98,7 @@
           ("@RPG" . ?r)
           ("@INBOX" . ?i)))
 
-  (setq org-archive-location "/Users/t.welch2/Library/Dropbox/Org/Archive.org::")
+(setq org-archive-location "~/Dropbox/Org-Archive/Archive.org")
   
   (setq org-agenda-files
 	(append
@@ -133,7 +133,7 @@
                                                 "INBOX") "** %i%?")
                                 ("w" "Work Task" entry
                                  (file+headline "~/Dropbox/Org/Work.org"
-                                                "General Tasks") "* TODO %i%?")))
+                                                "INBOX") "* TODO %i%?")))
   (setq org-agenda-custom-commands
         '(
           ("g" "Agenda for week and all tasks"
@@ -171,7 +171,8 @@
           
            ("i" "INBOX"
             ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
-             (agenda "")))))
+             (agenda ""))))
+	)
 
   (setq org-agenda-block-separator "")
   (set-face-attribute 'org-agenda-structure nil :underline t) 
@@ -288,12 +289,24 @@
      nil
      "~/Dropbox/Journal/")
     (insert "* Today's Journal\n" "** Tasks\n\n" "** Notes\n\n" "** Daily Morning Routine
-- Open new Denote journal
 - Check yesterday's journal
+- Check Orgzly for tasks
+- Check changed files (C-c l c f)
+- Sync Orgzly/Emacs
 - Check Outlook calendar
 - Check INBOX
 - Check To Listen
-"))
+")
+    
+(let ((heading "Tasks")
+      (case-fold-search t)) ; Make search case-insensitive
+  (goto-char (point-min)) ; Start from the beginning of the buffer
+  (if (re-search-forward (format org-complex-heading-regexp-format (regexp-quote heading)) nil t)
+      (progn
+        (end-of-line)          ; Move to the end of the heading line
+        (newline)              ; Insert a newline if needed
+        (message "Moved to the line under heading: %s" heading))
+    (message "Heading '%s' not found" heading))))
 
   (defun tw/denote-find-file ()
   "Use Ivy to find a Denote file."
