@@ -98,7 +98,7 @@
           ("@RPG" . ?r)
           ("@INBOX" . ?i)))
 
-(setq org-archive-location "~/Dropbox/Org-Archive/Archive.org")
+(setq org-archive-location "~/Dropbox/Org-Archive/Archive.org::")
   
   (setq org-agenda-files
 	(append
@@ -177,9 +177,9 @@
   (setq org-agenda-block-separator "")
   (set-face-attribute 'org-agenda-structure nil :underline t) 
   
-  (custom-set-faces
-   '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2"))))
-   '(org-agenda-overriding-header ((t (:weight bold :foreground "green")))))
+;  (custom-set-faces
+;   '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2"))))
+;   '(org-agenda-overriding-header ((t (:weight bold :foreground "green")))))
 
   (setq org-insert-heading-respect-content t)
   (setq org-goto-interface 'outline-path-completion)
@@ -196,9 +196,14 @@
   (setq org-todo-keyword-faces
         '(("PROJECT" . "#4A90E2")
           ("org-headline-done" . "#ababab")))
+
+;  (setq org-set-tag-faces '("@Personal" . (:foreground "yellow" :weight bold)))
+;  (setq org-set-tag-faces '("@Work" . (:foreground "green" :weight bold)))
+;  (setq org-set-tag-faces '(("@Emacs" . (:foreground "magenta" :weight light))))
+
   
-  (set-face-attribute 'org-headline-done nil :foreground "olive drab" :strike-through "indian red")
-  (setq org-fontify-done-headline t)
+;  (set-face-attribute 'org-headline-done nil :foreground "olive drab" :strike-through "indian red")
+;  (setq org-fontify-done-headline t)
 ;; (set-face-foreground 'org-done "Red")
 
   (setq org-agenda-span 'day)

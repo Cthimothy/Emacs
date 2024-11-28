@@ -18,6 +18,11 @@
   (custom-set-faces
    '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                           :slant normal :weight medium :width normal)))))
+
+;; Define light and dark color themes
+(setq tw-dark-theme 'ef-owl
+      tw-light-theme 'ef-frost)
+
 (use-package modus-themes
   :ensure t
   :config
@@ -31,17 +36,19 @@
 		     '(aw-leading-char-face
 		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
 		    (disable-theme (car custom-enabled-themes))
-		    (load-theme 'modus-operandi)))
+;		    (load-theme 'modus-operandi)))
+  		    (load-theme tw-light-theme)))
 
   (global-set-key (kbd "C-c l d")
 		  (lambda ()
 		    (interactive)
 		    (custom-set-faces
-		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "blue"))))
-		    		     '(aw-leading-char-face
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "steelblue"))))
+				     '(aw-leading-char-face
 		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
 		    (disable-theme (car custom-enabled-themes))
-		    (load-theme 'modus-vivendi))))
+;		    (load-theme 'modus-vivendi))))
+		    (load-theme tw-dark-theme))))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -252,7 +259,7 @@
   (interactive)
   (let ((ivy-re-builders-alist '((t . ivy--regex-ignore-order))))
     (counsel-org-goto-all)))
-  :bind (("C-c c f t" . tw/counsel-org-todo)))xg
+  :bind (("C-c c f t" . tw/counsel-org-todo)))
 
 (use-package ivy-posframe
   :ensure t
