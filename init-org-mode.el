@@ -1,4 +1,4 @@
-(use-package org
+(Use-package org
   :mode (("\\.org$" . org-mode))
   :ensure t
   :init
@@ -103,14 +103,14 @@
   (setq org-agenda-files
 	(append
 	 '(
-			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
-			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
-			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org"
-			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
-			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
-			   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org")
-			   (directory-files-recursively "/Users/t.welch2/Library/CloudStorage/Dropbox/Denote" "__journal\\.org$")
-			   ))
+	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
+	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
+	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org"
+	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
+	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
+	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org")
+	 (directory-files-recursively "/Users/t.welch2/Library/CloudStorage/Dropbox/Denote" "__journal\\.org$")))
+;;  	 (Directory-Files-recursively "/Users/t.welch2/Library/CloudStorage/Dropbox/Denote" "\\.org$")))
   
   (setq org-refile-targets
         '(("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org" :maxlevel . 1)

@@ -1,9 +1,9 @@
 ;; init-macbook.el / called from init.el 2024-September-10
 
-;; Look and feel
 ;; (use-package cloud-theme
-;;   :ensure t)
-;; (load-theme 'cloud)
+;;   :ensure t
+;;   :config
+;;   (setq tw-light-theme 'cloud-theme))
 
 ;; (use-package catppuccin-theme
 ;;   :ensure t
@@ -12,12 +12,17 @@
 ;;   (catppuccin-reload))
 
 ;; (use-package timu-macos-theme
-;;   :ensure t)
-;; (load-theme 'timu-macos)
+;;   :ensure t
+;;   :config
+;;   (setq tw-light-theme 'timu-macos-theme))
 
   (custom-set-faces
    '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                           :slant normal :weight medium :width normal)))))
+
+(set-frame-parameter nil 'alpha-transparency 50)
+
+(set-frame-parameter (selected-frame) 'alpha '(96 96))
 
 ;; Define light and dark color themes
 (setq tw-dark-theme 'ef-owl
@@ -27,7 +32,6 @@
   :ensure t
   :config
   (setq modus-themes-italic-constructs t)
-;  (global-set-key (kbd "C-c t t") 'modus-themes-toggle)
   (global-set-key (kbd "C-c l l")
 		  (lambda ()
 		    (interactive)
@@ -36,7 +40,6 @@
 		     '(aw-leading-char-face
 		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
 		    (disable-theme (car custom-enabled-themes))
-;		    (load-theme 'modus-operandi)))
   		    (load-theme tw-light-theme)))
 
   (global-set-key (kbd "C-c l d")
@@ -47,7 +50,6 @@
 				     '(aw-leading-char-face
 		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
 		    (disable-theme (car custom-enabled-themes))
-;		    (load-theme 'modus-vivendi))))
 		    (load-theme tw-dark-theme))))
 
 (menu-bar-mode -1)
@@ -66,7 +68,6 @@
 (setq magit-display-buffer-function
       (lambda (buffer)
         (display-buffer buffer '(display-buffer-same-window))))
-
 
 ;; Set sensible margins
 (setq left-margin-width 1)
@@ -176,6 +177,21 @@
 
 (use-package zygospore
   :ensure t)
+
+(use-package casual-suite
+  :ensure t
+  :config
+  (keymap-set dired-mode-map "C-o" #'casual-dired-tmenu)
+  (keymap-set isearch-mode-map "C-o" #'casual-isearch-tmenu)
+  (keymap-set ibuffer-mode-map "C-o" #'casual-ibuffer-tmenu)
+  (keymap-set ibuffer-mode-map "F" #'casual-ibuffer-filter-tmenu)
+  (keymap-set ibuffer-mode-map "s" #'casual-ibuffer-sortby-tmenu)
+  (keymap-set Info-mode-map "C-o" #'casual-info-tmenu)
+  (keymap-set bookmark-bmenu-mode-map "C-o" #'casual-bookmarks-tmenu)
+  (keymap-set org-agenda-mode-map "C-o" #'casual-agenda-tmenu)
+  (keymap-global-set "M-g" #'casual-avy-tmenu)
+  (keymap-set symbol-overlay-map "C-o" #'casual-symbol-overlay-tmenu)
+  (keymap-global-set "C-o" #'casual-editkit-main-tmenu))
 
 (use-package magit
   :ensure t
