@@ -1,4 +1,4 @@
-(Use-package org
+(use-package org
   :mode (("\\.org$" . org-mode))
   :ensure t
   :init
@@ -87,7 +87,7 @@
   ;; (add-hook 'org-mode-hook (lambda ()
   ;;                            (olivetti-mode 1)
   ;;                            (setq olivetti-body-width 20)))
-  ;;  (remove-hook 'org-hook-mode 'olivetti-mode)
+  ;;  (remove-hook 'org-hook-mode 'olivetti-mode) 
 
 
   (setq org-tag-list
@@ -134,7 +134,48 @@
                                 ("w" "Work Task" entry
                                  (file+headline "~/Dropbox/Org/Work.org"
                                                 "INBOX") "* TODO %i%?")))
-  (setq org-agenda-custom-commands
+;;   (setq org-agenda-custom-commands
+;;         '(
+;;           ("g" "Agenda for week and all tasks"
+;;            ((agenda "" ((org-agenda-overriding-header "Agenda")
+;;                         (setq org-agenda-span 'day)
+;;                         (setq org-agenda-start-day "0")
+;;                         (setq org-agenda-start-on-weekday t)
+;; 			(org-agenda-entry-types '(:deadline :scheduled :timestamp))
+;; 			(org-agenda-skip-function
+;; 			 '(org-agenda-skip-entry-if 'nottodo 'any))
+;; ;			(setq org-agenda-restriction-lock-highlight-subtree nil)
+;; ;			(setq org-agenda-todo-ignore-deadlines 'past)
+;; ;			(setq org-agenda-todo-ignore-scheduled 'past)
+;; ;			(setq org-agenda-todo-ignore-timestamp 'past)
+;;                         (org-agenda-block-separator ?\n)))
+            
+;; ;            (tags-todo "+PRIORITY=\"A\"" (org-agenda-overriding-header "Priority Tasks"))
+;;             (tags-todo "@Work"  (org-agenda-overriding-header "Work Tasks"))
+;; ;	    (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
+;; ;	    (tags-todo "@Projects" ((org-agenda-overriding-header "Projects Tasks")))
+;; ;            (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
+;; ;            (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
+
+;; 	   ("w" "Work Tasks"
+;;             ((tags-todo "@Work" ((org-agenda-overriding-header "Work Tasks")))
+;;              (agenda "")))
+           
+;;           ("p" "Personal Tasks"
+;;            ((tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
+;;             (agenda "")))
+          
+;;           ("e" "Emacs"
+;;            ((tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
+;;             (agenda "")))
+          
+;;            ("i" "INBOX"
+;;             ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
+;;              (agenda ""))))
+;; 	   )
+
+
+(setq org-agenda-custom-commands
         '(
           ("g" "Agenda for week and all tasks"
            ((agenda "" ((org-agenda-overriding-header "Agenda")
@@ -149,10 +190,14 @@
 ;			(setq org-agenda-todo-ignore-scheduled 'past)
 ;			(setq org-agenda-todo-ignore-timestamp 'past)
                         (org-agenda-block-separator ?\n)))
+
+	    (tags-todo "+PRIORITY=\"A\""
+		       ((org-agenda-overriding-header "Priority Tasks")))
             
-            (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")))
+            (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")
+				 (org-agenda-sorting-strategy nil)))
+
             (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
-;            (tags-todo "@Journal" ((org-agenda-overriding-header "Journal Tasks")))
             (tags-todo "@Projects" ((org-agenda-overriding-header "Projects Tasks")))
             (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
             (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))))
@@ -174,6 +219,11 @@
              (agenda ""))))
 	)
 
+
+
+
+
+	  
   (setq org-agenda-block-separator "")
   (set-face-attribute 'org-agenda-structure nil :underline t) 
   
@@ -185,17 +235,21 @@
   (setq org-goto-interface 'outline-path-completion)
   (setq org-blank-before-new-entry '((heading) (plain-list-item)))
   (setq org-agenda-prefix-format
-;;        '((agenda . " %i %-12:c%?-12t% s")
+;;      '((agenda . " %i %-12:c%?-12t% s")
 	'((agenda . " %i %?-12t% s")
-          (todo   . " ")
-          (tags   . " %i %-12:c")
-          (search . " %i %-12:c")))
+;;	'((agenda . " %-12t %s")	  
+;;        (todo   . " ")
+	  (todo . "%-12:c%l   ")
+;;          (tags   . " %-12:c")
+	  (tags   . " %i %s")
+          (search . " %-12:c")))
 
 ;;  (makunbound 'org-agenda-prefix-format)
 
-  (setq org-todo-keyword-faces
-        '(("PROJECT" . "#4A90E2")
-          ("org-headline-done" . "#ababab")))
+  ;; (setq org-todo-keyword-faces
+  ;;       '(("PROJECT" . "#4A90E2")
+  ;; 	  ("DONE" . "green")
+  ;;         ("org-headline-done" . "#ababab")))
 
 ;  (setq org-set-tag-faces '("@Personal" . (:foreground "yellow" :weight bold)))
 ;  (setq org-set-tag-faces '("@Work" . (:foreground "green" :weight bold)))
@@ -321,3 +375,4 @@
               (directory-files denote-directory nil "^[^.].*\\.org$")
               :action (lambda (file)
                         (find-file (expand-file-name file denote-directory)))))))
+ 
