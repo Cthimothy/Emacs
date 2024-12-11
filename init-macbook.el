@@ -1,56 +1,165 @@
 ;; init-macbook.el / called from init.el 2024-September-10
 
-;; (use-package cloud-theme
-;;   :ensure t
-;;   :config
-;;   (setq tw-light-theme 'cloud-theme))
 
-;; (use-package catppuccin-theme
-;;   :ensure t
-;;   :config
-;;   (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha, 'frappe
-;;   (catppuccin-reload))
-
-;; (use-package timu-macos-theme
-;;   :ensure t
-;;   :config
-;;   (setq tw-light-theme 'timu-macos-theme))
 
   (custom-set-faces
    '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                           :slant normal :weight medium :width normal)))))
 
 (set-frame-parameter nil 'alpha-transparency 50)
-
 (set-frame-parameter (selected-frame) 'alpha '(96 96))
 
-;; Define light and dark color themes
-(setq tw-dark-theme 'ef-owl
-      tw-light-theme 'ef-frost)
+(defun tw/display-async-shell-output (buffer &optional _)
+  "Display BUFFER in a new window split below the current one."
+  (when-let ((win (display-buffer-in-side-window
+                   buffer '((side . bottom)))))
+    (set-window-text-height win (max 10 (/ (frame-height) 3)))))
 
-(use-package modus-themes
-  :ensure t
-  :config
-  (setq modus-themes-italic-constructs t)
-  (global-set-key (kbd "C-c l l")
-		  (lambda ()
-		    (interactive)
-		    (custom-set-faces
-		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
-		     '(aw-leading-char-face
-		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
-		    (disable-theme (car custom-enabled-themes))
-  		    (load-theme tw-light-theme)))
+(setq display-buffer-alist
+      (cons '("\\*Async Shell Command\\*"
+              (tw/display-async-shell-output))
+            display-buffer-alist))
 
-  (global-set-key (kbd "C-c l d")
-		  (lambda ()
-		    (interactive)
-		    (custom-set-faces
-		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "steelblue"))))
-				     '(aw-leading-char-face
-		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
-		    (disable-theme (car custom-enabled-themes))
-		    (load-theme tw-dark-theme))))
+;; Dired custom functions and configuration
+(defun tw/toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+	     (next-win-buffer (window-buffer (next-window)))
+	     (this-win-edges (window-edges (selected-window)))
+	     (next-win-edges (window-edges (next-window)))
+	     (this-win-2nd (not (and (<= (car this-win-edges)
+					 (car next-win-edges))
+				     (<= (cadr this-win-edges)
+					 (cadr next-win-edges)))))
+	     (splitter
+	      (if (= (car this-win-edges)
+		     (car (window-edges (next-window))))
+		  'split-window-horizontally
+		'split-window-vertically)))
+	(delete-other-windows)
+	(let ((first-win (selected-window)))
+	  (funcall splitter)
+	  (if this-win-2nd (other-window 1))
+	  (set-window-buffer (selected-window) this-win-buffer)
+	  (set-window-buffer (next-window) next-win-buffer)
+	  (select-window first-win)
+	  (if this-win-2nd (other-window 1))))))
+ 
+(defun dired-dotfiles-toggle ()
+  (interactive)
+  (when (equal major-mode 'dired-mode)
+    (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
+	(progn 
+	  (set (make-local-variable 'dired-dotfiles-show-p) nil)
+	  (message "h")
+	  (dired-mark-files-regexp "^\\\.")
+	  (dired-do-kill-lines))
+      (progn (revert-buffer) ; otherwise just revert to re-show
+	     (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+
+(defun elfeed-mark-all-as-read ()
+  (interactive)
+  (mark-whole-buffer)
+  (elfeed-search-untag-all-unread))
+
+(defun tw/insert-current-date ()
+  "Insert the current date in the format YYYY-MM-DD."
+  (interactive)
+  (insert (format-time-string "%Y-%B-%d")))
+
+(defun tw/list-files-changed-on-disk ()
+  "Display all files that have changed on disk but not in the buffer."
+  (interactive)
+  (let ((changed-files
+         (seq-filter
+          (lambda (buf)
+            (and (buffer-file-name buf) ; The buffer is visiting a file
+                 (not (verify-visited-file-modtime buf)))) ; File changed on disk
+          (buffer-list))))
+    (if changed-files
+        (with-current-buffer (get-buffer-create "*Files Changed on Disk*")
+          (setq buffer-read-only nil)
+          (erase-buffer)
+          (insert "Files changed on disk but not in buffer:\n\n")
+          (dolist (buf changed-files)
+            (insert (format "%s\n" (buffer-file-name buf))))
+          (setq buffer-read-only t)
+          (switch-to-buffer (current-buffer)))
+      (message "No files have changed on disk."))))
+
+(defun tw/ivy-switch-to-window-by-buffer ()
+  "Use ivy to switch to a window displaying a selected buffer."
+  (interactive)
+  (let* ((window-buffer-alist
+          (mapcar (lambda (w)
+                    (cons (buffer-name (window-buffer w)) w))
+                  (window-list))))
+    (ivy-read "Switch to window displaying buffer: "
+              (mapcar #'car window-buffer-alist)
+              :action (lambda (buffer-name)
+                        (select-window (cdr (assoc buffer-name window-buffer-alist)))))))
+
+(defun tw/set-margins ()
+(interactive)
+(setq left-margin-width 1)
+(setq right-margin-width 1)
+(set-window-buffer (selected-window) (current-buffer))
+(set-window-buffer nil (current-buffer)))
+
+(add-hook 'window-configuration-change-hook 'tw/set-margins)
+
+(defun tw/dired-find-file-other-application ()
+  (interactive)
+  (let* ((file (dired-get-filename nil t)))
+    (message "Opening %s..." file)
+    (call-process "xdg-open" nil 0 nil file)
+    (message "Opening %s done" file)))
+
+(defun tw/dired-find-file-other-window ()
+  "Open the file in a vertical split to the right."
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (select-window (split-window-right))
+    (find-file file)))
+
+(defun tw/dired-find-file-split ()
+  "Open the file in the right-hand vertical split."
+  (interactive)
+  (let ((buffer (dired-get-file-for-visit)))
+    ;; Check if the window split is valid
+    (let ((new-window (split-window-right)))
+      (when (window-live-p new-window)
+        (select-window new-window)))  ; Split vertically and move to the new window if it's live
+    (find-file buffer)))              ; Open the file in the new window
+
+(defun tw/dired-filter-files (string)
+  "Filter Dired for files containing string: "
+  (interactive "sFilter by substring: ")
+  (dired-mark-files-regexp string)
+  (dired-toggle-marks)
+  (dired-do-kill-lines))
+
+(defun tw/toggle-window-dedication ()
+  (interactive)
+  (set-window-dedicated-p (selected-window)
+                          (not (window-dedicated-p (selected-window)))))
+
+(defun tw/smart-open-line-above ()
+  (interactive)
+  (move-beginning-of-line nil)
+  (newline-and-indent)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(defun tw/smart-open-line-below ()
+  (interactive)
+  (move-end-of-line nil)
+  (newline-and-indent))
+
+
+
+
 
 (defun tw/ef-themes-org-todo-faces (&rest _)
   "Apply colors from the active Ef theme, while ignoring all arguments.
@@ -64,6 +173,34 @@ or related, to make changes apply to another Ef theme."
 	    ("NEXT" . ,yellow-warmer)
 	    ("PROJECT" . ,blue-warmer)))))
 (add-hook 'ef-themes-post-load-hook #'tw/ef-themes-org-todo-faces)
+
+;; Custom functions
+(defun tw/raycast-show-agenda ()
+  (interactive)
+  (let ((agenda-frame (make-frame-command)))
+    (select-frame agenda-frame)
+    (org-agenda-list)
+    (x-focus-frame agenda-frame)))
+
+; (defun tw/dired-ediff-marked-files ()
+;   "Run ediff-files on a pair of files marked in dired buffer"
+;   (interactive)
+;   (let ((marked-files (dired-get-marked-files nil)))
+;     (if (not (= (length marked-files) 2))
+;         (message "mark exactly 2 files")
+;       (ediff-files (nth 0 marked-files)
+;                    (nth 1 marked-files)))))
+
+(defun tw/hide-org-tags ()
+  (interactive)
+  (setq org-hide-tags t)
+  (org-set-tags nil))
+
+(defun tw/highlight-line ()
+  (interactive)
+  (move-beginning-of-line 1)
+  (set-mark-command nil)
+  (move-end-of-line 1))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -162,9 +299,7 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
 (global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c l c f") 'tw/list-files-changed-on-disk)
-
-
-
+(global-set-key (kbd "C-c v") 'visual-line-mode)
 
 ;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
 ;;(global-unset-key (kbd "M-<return>"))
@@ -187,6 +322,52 @@ or related, to make changes apply to another Ef theme."
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
+(add-hook 'text-mode-hook #'visual-line-mode)
+
+;; (use-package cloud-theme
+;;   :ensure t
+;;   :config
+;;   (setq tw-light-theme 'cloud-theme))
+
+;; (use-package catppuccin-theme
+;;   :ensure t
+;;   :config
+;;   (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha, 'frappe
+;;   (catppuccin-reload))
+
+;; (use-package timu-macos-theme
+;;   :ensure t
+;;   :config
+;;   (setq tw-light-theme 'timu-macos-theme))
+
+;; Define light and dark color themes
+(setq tw-dark-theme 'ef-owl
+      tw-light-theme 'ef-frost)
+
+(use-package modus-themes
+  :ensure t
+  :config
+  (setq modus-themes-italic-constructs t)
+  (global-set-key (kbd "C-c l l")
+		  (lambda ()
+		    (interactive)
+		    (custom-set-faces
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
+		     '(aw-leading-char-face
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
+		    (disable-theme (car custom-enabled-themes))
+  		    (load-theme tw-light-theme)))
+
+  (global-set-key (kbd "C-c l d")
+		  (lambda ()
+		    (interactive)
+		    (custom-set-faces
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "steelblue"))))
+				     '(aw-leading-char-face
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
+		    (disable-theme (car custom-enabled-themes))
+		    (load-theme tw-dark-theme))))
+;; End of custom fuctions
 
 (use-package zygospore
   :ensure t)
@@ -210,7 +391,6 @@ or related, to make changes apply to another Ef theme."
   :ensure t
   :config
     (global-set-key (kbd "C-x g") 'magit))
-
 
 (use-package noflet
   :ensure t)
@@ -277,6 +457,9 @@ or related, to make changes apply to another Ef theme."
   :init
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
+  :custom
+  (setq ivy-re-builders-alist
+      '((t . ivy--regex-ignore-order)))
   :config
   (ivy-mode t))
 
@@ -407,214 +590,5 @@ or related, to make changes apply to another Ef theme."
 
 ;;(load (expand-file-name "~/.quicklisp/slime-helper.el"))
 ;;(setq inferior-lisp-program "sbcl")
-
-;; Custom functions
-(defun tw/raycast-show-agenda ()
-  (interactive)
-  (let ((agenda-frame (make-frame-command)))
-    (select-frame agenda-frame)
-    (org-agenda-list)
-    (x-focus-frame agenda-frame)))
-
-; (defun tw/dired-ediff-marked-files ()
-;   "Run ediff-files on a pair of files marked in dired buffer"
-;   (interactive)
-;   (let ((marked-files (dired-get-marked-files nil)))
-;     (if (not (= (length marked-files) 2))
-;         (message "mark exactly 2 files")
-;       (ediff-files (nth 0 marked-files)
-;                    (nth 1 marked-files)))))
-
-(defun tw/hide-org-tags ()
-  (interactive)
-  (setq org-hide-tags t)
-  (org-set-tags nil))
-
-(defun tw/highlight-line ()
-  (interactive)
-  (move-beginning-of-line 1)
-  (set-mark-command nil)
-  (move-end-of-line 1))
-
-(defun tw/ivy-switch-to-window-by-buffer ()
-  "Use ivy to switch to a window displaying a selected buffer."
-  (interactive)
-  (let* ((window-buffer-alist
-          (mapcar (lambda (w)
-                    (cons (buffer-name (window-buffer w)) w))
-                  (window-list))))
-    (ivy-read "Switch to window displaying buffer: "
-              (mapcar #'car window-buffer-alist)
-              :action (lambda (buffer-name)
-                        (select-window (cdr (assoc buffer-name window-buffer-alist)))))))
-
-(defun tw/set-margins ()
-(interactive)
-(setq left-margin-width 1)
-(setq right-margin-width 1)
-(set-window-buffer (selected-window) (current-buffer))
-(set-window-buffer nil (current-buffer)))
-
-(add-hook 'window-configuration-change-hook 'tw/set-margins)
-
-(defun tw/dired-find-file-other-application ()
-  (interactive)
-  (let* ((file (dired-get-filename nil t)))
-    (message "Opening %s..." file)
-    (call-process "xdg-open" nil 0 nil file)
-    (message "Opening %s done" file)))
-
-(defun tw/dired-find-file-other-window ()
-  "Open the file in a vertical split to the right."
-  (interactive)
-  (let ((file (dired-get-file-for-visit)))
-    (select-window (split-window-right))
-    (find-file file)))
-
-(defun tw/dired-find-file-split ()
-  "Open the file in the right-hand vertical split."
-  (interactive)
-  (let ((buffer (dired-get-file-for-visit)))
-    ;; Check if the window split is valid
-    (let ((new-window (split-window-right)))
-      (when (window-live-p new-window)
-        (select-window new-window)))  ; Split vertically and move to the new window if it's live
-    (find-file buffer)))              ; Open the file in the new window
-
-(defun tw/dired-filter-files (string)
-  "Filter Dired for files containing string: "
-  (interactive "sFilter by substring: ")
-  (dired-mark-files-regexp string)
-  (dired-toggle-marks)
-  (dired-do-kill-lines))
-
-(defun tw/toggle-window-dedication ()
-  (interactive)
-  (set-window-dedicated-p (selected-window)
-                          (not (window-dedicated-p (selected-window)))))
-
-(defun tw/smart-open-line-above ()
-  (interactive)
-  (move-beginning-of-line nil)
-  (newline-and-indent)
-  (forward-line -1)
-  (indent-according-to-mode))
-
-(defun tw/smart-open-line-below ()
-  (interactive)
-  (move-end-of-line nil)
-  (newline-and-indent))
-
-;; check git status
-
-;; Dired custom functions and configuration
-(defun tw/toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-	     (next-win-buffer (window-buffer (next-window)))
-	     (this-win-edges (window-edges (selected-window)))
-	     (next-win-edges (window-edges (next-window)))
-	     (this-win-2nd (not (and (<= (car this-win-edges)
-					 (car next-win-edges))
-				     (<= (cadr this-win-edges)
-					 (cadr next-win-edges)))))
-	     (splitter
-	      (if (= (car this-win-edges)
-		     (car (window-edges (next-window))))
-		  'split-window-horizontally
-		'split-window-vertically)))
-	(delete-other-windows)
-	(let ((first-win (selected-window)))
-	  (funcall splitter)
-	  (if this-win-2nd (other-window 1))
-	  (set-window-buffer (selected-window) this-win-buffer)
-	  (set-window-buffer (next-window) next-win-buffer)
-	  (select-window first-win)
-	  (if this-win-2nd (other-window 1))))))
- 
-(defun dired-dotfiles-toggle ()
-  (interactive)
-  (when (equal major-mode 'dired-mode)
-    (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
-	(progn 
-	  (set (make-local-variable 'dired-dotfiles-show-p) nil)
-	  (message "h")
-	  (dired-mark-files-regexp "^\\\.")
-	  (dired-do-kill-lines))
-      (progn (revert-buffer) ; otherwise just revert to re-show
-	     (set (make-local-variable 'dired-dotfiles-show-p) t)))))
-
-(defun elfeed-mark-all-as-read ()
-  (interactive)
-  (mark-whole-buffer)
-  (elfeed-search-untag-all-unread))
-
-(defun tw/insert-current-date ()
-  "Insert the current date in the format YYYY-MM-DD."
-  (interactive)
-  (insert (format-time-string "%Y-%B-%d")))
-
-(defun tw/list-files-changed-on-disk ()
-  "Display all files that have changed on disk but not in the buffer."
-  (interactive)
-  (let ((changed-files
-         (seq-filter
-          (lambda (buf)
-            (and (buffer-file-name buf) ; The buffer is visiting a file
-                 (not (verify-visited-file-modtime buf)))) ; File changed on disk
-          (buffer-list))))
-    (if changed-files
-        (with-current-buffer (get-buffer-create "*Files Changed on Disk*")
-          (setq buffer-read-only nil)
-          (erase-buffer)
-          (insert "Files changed on disk but not in buffer:\n\n")
-          (dolist (buf changed-files)
-            (insert (format "%s\n" (buffer-file-name buf))))
-          (setq buffer-read-only t)
-          (switch-to-buffer (current-buffer)))
-      (message "No files have changed on disk."))))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("2eca138bb4bd21c5de6f2f271038ae562a1c79ccfc006b9aa4f1d31139c8824d" "e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0" default))
- '(package-selected-packages
-   '(xclip gptel dired-hacks-utils denoterg -explore timu-macos-theme selected-window-accent-mode pdf-tools magit true malyon org-side-tree all-the-icons-ibuffer listen dashboard zygospore yequake which-key visual-fill-column vertico ts telephone-line taxy sr-speedbar smartparens slime sicp ripgrep rainbow-delimiters quelpa-use-package popup-kill-ring pkg-info perspective peg paredit page-break-lines ov org-roam org-bullets openwith nerd-icons-ibuffer nerd-icons-dired multi-vterm marginalia ivy-posframe ivy-explorer imenu-anywhere ht helpful golden-ratio eyebrowse exwm expand-region erc-hl-nicks erc-colorize erc equake eat dracula-theme doom-themes doom-modeline dirvish dired-single dired+ dimmer counsel consult-notes company-box auto-dim-other-buffers activities ace-window 0blayout)))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
-;;  '(hl-line ((t (:inherit nil :extend t))))
-;;  '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2"))))
-;;  '(org-agenda-done ((t (:foreground "gray42"))))
-;;  '(org-agenda-overriding-header ((t (:weight bold :foreground "green"))))
-;;  '(org-document-title ((t (:foreground "gray53" :weight bold :height 1.0))))
-;;  '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
-;;  '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
-;;  '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
-;;  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-;;  '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
-;;  '(org-level-8 ((t (:extend nil :foreground "#e64553" :weight normal))))
-;;  '(org-tag ((t (:foreground "light steel blue" :weight bold))))
-;;  '(org-todo ((t (:foreground "DarkOrange3")))))
-
-
-;; (set-face-attribute 'mode-line nil
-;; ;;                    :foreground "#ffffff"  ;; Text color
-;;                     :background "#684B71"  ;; Background color
-;;                     :box nil)              ;; Remove the box if desired
-
-;; (define-skeleton 1-journal-skeleton
-;;   "A journal skeleton" nil
-;;   "** Check Org-agenda tasks
-;; ** Check ToListen/Today's Queue
-;; ** Notes
-;; *** ")
 
 (load-file "~/.emacs.d/init-org-mode.el")

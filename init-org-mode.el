@@ -28,7 +28,7 @@
     (with-current-buffer (find-file-noselect file)
       (org-map-entries
        (lambda ()
-         (org-archive-subtree))
+         (org-archive-s/-ubtree))
        "/DONE" 'file)
       (save-buffer))))
   
@@ -55,7 +55,7 @@
   
   ;; This is run from MacOS Automator
   ;; socketfile=$(lsof -c Emacs | grep server | /usr/local/opt/coreutils/libexec/gnubin/tr -s " " |
-  ;; /usr/local/opt/coreutils/libexec/gnubin/cut -d' ' -f8)
+  ;; /usr/local/opt/coreutils/libexec/gnubin/cut -d' ' -f8)gg
   ;; /usr/local/bin/emacsclient -ne "(make-capture-frame)" -s $socketfile
   
   :config
@@ -89,8 +89,7 @@
   ;;                            (setq olivetti-body-width 20)))
   ;;  (remove-hook 'org-hook-mode 'olivetti-mode) 
 
-
-  (setq org-tag-list
+  (setq org-tag-alist
         '(("@Emacs" . ?e)
           ("@Tasks" . ?t)
           ("@Work" . ?w)
@@ -134,46 +133,6 @@
                                 ("w" "Work Task" entry
                                  (file+headline "~/Dropbox/Org/Work.org"
                                                 "INBOX") "* TODO %i%?")))
-;;   (setq org-agenda-custom-commands
-;;         '(
-;;           ("g" "Agenda for week and all tasks"
-;;            ((agenda "" ((org-agenda-overriding-header "Agenda")
-;;                         (setq org-agenda-span 'day)
-;;                         (setq org-agenda-start-day "0")
-;;                         (setq org-agenda-start-on-weekday t)
-;; 			(org-agenda-entry-types '(:deadline :scheduled :timestamp))
-;; 			(org-agenda-skip-function
-;; 			 '(org-agenda-skip-entry-if 'nottodo 'any))
-;; ;			(setq org-agenda-restriction-lock-highlight-subtree nil)
-;; ;			(setq org-agenda-todo-ignore-deadlines 'past)
-;; ;			(setq org-agenda-todo-ignore-scheduled 'past)
-;; ;			(setq org-agenda-todo-ignore-timestamp 'past)
-;;                         (org-agenda-block-separator ?\n)))
-            
-;; ;            (tags-todo "+PRIORITY=\"A\"" (org-agenda-overriding-header "Priority Tasks"))
-;;             (tags-todo "@Work"  (org-agenda-overriding-header "Work Tasks"))
-;; ;	    (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
-;; ;	    (tags-todo "@Projects" ((org-agenda-overriding-header "Projects Tasks")))
-;; ;            (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
-;; ;            (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
-
-;; 	   ("w" "Work Tasks"
-;;             ((tags-todo "@Work" ((org-agenda-overriding-header "Work Tasks")))
-;;              (agenda "")))
-           
-;;           ("p" "Personal Tasks"
-;;            ((tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
-;;             (agenda "")))
-          
-;;           ("e" "Emacs"
-;;            ((tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
-;;             (agenda "")))
-          
-;;            ("i" "INBOX"
-;;             ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
-;;              (agenda ""))))
-;; 	   )
-
 
 (setq org-agenda-custom-commands
         '(
@@ -195,7 +154,8 @@
 		       ((org-agenda-overriding-header "Priority Tasks")))
             
             (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")
-				 (org-agenda-sorting-strategy nil)))
+				 (org-agenda-sorting-strategy nil)
+				 (org-tags-match-list-sublevels t)))
 
             (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
             (tags-todo "@Projects" ((org-agenda-overriding-header "Projects Tasks")))
@@ -218,11 +178,6 @@
             ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
              (agenda ""))))
 	)
-
-
-
-
-
 	  
   (setq org-agenda-block-separator "")
   (set-face-attribute 'org-agenda-structure nil :underline t) 
