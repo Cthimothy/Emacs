@@ -1,26 +1,13 @@
 ;; init-macbook.el / called from init.el 2024-September-10
 
-
-
   (custom-set-faces
    '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                           :slant normal :weight medium :width normal)))))
 
 (set-frame-parameter nil 'alpha-transparency 50)
 (set-frame-parameter (selected-frame) 'alpha '(96 96))
-
-(defun tw/display-async-shell-output (buffer &optional _)
-  "Display BUFFER in a new window split below the current one."
-  (when-let ((win (display-buffer-in-side-window
-                   buffer '((side . bottom)))))
-    (set-window-text-height win (max 10 (/ (frame-height) 3)))))
-
-(setq display-buffer-alist
-      (cons '("\\*Async Shell Command\\*"
-              (tw/display-async-shell-output))
-            display-buffer-alist))
-
-;; Dired custom functions and configuration
+rk
+;; Custom functions
 (defun tw/toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
@@ -46,6 +33,33 @@
 	  (select-window first-win)
 	  (if this-win-2nd (other-window 1))))))
  
+(defun tw/display-async-shell-output-in-active-window (buffer _action)
+  "Display BUFFER by splitting the active window below."
+  (let ((win (selected-window))) ; Get the active window
+    (with-selected-window win
+      (let ((new-win (split-window win nil 'below))) ; Split the active window below
+        (set-window-buffer new-win buffer)
+        (set-window-text-height new-win (max 10 (/ (frame-height) 3)))))))
+
+(setq display-buffer-alist
+      (cons '("\\*Async Shell Command\\*"
+              (tw/display-async-shell-output-in-active-window))
+            display-buffer-alist))
+
+;; (Def tw/display-async-shell-output-in-active-window (buffer _action)
+;;   "Display BUFFER by splitting the active window below and switch to it."
+;;   (let ((win (selected-window))) ; Get the active window
+;;     (with-selected-window win
+;;       (let ((new-win (split-window win nil 'below))) ; Split the active window below
+;;         (set-window-buffer new-win buffer)
+;;         (set-window-text-height new-win (max 10 (/ (frame-height) 3)))
+;;         (select-window new-win))))) ; Switch to the new window
+
+;; (setq display-buffer-alist
+;;       (cons '("\\*Async Shell Command\\*"
+;;               (tw/display-async-shell-output-in-active-window))
+;;             display-buffer-alist))
+
 (defun dired-dotfiles-toggle ()
   (interactive)
   (when (equal major-mode 'dired-mode)
