@@ -6,7 +6,7 @@
 
 (set-frame-parameter nil 'alpha-transparency 50)
 (set-frame-parameter (selected-frame) 'alpha '(96 96))
-rk
+
 ;; Custom functions
 (defun tw/toggle-window-split ()
   (interactive)
@@ -278,7 +278,7 @@ or related, to make changes apply to another Ef theme."
       `((".*" "~/.emacs.d/Backups/" t)))
 
 (global-set-key (kbd "C-c C-s") 'async-shell-command)
-(global-set-key (kbd "C-c v t") 'multi-vterm)
+(global-set-key (kbd "C-x v t") 'multi-vterm)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
 (global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-c f") 'tw/dired-filter-files)
