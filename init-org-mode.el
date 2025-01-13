@@ -59,6 +59,14 @@
   ;; /usr/local/bin/emacsclient -ne "(make-capture-frame)" -s $socketfile
   
   :config
+  (setq org-todo-keyword-faces
+	'(
+	  ("PROJECT" . (:foreground "#65BC8F" :background "" :weight bold))
+	  ("IN-PROGRESS" . (:foreground "#c44d56" :background "" :weight bold))
+	  ("DONE" . (:foreground "#434B56" :background ""))
+	  ("NEXT" . (:foreground "#f3e16b" :background ""))
+	  ))
+  
   (run-at-time "24:00" 86400
                (lambda () (my-org-archive-done-tasks-in-agenda-files)))
 
@@ -297,13 +305,12 @@
     (interactive)
     (denote (format-time-string "%A %e %B %Y") '("journal"))
     (insert "* Today's Journal\n" "** Tasks\n" "** Notes\n\n" "** Daily Morning Routine
-- Check yesterday's journal
-- Check Orgzly for tasks
-- Check changed files (C-c l c f)
-- Sync Orgzly/Emacs
-- Check Outlook calendar
-- Check INBOX
-- Check To Listen
+- [ ] Check yesterday's journal
+- [ ] Check Beorg for tasks
+- [ ] Check changed files (C-c l c f)
+- [ ] Check Outlook calendar
+- [ ] Check INBOX
+- [ ] Check To Listen
   https://raindrop.io/Cthimothy/to-listen-46346187
 ")
     
