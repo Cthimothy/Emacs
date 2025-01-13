@@ -314,6 +314,7 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c l c f") 'tw/list-files-changed-on-disk)
 (global-set-key (kbd "C-c v") 'visual-line-mode)
+(global-set-key (kbd "C-c g d") 'find-grep-dired)
 
 ;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
 ;;(global-unset-key (kbd "M-<return>"))
@@ -401,7 +402,10 @@ or related, to make changes apply to another Ef theme."
   (keymap-set symbol-overlay-map "C-o" #'casual-symbol-overlay-tmenu)
   (keymap-global-set "C-o" #'casual-editkit-main-tmenu))
 
-(use-package magit
+(use-package orderless
+  :ensure t)
+
+(Use-Package magit
   :ensure t
   :config
     (global-set-key (kbd "C-x g") 'magit))
@@ -475,6 +479,8 @@ or related, to make changes apply to another Ef theme."
   (setq ivy-re-builders-alist
       '((t . ivy--regex-ignore-order)))
   :config
+  (setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
+  (add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight))
   (ivy-mode t))
 
 (use-package counsel

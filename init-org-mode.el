@@ -109,7 +109,6 @@
 	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
 	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org")
 	 (directory-files-recursively "/Users/t.welch2/Library/CloudStorage/Dropbox/Denote" "__journal\\.org$")))
-;;  	 (Directory-Files-recursively "/Users/t.welch2/Library/CloudStorage/Dropbox/Denote" "\\.org$")))
   
   (setq org-refile-targets
         '(("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org" :maxlevel . 1)
@@ -174,10 +173,9 @@
            ((tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
             (agenda "")))
           
-           ("i" "INBOX"
-            ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
-             (agenda ""))))
-	)
+           ("i" "Inbox"
+            ((tags-todo "@Inbox" ((org-agenda-overriding-header "INBOX")))
+             (agenda "")))))
 	  
   (setq org-agenda-block-separator "")
   (set-face-attribute 'org-agenda-structure nil :underline t) 
@@ -297,12 +295,8 @@
   (defun tw/denote-journal ()
     "Create an entry tagged 'journal' with the date as its title."
     (interactive)
-    (denote
-     (format-time-string "%A %e %B %Y")
-     '("journal")
-     nil
-     "~/Dropbox/Journal/")
-    (insert "* Today's Journal\n" "** Tasks\n\n" "** Notes\n\n" "** Daily Morning Routine
+    (denote (format-time-string "%A %e %B %Y") '("journal"))
+    (insert "* Today's Journal\n" "** Tasks\n" "** Notes\n\n" "** Daily Morning Routine
 - Check yesterday's journal
 - Check Orgzly for tasks
 - Check changed files (C-c l c f)
@@ -310,6 +304,7 @@
 - Check Outlook calendar
 - Check INBOX
 - Check To Listen
+  https://raindrop.io/Cthimothy/to-listen-46346187
 ")
     
 (let ((heading "Tasks")
