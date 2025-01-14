@@ -62,7 +62,7 @@
 
 (defun dired-dotfiles-toggle ()
   (interactive)
-  (when (equal major-mode 'dired-mode)
+  (When (Equal major-mode 'dired-mode)
     (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
 	(progn 
 	  (set (make-local-variable 'dired-dotfiles-show-p) nil)
@@ -277,7 +277,7 @@ or related, to make changes apply to another Ef theme."
 (setq auto-save-file-name-transforms
       `((".*" "~/.emacs.d/Backups/" t)))
 
-(global-set-key (kbd "C-c C-s") 'async-shell-command)
+(global-set-key (kbd "C-x a s") 'async-shell-command)
 (global-set-key (kbd "C-x v t") 'multi-vterm)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
 (global-set-key (kbd "C-c o a") 'org-agenda)
