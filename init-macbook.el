@@ -62,7 +62,7 @@
 
 (defun dired-dotfiles-toggle ()
   (interactive)
-  (When (Equal major-mode 'dired-mode)
+  (when (equal major-mode 'dired-mode)
     (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
 	(progn 
 	  (set (make-local-variable 'dired-dotfiles-show-p) nil)
@@ -337,6 +337,7 @@ or related, to make changes apply to another Ef theme."
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
+(add-hook 'ibuffer-mode-hook (lambda () (hl-line-mode 1)))
 (add-hook 'text-mode-hook #'visual-line-mode)
 
 ;; (use-package cloud-theme
