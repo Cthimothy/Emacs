@@ -1,4 +1,4 @@
-;; init-macbook.el / called from init.el 2024-September-10
+;; Init-Macbook.el / called from init.el 2024-September-10
 
   (custom-set-faces
    '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
@@ -322,7 +322,10 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "C-c t h") 'tw/hide-org-tags)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
- 
+
+(setq dired-listing-switches "-lha")
+(setq large-file-warning-threshold 50000000)
+
 ;; Hook some modes
 ;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
 (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
@@ -406,7 +409,7 @@ or related, to make changes apply to another Ef theme."
 (use-package orderless
   :ensure t)
 
-(Use-Package magit
+(use-package magit
   :ensure t
   :config
     (global-set-key (kbd "C-x g") 'magit))

@@ -159,15 +159,13 @@
 
 	    (tags-todo "+PRIORITY=\"A\""
 		       ((org-agenda-overriding-header "Priority Tasks")))
-            
+	    (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
             (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")
 				 (org-agenda-sorting-strategy nil)
 				 (org-tags-match-list-sublevels t)))
-
             (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
             (tags-todo "@Projects" ((org-agenda-overriding-header "Projects Tasks")))
-            (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
-            (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))))
+            (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))))
            
            ("w" "Work Tasks"
             ((agenda "" ((org-agenda-overriding-header "Work Tasks")))
@@ -241,7 +239,8 @@
 ;;                     ((org-agenda-skip-function
 ;;                       '(or (tw/org-skip-subtree-if-priority ?A)
 ;;                            (org-agenda-skip-if nil '(scheduled deadline))))))))))
-) ; End of org-mode config
+  )
+; End of org-mode config
 
 ;; (use-package org-notify
 ;;   :ensure t
@@ -305,13 +304,13 @@
     (interactive)
     (denote (format-time-string "%A %e %B %Y") '("journal"))
     (insert "* Today's Journal\n" "** Tasks\n" "** Notes\n\n" "** Daily Morning Routine
-- [ ] Check yesterday's journal
+- [ ] Review yesterday's journal
 - [ ] Check Beorg for tasks
-- [ ] Check changed files (C-c l c f)
-- [ ] Check Outlook calendar
-- [ ] Check INBOX
-- [ ] Check To Listen
-  https://raindrop.io/Cthimothy/to-listen-46346187
+- [ ] Check for changed files (C-c l c f)
+- [ ] Review Outlook calendar
+- [ ] Review Org INBOX
+- [ ] Review To Listen https://raindrop.io/Cthimothy/to-listen-46346187
+- [ ] Review Raindrop Inbox 
 ")
     
 (let ((heading "Tasks")
