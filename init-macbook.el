@@ -325,6 +325,7 @@ or related, to make changes apply to another Ef theme."
 
 (setq dired-listing-switches "-lha")
 (setq large-file-warning-threshold 50000000)
+(setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; Hook some modes
 ;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
@@ -333,7 +334,10 @@ or related, to make changes apply to another Ef theme."
 (add-hook 'dired-mode-hook 'hl-line-mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'hl-line-mode)
-(add-hook 'prog-mode-hook 'electric-pair-mode)
+(add-hook 'prog-mode-hook 'electric-Pair-Mode)
+(setq electric-pair-inhibit-predicate
+      (lambda (c)
+        (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
 (add-hook 'org-agenda-mode 'hl-line-mode)
 (add-hook 'org-mode-hook 'hl-line-mode)
 (add-hook 'org-mode-hook 'display-line-numbers-mode)
