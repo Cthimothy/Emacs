@@ -68,7 +68,7 @@
 	  ))
   
   (run-at-time "24:00" 86400
-               (lambda () (my-org-archive-done-tasks-in-agenda-files)))
+               (lambda () (tw/org-archive-done-tasks-in-agenda-files)))
 
   (setq org-hide-emphasis-markers t)
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
