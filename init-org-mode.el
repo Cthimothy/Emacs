@@ -65,7 +65,13 @@
 	  ("IN-PROGRESS" . (:foreground "#c44d56" :background "" :weight bold))
 	  ("DONE" . (:foreground "#434B56" :background ""))
 	  ("NEXT" . (:foreground "#f3e16b" :background ""))
+	  ("TODO" . (:foreground "#F0C455" :background ""))
 	  ))
+
+  (custom-set-faces
+   '(org-agenda-structure
+     ((t (:foreground "LightSkyBlue" :weight bold :underline t :height 1.0))))
+   '(org-agenda-date-today ((t (:weight bold :height 1.4 :foreground "LightSkyBlue")))))
   
   (run-at-time "24:00" 86400
                (lambda () (tw/org-archive-done-tasks-in-agenda-files)))
@@ -88,10 +94,13 @@
   (setq org-directory (concat org-base-path "/Org/"))
   (setq org-agenda-window-setup 'current-window)
   (setq org-adapt-xindentation t)
-  (setq org-agenda-show-current-time-in-grid nil)
+  (setq org-adapt-indentation t)
+;  (setq org-agenda-show-current-time-in-grid t)
   (setq org-agenda-time-grid '((daily today remove-match require-timed)
                              (800 900 1000 1100  1200 1300 1400 1500 1600 1700 1800)
-                             " -----" ""))
+                             " - " ""))
+  (setq org-agenda-show-all-dates nil)
+  (setq org-agenda-compact-blocks t)
   ;; (add-hook 'org-mode-hook (lambda ()
   ;;                            (olivetti-mode 1)
   ;;                            (setq olivetti-body-width 20)))
@@ -145,17 +154,18 @@
         '(
           ("g" "Agenda for week and all tasks"
            ((agenda "" ((org-agenda-overriding-header "Agenda")
-                        (setq org-agenda-span 'day)
+                        (setq org-agenda-span 'week)
                         (setq org-agenda-start-day "0")
                         (setq org-agenda-start-on-weekday t)
 			(org-agenda-entry-types '(:deadline :scheduled :timestamp))
-			(org-agenda-skip-function
-			 '(org-agenda-skip-entry-if 'nottodo 'any))
+			(org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))
 ;			(setq org-agenda-restriction-lock-highlight-subtree nil)
 ;			(setq org-agenda-todo-ignore-deadlines 'past)
 ;			(setq org-agenda-todo-ignore-scheduled 'past)
 ;			(setq org-agenda-todo-ignore-timestamp 'past)
-                        (org-agenda-block-separator ?\n)))
+                        (org-agenda-block-separator "\n")))
+	    ;org-agenda-deadline-leaders default-value)
+	    ;(setq org-agenda-deadline-leaders '("Deadline:  " "In %d d.: " "%d d. ago: "))
 
 	    (tags-todo "+PRIORITY=\"A\""
 		       ((org-agenda-overriding-header "Priority Tasks")))
@@ -183,11 +193,10 @@
             ((tags-todo "@Inbox" ((org-agenda-overriding-header "INBOX")))
              (agenda "")))))
 	  
-  (setq org-agenda-block-separator "")
   (set-face-attribute 'org-agenda-structure nil :underline t) 
   
 ;  (custom-set-faces
-;   '(org-agenda-date-today ((t (:weight bold :italic t :foreground "LightGoldenRod2"))))
+
 ;   '(org-agenda-overriding-header ((t (:weight bold :foreground "green")))))
 
   (setq org-insert-heading-respect-content t)
@@ -219,7 +228,7 @@
 ;  (setq org-fontify-done-headline t)
 ;; (set-face-foreground 'org-done "Red")
 
-  (setq org-agenda-span 'day)
+;;  (setq org-agenda-span 'day)
   (setq org-agenda-start-on-weekday nil)
   (setq org-agenda-start-day "+0d")
 ;;   (setq org-agenda-custom-commands '())
@@ -309,8 +318,7 @@
 - [ ] Check for changed files (C-c l c f)
 - [ ] Review Outlook calendar
 - [ ] Review Org INBOX
-- [ ] Review To Listen https://raindrop.io/Cthimothy/to-listen-46346187
-- [ ] Review Raindrop Inbox 
+- [ ] Review Raindrop INBOX https://raindrop.io/Cthimothy/todo-51651363
 ")
     
 (let ((heading "Tasks")

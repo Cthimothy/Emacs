@@ -300,8 +300,8 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
 (global-set-key (kbd "C-c C-f") 'find-name-dired)
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
-(global-set-key (kbd "C-x r e") 'eval-region)
-(global-set-key (kbd "C-x r b") 'eval-buffer)
+;(global-set-key (kbd "C-x r e") 'eval-region)
+;(global-set-key (kbd "C-x r b") 'eval-buffer)
 ;(Global-Setkey (kbd "C-c C-l") 'package-list-packages)
 (global-set-key (kbd "C-c h") 'dired-dotfiles-toggle)
 (global-set-key (kbd "C-c y") 'popup-kill-ring)
@@ -334,7 +334,7 @@ or related, to make changes apply to another Ef theme."
 (add-hook 'dired-mode-hook 'hl-line-mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'hl-line-mode)
-(add-hook 'prog-mode-hook 'electric-Pair-Mode)
+(add-hook 'prog-mode-hook 'electric-pair-mode)
 (setq electric-pair-inhibit-predicate
       (lambda (c)
         (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
@@ -432,6 +432,12 @@ or related, to make changes apply to another Ef theme."
 ;; (use-package olivetti
 ;;   :ensure t)
 
+(use-package visual-replace
+   :defer t
+   :bind (("C-c r" . visual-replace)
+          :map isearch-mode-map
+          ("C-c r" . visual-replace-from-isearch)))
+
 (use-package multiple-cursors
   :ensure t
   :config
@@ -481,7 +487,7 @@ or related, to make changes apply to another Ef theme."
 (use-package ivy
   :ensure t
   :init
-  (setq ivy-use-virtual-buffers t)
+  (setq ivy-use-virtual-buffers nil)
   (setq enable-recursive-minibuffers t)
   :custom
   (setq ivy-re-builders-alist
@@ -544,6 +550,8 @@ or related, to make changes apply to another Ef theme."
 (use-package pdf-tools
   :ensure t
   :config
+  (setq-default pdf-view-display-size 'fit-width)
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
   (pdf-tools-install))
 
 
