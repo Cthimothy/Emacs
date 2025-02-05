@@ -7,6 +7,9 @@
 (set-frame-parameter nil 'alpha-transparency 50)
 (set-frame-parameter (selected-frame) 'alpha '(96 96))
 
+(set-frame-parameter nil 'alpha-transparency 0)
+(set-frame-parameter (selected-frame) 'alpha '(100 100))
+
 ;; Custom functions
 (defun tw/toggle-window-split ()
   (interactive)
@@ -315,6 +318,7 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "C-c l c f") 'tw/list-files-changed-on-disk)
 (global-set-key (kbd "C-c v") 'visual-line-mode)
 (global-set-key (kbd "C-c g d") 'find-grep-dired)
+(global-set-key (kbd "C-c =") 'balance-windows-area)
 
 ;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
 ;;(global-unset-key (kbd "M-<return>"))
@@ -517,10 +521,11 @@ or related, to make changes apply to another Ef theme."
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
   (setq ivy-posframe-parameters
-      '((left-fringe . 1)
-        (right-fringe . 4)))
+      '((left-fringe . 10)
+        (right-fringe . 10)))
 ;;  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#000000")
   (ivy-posframe-mode 1))
 
