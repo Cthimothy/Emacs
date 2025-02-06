@@ -168,14 +168,13 @@
 			(org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))
                         (org-agenda-block-separator "\n")))
 	    
-	    (tags-todo "+PRIORITY=\"A\""
-		       ((org-agenda-overriding-header "Priority Tasks")))
-	    (tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
-	    (todo "NEXT" ((org-agenda-overriding-header "Next Tasks")))
-            (tags-todo "@Work"  ((org-agenda-overriding-header "Work Tasks")))
-            (tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
-            (tags-todo "@Projects" ((org-agenda-overriding-header "Projects Tasks")))
-            (tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))))
+	    (tags-todo "+PRIORITY=\"A\"" ((org-agenda-overriding-header "\nPriority Tasks")))
+	    (tags-todo "@INBOX" ((org-agenda-overriding-header "\nINBOX")))
+	    (todo "NEXT" ((org-agenda-overriding-header "\nNext Tasks")))
+            (tags-todo "@Work"  ((org-agenda-overriding-header "\nWork Tasks")))
+            (tags-todo "@Emacs" ((org-agenda-overriding-header "\nEmacs Tasks")))
+            (tags-todo "@Projects" ((org-agenda-overriding-header "\nProjects Tasks")))
+            (tags-todo "@Personal" ((org-agenda-overriding-header "\nPersonal Tasks")))))
 
           ("w" "Work Tasks"
            ((agenda "" ((org-agenda-overriding-header "Work Tasks")))
@@ -189,11 +188,9 @@
           ("i" "Inbox"
            ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
             (agenda "")))))
+  ) ;End of org-mode
 
-  ;;  (makunbound 'org-agenda-prefix-format)
-
-  )
-; End of org-mode config
+; (makunbound 'org-agenda-prefix-format)
 
 ;; (use-package org-notify
 ;;   :ensure t

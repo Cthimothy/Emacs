@@ -49,19 +49,14 @@
               (tw/display-async-shell-output-in-active-window))
             display-buffer-alist))
 
-;; (Def tw/display-async-shell-output-in-active-window (buffer _action)
-;;   "Display BUFFER by splitting the active window below and switch to it."
+;; (defun tw/display-async-shell-output-in-active-window (buffer _action)
+;;   "Display BUFFER by splitting the active window below and switching to it."
 ;;   (let ((win (selected-window))) ; Get the active window
 ;;     (with-selected-window win
 ;;       (let ((new-win (split-window win nil 'below))) ; Split the active window below
 ;;         (set-window-buffer new-win buffer)
 ;;         (set-window-text-height new-win (max 10 (/ (frame-height) 3)))
-;;         (select-window new-win))))) ; Switch to the new window
-
-;; (setq display-buffer-alist
-;;       (cons '("\\*Async Shell Command\\*"
-;;               (tw/display-async-shell-output-in-active-window))
-;;             display-buffer-alist))
+;;         (run-at-time 0.1 nil #'select-window new-win)))))  ; Delay switch slightly
 
 (defun dired-dotfiles-toggle ()
   (interactive)
