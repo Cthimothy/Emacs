@@ -92,9 +92,10 @@
       '((sequence "NEXT(n)" "TODO(t)" "UNSCHEDULED(u)" "PROJECT(p)" "|" "DONE(d)")))
 
   (setq org-hide-emphasis-markers t)
-  ;(setq org-agenda-start-with-follow-mode t)
-  (setq org-base-path "/Users/t.welch2/Library/CloudStorage/Dropbox")
-  (setq org-directory (concat org-base-path "/Org/"))
+; (setq org-agenda-start-with-follow-mode t)
+; (setq org-base-path "/Users/t.welch2/Library/CloudStorage/Dropbox")
+; (setq org-directory (concat org-base-path "/Org/"))
+  (setq org-directory "~/Org/")
   (setq org-agenda-window-setup 'current-window)
   (setq org-adapt-xindentation t)
   (setq org-adapt-indentation t)
@@ -113,40 +114,40 @@
           ("@RPG" . ?r)
           ("@INBOX" . ?i)))
 
-  (setq org-archive-location "~/Dropbox/Org-Archive/Archive.org::")
+  (setq org-archive-location "~/Org/Org-Archive/Archive.org::")
   
   (setq org-agenda-files
 	(append
 	 '(
-	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org"
-	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org"
-	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org"
-	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org"
-	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org"
-	   "/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org")
-	 (directory-files-recursively "/Users/t.welch2/Library/CloudStorage/Dropbox/Denote" "__journal\\.org$")))
+	   "~/Org/Emacs.org"
+	   "~/Org/Inbox.org"
+	   "~/Org/Projects.org"
+	   "~/Org/RPG.org"
+	   "~/Org/Tasks.org"
+	   "~/Org/Work.org")
+	 (directory-files-recursively "~/Denote/" "__journal\\.org$")))
   
   (setq org-refile-targets
-        '(("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Projects.org" :maxlevel . 1)
-          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Tasks.org" :maxlevel . 1)
-          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Atheism.org" :maxlevel . 1)
-          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Emacs.org" :maxlevel . 1)
-          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/RPG.org" :maxlevel . 1)
-          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Work.org" :maxlevel . 3)
-          ("/Users/t.welch2/Library/CloudStorage/Dropbox/Org/Inbox.org" :maxlevel . 1)))
+        '(("~/Org/Projects.org" :maxlevel . 1)
+          ("~/Org/Tasks.org" :maxlevel . 1)
+          ("~/Org/Atheism.org" :maxlevel . 1)
+          ("~/Org/Emacs.org" :maxlevel . 1)
+          ("~/Org/RPG.org" :maxlevel . 1)
+          ("~/Org/Work.org" :maxlevel . 3)
+          ("~/Org/Inbox.org" :maxlevel . 1)))
 
   (setq org-capture-templates `(
                                 ("i" "INBOX" entry
-                                 (file+headline "~/Dropbox/Org/Inbox.org"
+                                 (file+headline "~/Org/Inbox.org"
                                                 "") "* TODO %i%?")
                                 ("t" "General Task" entry
-                                 (file+headline "~/Dropbox/Org/Tasks.org"
+                                 (file+headline "~/Org/Tasks.org"
                                                 "To Do") "* TODO %i%?")
                                 ("A" "Atheism Note" entry
-                                 (file+headline "~/Dropbox/Org/Atheism.org"
+                                 (file+headline "~/Org/Atheism.org"
                                                 "INBOX") "** %i%?")
                                 ("w" "Work Task" entry
-                                 (file+headline "~/Dropbox/Org/Work.org"
+                                 (file+headline "~/Org/Work.org"
                                                 "INBOX") "* TODO %i%?")))
 
   (setq org-agenda-custom-commands
@@ -159,17 +160,29 @@
 				(todo todo-state-up)
 				(tags todo-state-up)
 				(search todo-state-up)))
-                        (setq org-agenda-start-day "0")
-                        (setq org-agenda-start-on-weekday t)
-			(setq org-deadline-warning-days 0)
-			(setq org-agenda-start-on-weekday nil)
 			(setq org-agenda-start-day "+0d")
+			(setq org-agenda-start-on-weekday t)
+;			(setq org-agenda-start-on-weekday nil)
+			(setq org-deadline-warning-days 0)
+(makunbound 'org-agenda-prefix-format)
+(makunbound 'org-prefix-format)
+			(setq org-agenda-prefix-format '((agenda  . " %-12T")))
+			(setq org-prefix-format
+			      '(
+				;(agenda . "  %-12:c%?-12t% s")
+				(timeline . "  %?-12t% s")
+				(todo . "  %-12:c")
+				(search . "  %-12:c")
+				(tags . "  %-12:c")
+				(tags-todo . "  %-12:c")))
+			(setq org-agenda-remove-tags t)
+
 			(org-agenda-entry-types '(:deadline :scheduled :timestamp))
 			(org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))
                         (org-agenda-block-separator "\n")))
 	    
 	    (tags-todo "+PRIORITY=\"A\"" ((org-agenda-overriding-header "\nPriority Tasks")))
-	    (tags-todo "@INBOX" ((org-agenda-overriding-header "\nINBOX")))
+	    (tags-todo "@INBOX" ((org-agenda-overriding-header "\nInbox")))
 	    (todo "NEXT" ((org-agenda-overriding-header "\nNext Tasks")))
             (tags-todo "@Work"  ((org-agenda-overriding-header "\nWork Tasks")))
             (tags-todo "@Emacs" ((org-agenda-overriding-header "\nEmacs Tasks")))
@@ -188,9 +201,10 @@
           ("i" "Inbox"
            ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
             (agenda "")))))
-  ) ;End of org-mode
+  )
+;;End of org-mode
 
-; (makunbound 'org-agenda-prefix-format)
+
 
 ;; (use-package org-notify
 ;;   :ensure t
@@ -213,7 +227,7 @@
 (use-package denote
   :ensure t
   :custom
-  (denote-directory "~/Dropbox/Denote/")
+  (denote-directory "~/Denote/")
 
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
@@ -263,3 +277,6 @@
               (directory-files denote-directory nil "^[^.].*\\.org$")
               :action (lambda (file)
                         (find-file (expand-file-name file denote-directory)))))))
+
+(load-file "~/.emacs.d/init-late.el")
+

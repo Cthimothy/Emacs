@@ -1,5 +1,11 @@
 ;; Init-Macbook.el / called from init.el 2024-September-10
 
+
+(setq inhibit-startup-screen t)
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+(add-hook 'after-init-hook (lambda () (kill-buffer "*scratch*")))
+(add-hook 'after-init-hook (lambda () (kill-buffer "*Messages*")))
+
   (custom-set-faces
    '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                           :slant normal :weight medium :width normal)))))
@@ -362,10 +368,6 @@ or related, to make changes apply to another Ef theme."
 ;;   :config
 ;;   (setq tw-light-theme 'timu-macos-theme))
 
-;; Define light and dark color themes
-(setq tw-dark-theme 'ef-owl
-      tw-light-theme 'ef-frost)
-
 (use-package modus-themes
   :ensure t
   :config
@@ -373,23 +375,29 @@ or related, to make changes apply to another Ef theme."
   (global-set-key (kbd "C-c l l")
 		  (lambda ()
 		    (interactive)
-		    (custom-set-faces
-		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
-		     '(aw-leading-char-face
-		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
+;		    (custom-set-faces
+;		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
+;		     '(aw-leading-char-face
+;		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
 		    (disable-theme (car custom-enabled-themes))
   		    (load-theme tw-light-theme)))
 
   (global-set-key (kbd "C-c l d")
 		  (lambda ()
 		    (interactive)
-		    (custom-set-faces
-		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "steelblue"))))
-				     '(aw-leading-char-face
-		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
+;		    (custom-set-faces
+;		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "steelblue"))))
+;				     '(aw-leading-char-face
+;		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
 		    (disable-theme (car custom-enabled-themes))
 		    (load-theme tw-dark-theme))))
 ;; End of custom fuctions
+
+;; Define light and dark color themes
+(setq tw-dark-theme 'ef-owl
+      tw-light-theme 'ef-frost)
+
+(load-theme 'ef-owl)
 
 (use-package zygospore
   :ensure t)
@@ -451,7 +459,25 @@ or related, to make changes apply to another Ef theme."
   (doom-modeline-mode t))
 
 (use-package helpful
-  :ensure t)
+  :ensure t
+  :config
+  ;; Note that the built-in `describe-function' includes both functions
+  ;; and macros. `helpful-function' is functions only, so we provide
+  ;; `helpful-callable' as a drop-in replacement.
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (global-set-key (kbd "C-h x") #'helpful-command)
+  ;; Lookup the current symbol at point. C-c C-d is a common keybinding
+  ;; for this in lisp modes.
+  (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+  ;; Look up *F*unctions (excludes macros).
+  ;;
+  ;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+  ;; already links to the manual, if a function is referenced there.
+  (global-set-key (kbd "C-h F") #'helpful-function)
+  (setq counsel-describe-function-function #'helpful-callable)
+  (setq counsel-describe-variable-function #'helpful-variable))
 
 (use-package ace-window
   :ensure t
@@ -584,9 +610,6 @@ or related, to make changes apply to another Ef theme."
   :config
   (set-face-attribute 'region nil :background "#666")
   (delete-selection-mode 1))
-
-(use-package helpful
-  :ensure t)
 
 (use-package marginalia
   :ensure t
