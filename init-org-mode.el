@@ -164,8 +164,8 @@
 			(setq org-agenda-start-on-weekday t)
 ;			(setq org-agenda-start-on-weekday nil)
 			(setq org-deadline-warning-days 0)
-(makunbound 'org-agenda-prefix-format)
-(makunbound 'org-prefix-format)
+;(makunbound 'org-agenda-prefix-format)
+;(makunbound 'org-prefix-format)
 			(setq org-agenda-prefix-format '((agenda  . " %-12T")))
 			(setq org-prefix-format
 			      '(
@@ -232,6 +232,7 @@
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;(add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "family" "music" "books"))
   (denote-dired-mode t)
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'tw/denote-find-file)
