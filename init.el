@@ -52,6 +52,15 @@
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
 
 ;; Custom functions
+
+(defun tw/toggle-fill-column-indicator ()
+  "Enable `display-fill-column-indicator-mode` only if the current line exceeds `fill-column`."
+  (if (> (current-column) fill-column)
+      (display-fill-column-indicator-mode 1)
+    (display-fill-column-indicator-mode -1)))
+(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
+(setq-default fill-column 80)
+
 (defun tw/toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
@@ -351,6 +360,8 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "C-c v") 'visual-line-mode)
 (global-set-key (kbd "C-c g d") 'find-grep-dired)
 (global-set-key (kbd "C-c =") 'balance-windows-area)
+(global-set-key (kbd "C-c e") 'forward-sexp)
+(global-set-key (kbd "C-c a") 'backward-sexp)
 
 ;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
 ;;(global-unset-key (kbd "M-<return>"))
@@ -391,7 +402,7 @@ or related, to make changes apply to another Ef theme."
 ;; (use-package catppuccin-theme
 ;;   :ensure t
 ;;   :config
-;;   (setq catppuccin-flavor 'latte) ;; or 'latte, 'macchiato, or 'mocha, 'frappe
+;;   (setq catppuccin-flavor 'mocha) ;; or 'latte, 'macchiato, or 'mocha, 'frappe
 ;;   (catppuccin-reload))
 
 ;; (use-package timu-macos-theme
@@ -937,6 +948,15 @@ or related, to make changes apply to another Ef theme."
                    :immediate-finish nil
                    :kill-buffer t
                    :jump-to-captured nil)))
+
+(with-eval-after-load 'org-capture
+  (add-to-list 'org-capture-templates
+               '("j" "Journal" entry
+                 (file denote-journal-extras-path-to-new-or-existing-entry)
+                 "* %U %?\n%i\n%a"
+                 :kill-buffer t
+                 :empty-lines 1)))
+
   
   (defun tw/denote-journal ()
     "Create an entry tagged 'journal' with the date as its title."
@@ -969,6 +989,62 @@ or related, to make changes apply to another Ef theme."
              consult-notes-search-in-all-notes)
   :config
   (consult-notes-denote-mode t))
+
+;; (use-package org2jekyll
+;;   :ensure t
+;;   :config
+;; ;  (require 'org)
+;; ;  (require 'org2jekyll)
+
+;;   (custom-set-variables '(org2jekyll-blog-author "ardumont")
+;; 			'(org2jekyll-source-directory (expand-file-name "~/Denote/"))
+;; 			'(org2jekyll-jekyll-directory (expand-file-name "~/Projects/cthimothy.github.io/")
+;; 			'(org2jekyll-jekyll-drafts-dir "")
+;; 			'(org2jekyll-jekyll-posts-dir "_posts/")
+;; 			'(org-publish-project-alist
+;;                           `(("default"  ;; mostly static pages: about me, about, etc...
+;;                              :base-directory ,(org2jekyll-input-directory)
+;;                              :base-extension "org"
+;;                              :publishing-directory ,(org2jekyll-output-directory)
+;;                              :publishing-function org-html-publish-to-html
+;;                              :headline-levels 4
+;;                              :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+;;                              :html-preamble t
+;;                              :recursive t
+;;                              :make-index t
+;;                              :html-extension "html"
+;;                              :body-only t)
+;;                             ("post"  ;; dynamic pages like blog articles
+;;                              :base-directory ,(org2jekyll-input-directory)
+;;                              :base-extension "org"
+;;                              :publishing-directory ,(org2jekyll-output-directory org2jekyll-jekyll-posts-dir)
+;;                              :publishing-function org-html-publish-to-html
+;;                              :headline-levels 4
+;;                              :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+;;                              :html-preamble t
+;;                              :recursive t
+;;                              :make-index t
+;;                              :html-extension "html"
+;;                              :body-only t)
+;;                             ("images"
+;;                              :base-directory ,(org2jekyll-input-directory "img")
+;;                              :base-extension "jpg\\|gif\\|png"
+;;                              :publishing-directory ,(org2jekyll-output-directory "img")
+;;                              :publishing-function org-publish-attachment
+;;                              :recursive t)
+;;                             ("js"
+;;                              :base-directory ,(org2jekyll-input-directory "js")
+;;                              :base-extension "js"
+;;                              :publishing-directory ,(org2jekyll-output-directory "js")
+;;                              :publishing-function org-publish-attachment
+;;                              :recursive t)
+;;                             ("css"
+;;                              :base-directory ,(org2jekyll-input-directory "css")
+;;                              :base-extension "css\\|el"
+;;                              :publishing-directory ,(org2jekyll-output-directory "css")
+;;                              :publishing-function org-publish-attachment
+;;                              :recursive t)
+;;                             ("web" :components ("images" "js" "css")))))))
 
 (use-package dashboard
   :ensure t
