@@ -387,7 +387,7 @@ or related, to make changes apply to another Ef theme."
         (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
 (add-hook 'org-agenda-mode 'hl-line-mode)
 (add-hook 'org-mode-hook 'hl-line-mode)
-(add-hook 'org-mode-hook 'display-line-numbers-mode)
+;(add-hook 'org-mode-hook 'display-line-numbers-mode)
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
@@ -677,6 +677,7 @@ or related, to make changes apply to another Ef theme."
 (use-package treemacs
   :ensure t
   :config
+  (setq treemacs-width 63)
   (treemacs))
 
 (use-package paredit
@@ -787,7 +788,19 @@ or related, to make changes apply to another Ef theme."
   (setq org-todo-keywords
       '((sequence "NEXT(n)" "TODO(t)" "UNSCHEDULED(u)" "PROJECT(p)" "|" "DONE(d)")))
 
-  (setq org-hide-emphasis-markers t)
+  (setq org-adapt-indentation t
+      org-hide-leading-stars t
+      org-hide-emphasis-markers t
+      org-pretty-entities t
+	  org-ellipsis "  ·")
+  ;;  
+
+(setq org-adapt-indentation t
+      org-hide-leading-stars t
+      org-hide-emphasis-markers t
+      org-pretty-entities t
+	  org-ellipsis " ❱") ;;;  · ❱ ❯ ⃕ ↴  ̬ ➥ ➧⤸ ⤵ 🠻 🠺 🡃 🡫 🡮 🡻 🡾 ▼ ⬎ ⤷
+  
 ; (setq org-agenda-start-with-follow-mode t)
 ; (setq org-base-path "/Users/t.welch2/Library/CloudStorage/Dropbox")
 ; (setq org-directory (concat org-base-path "/Org/"))
@@ -865,6 +878,15 @@ or related, to make changes apply to another Ef theme."
 			;;(makunbound 'org-agenda-prefix-format)
 			;;(makunbound 'org-prefix-format)
 			(setq org-agenda-prefix-format '((agenda  . " %-12T")))
+
+(setq org-agenda-prefix-format
+      '((agenda . " %i %?-12t% s")
+        (todo . " %i ")
+        (tags . " %i ")
+        (search . " %i ")))
+
+
+
 			(setq org-prefix-format
 			      '(
 				;(agenda . "  %-12:c%?-12t% s")
@@ -892,6 +914,9 @@ or related, to make changes apply to another Ef theme."
             (tags-todo "@Work")))
           ("p" "Personal Tasks"
            ((tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
+            (agenda "")))
+	  ("r" "RPG Tasks"
+           ((tags-todo "@RPG" ((org-agenda-overriding-header "RPG Tasks")))
             (agenda "")))
           ("e" "Emacs"
            ((tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
@@ -927,18 +952,18 @@ or related, to make changes apply to another Ef theme."
 
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
-  ;(add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+  ;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
   (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "family" "music" "books"))
-  (denote-dired-mode t)
+  ;; (denote-dired-mode t)
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
-;  (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
+  ;; (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
   (global-set-key (kbd "C-c d j n") 'denote-journal-extras-new-or-existing-entry)
   (global-set-key (kbd "C-c d o") (lambda ()
 				    (interactive)
 				    (dired denote-directory)))
   (denote-rename-buffer-mode)
-  (add-hook 'dired-mode-hook #'denote-dired-mode)
+
 
   (require 'denote-org-extras)
   (with-eval-after-load 'org-capture
@@ -958,7 +983,6 @@ or related, to make changes apply to another Ef theme."
                  "* %U %?\n%i\n%a"
                  :kill-buffer t
                  :empty-lines 1)))
-
   
   (defun tw/denote-journal ()
     "Create an entry tagged 'journal' with the date as its title."
@@ -977,7 +1001,7 @@ or related, to make changes apply to another Ef theme."
     (message "Heading '%s' not found" heading))))
 
   (defun tw/denote-find-file ()
-  "Use Ivy to find a Denote file."
+  "Use Ivy to finda Denote file."
   (interactive)
   (let ((default-directory denote-directory))
     (ivy-read "Find Denote file: "
@@ -1006,4 +1030,8 @@ or related, to make changes apply to another Ef theme."
                           (registers . 5)))
   (dashboard-setup-startup-hook))
 (dashboard-open)
+
+(use-package calfw
+  :ensure t)
+
 (delete-window (get-buffer-window "*scratch*"))
