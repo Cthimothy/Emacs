@@ -25,6 +25,9 @@
 (setq custom-file (locate-user-emacs-file "custom.el"))  
 (load custom-file :no-error-if-file-is-missing)  
 
+(setq lock-file-name-transforms
+      '((".*" "~/.emacs.d/lockfiles/" t)))
+
 ;; (let ((host (system-name)))
 ;;   (cond
 ;;    ((string-equal host "azathoth")
@@ -38,7 +41,7 @@
 
 ;; Init-Macbook.el / called from init.el 2024-September-10
 (setq inhibit-startup-screen t)
-(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+;; (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 ;;(add-hook 'after-init-hook (lambda () (kill-buffer "*scratch*")))
 (add-hook 'after-init-hook (lambda () (kill-buffer "*Messages*")))
 
@@ -340,7 +343,7 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "M-p") 'scroll-down-command)
 (global-set-key (kbd "M-,") 'beginning-of-buffer)
 (global-set-key (kbd "M-.") 'end-of-buffer)
-(global-set-key (kbd "C-x C-g") 'avy-goto-line)
+(global-set-key (kbd "C-x C-l") 'avy-goto-line)
 (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
 (global-set-key (kbd "C-c C-f") 'find-name-dired)
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
@@ -761,7 +764,7 @@ or related, to make changes apply to another Ef theme."
   :config
   (custom-set-faces
      '(org-agenda-structure
-     ((t (:foreground "LightSkyBlue" :weight bold :underlined t :height 1.1))))
+     ((t (:foreground "LightSkyBlue" :weight bold :height 1.2 :underline nil :height 1.1))))
      '(org-agenda-date-today ((t (:weight bold :height 1.4 :foreground "LightSkyBlue")))))
 
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
@@ -825,40 +828,55 @@ or related, to make changes apply to another Ef theme."
 
   (setq org-archive-location "~/Org/Org-Archive/Archive.org::")
   
+;; (setq org-agenda-files
+;;  	(append
+;;  	 '(
+;;  	   "~/Org/Emacs.org"
+;;  	   "~/Org/Inbox.org"
+;;  	   "~/Org/Projects.org"
+;;  	   "~/Org/RPG.org"
+;;  	   "~/Org/Tasks.org"
+;;  	   "~/Org/Work.org")
+;; 	 (directory-files-recursively "~/Denote/" "\\.org$")
+;; 	 (directory-files-recursively "~/Denote/Journal/" "__journal\\.org$")
+;; 	 (directory-files "~/Denote/" t "\\.org$")
+;; 	 (directory-files "~/Denote/Journal" t "__journal\\.org$")))))
+
   (setq org-agenda-files
-	(append
-	 '(
-	   "~/Org/Emacs.org"
-	   "~/Org/Inbox.org"
-	   "~/Org/Projects.org"
-	   "~/Org/RPG.org"
-	   "~/Org/Tasks.org"
-	   "~/Org/Work.org")
-;	 (directory-files-recursively "~/Denote/Journal/" "__journal\\.org$")
-	 (directory-files "~/Denote/" t "\\.org$")
-	 (directory-files "~/Denote/Journal" t "__journal\\.org$")))
+	(directory-files-recursively "~/Denote/" "\\.org$"))
   
-  (setq org-refile-targets
-        '(("~/Org/Projects.org" :maxlevel . 1)
-          ("~/Org/Tasks.org" :maxlevel . 1)
-          ("~/Org/Atheism.org" :maxlevel . 1)
-          ("~/Org/Emacs.org" :maxlevel . 1)
-          ("~/Org/RPG.org" :maxlevel . 1)
-          ("~/Org/Work.org" :maxlevel . 3)
-          ("~/Org/Inbox.org" :maxlevel . 1)))
+  ;; (setq org-refile-targets
+  ;;       '(("~/Org/Projects.org" :maxlevel . 1)
+  ;;         ("~/Org/Tasks.org" :maxlevel . 1)
+  ;;         ("~/Org/Atheism.org" :maxlevel . 1)
+  ;;         ("~/Org/Emacs.org" :maxlevel . 1)
+  ;;         ("~/Org/RPG.org" :maxlevel . 1)
+  ;;         ("~/Org/Work.org" :maxlevel . 3)
+;;         ("~/Org/Inbox.org" :maxlevel . 1)))
+
+(setq org-refile-targets
+      '(denote-journal-extras--entry-today))
+
+(setq org-refile-targets
+      `((,(denote-journal-extras--entry-today) . (:maxlevel . 2))
+	("~/Denote/20231016T101943--atheism.org" :maxlevel . 1)
+	("~/Denote/20250305T141314--emacs.org" :maxlevel . 1)
+;;	("~/Denote/20250304T152326--rpg.org" :maxlevel . 1)
+	("~/Denote/20250305T141315--projects.org" :maxlevel . 1)
+	("~/Denote/20250305T073302--work.org" :maxlevel . 1)))
 
   (setq org-capture-templates `(
                                 ("i" "INBOX" entry
-                                 (file+headline "~/Org/Inbox.org"
+                                 (file+headline "~/Denote/20250304T122024--inbox.org"
                                                 "") "* TODO %i%?")
                                 ("t" "General Task" entry
-                                 (file+headline "~/Org/Tasks.org"
+                                 (file+headline "~/Denote/20250304T113200--tasks.org"
                                                 "To Do") "* TODO %i%?")
                                 ("A" "Atheism Note" entry
-                                 (file+headline "~/Org/Atheism.org"
-                                                "INBOX") "** %i%?")
+                                 (file+headline "~/Denote/20250212T142617--atheism.org"
+						"INBOX") "** %i%?")
                                 ("w" "Work Task" entry
-                                 (file+headline "~/Org/Work.org"
+                                 (file+headline "~/Denote/20250305T073302--work.org"
                                                 "INBOX") "* TODO %i%?")))
 
   (setq org-agenda-custom-commands
@@ -869,6 +887,7 @@ or related, to make changes apply to another Ef theme."
 			(setq org-agenda-sorting-strategy
 			      '((agenda todo-state-up)
 				(todo todo-state-up)
+				;;;(todo todo-state-down priority-down category-keep)
 				(tags todo-state-up)
 				(search todo-state-up)))
 			(setq org-agenda-start-day "+0d")
@@ -879,27 +898,32 @@ or related, to make changes apply to another Ef theme."
 			;;(makunbound 'org-prefix-format)
 			(setq org-agenda-prefix-format '((agenda  . " %-12T")))
 
-(setq org-agenda-prefix-format
+			(setq org-agenda-prefix-format
       '((agenda . " %i %?-12t% s")
         (todo . " %i ")
         (tags . " %i ")
         (search . " %i ")))
 
+;; (setq org-prefix-format
+;;       '(
+;;         (agenda . "  %-12:c%?-12t% s")
+;; 	(timeline . "  %?-12t% s")
+;; 	(todo . "  %-12:c")
+;; 	(search . "  %-12:c")
+;; 	(tags . "  %-12:c")
+;; 	(tags-todo . "  %-12:c")))
 
+(setq org-agenda-prefix-format
+      '((agenda . "  %i %?-12t% s")  ;; Remove `%c`
+        (todo . "  %i ")
+        (tags . "  %i ")
+        (search . "  %i ")))
 
-			(setq org-prefix-format
-			      '(
-				;(agenda . "  %-12:c%?-12t% s")
-				(timeline . "  %?-12t% s")
-				(todo . "  %-12:c")
-				(search . "  %-12:c")
-				(tags . "  %-12:c")
-				(tags-todo . "  %-12:c")))
-			(setq org-agenda-remove-tags t)
+(setq org-agenda-remove-tags nil)
 
-			(org-agenda-entry-types '(:deadline :scheduled :timestamp))
-			(org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))
-                        (org-agenda-block-separator "\n")))
+(org-agenda-entry-types '(:deadline :scheduled :timestamp))
+(org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))
+(org-agenda-block-separator "\n")))
 	    
 	    (tags-todo "+PRIORITY=\"A\"" ((org-agenda-overriding-header "\nPriority Tasks")))
 	    (tags-todo "@INBOX" ((org-agenda-overriding-header "\nInbox")))
@@ -909,18 +933,29 @@ or related, to make changes apply to another Ef theme."
             (tags-todo "@Projects" ((org-agenda-overriding-header "\nProjects Tasks")))
             (tags-todo "@Personal" ((org-agenda-overriding-header "\nPersonal Tasks")))))
 
+	  ;; Summary for small frame
+	  ("s" "Today's Summary"
+	   ((agenda "" (org-agenda-overriding-header "Today's Summary")))
+	   (tags-todo "+PRIORITY=\"A\"" ((org-agenda-overriding-header "\nPriority Tasks")))
+	   (tags-todo "@INBOX" ((org-agenda-overriding-header "\nInbox")))
+	    (todo "NEXT" ((org-agenda-overriding-header "\nNext Tasks"))))
+	  
           ("w" "Work Tasks"
            ((agenda "" ((org-agenda-overriding-header "Work Tasks")))
             (tags-todo "@Work")))
+	  
           ("p" "Personal Tasks"
            ((tags-todo "@Personal" ((org-agenda-overriding-header "Personal Tasks")))
             (agenda "")))
+	  
 	  ("r" "RPG Tasks"
            ((tags-todo "@RPG" ((org-agenda-overriding-header "RPG Tasks")))
             (agenda "")))
+	  
           ("e" "Emacs"
            ((tags-todo "@Emacs" ((org-agenda-overriding-header "Emacs Tasks")))
             (agenda "")))
+	  
           ("i" "Inbox"
            ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
             (agenda "")))))
@@ -962,6 +997,11 @@ or related, to make changes apply to another Ef theme."
   (global-set-key (kbd "C-c d o") (lambda ()
 				    (interactive)
 				    (dired denote-directory)))
+
+    (global-set-key (kbd "C-c d j o") (lambda ()
+				    (interactive)
+				    (dired denote-journal-extras-directory)))
+
   (denote-rename-buffer-mode)
 
 
@@ -1009,6 +1049,19 @@ or related, to make changes apply to another Ef theme."
               :action (lambda (file)
                         (find-file (expand-file-name file denote-directory)))))))
 
+(use-package denote-search
+  :ensure t
+  :bind
+  ;; Customize keybindings to your liking
+  (("C-c s s" . denote-search)
+   ("C-c s d" . denote-search-marked-dired-files)
+   ("C-c s r" . denote-search-files-referenced-in-region))
+  :custom
+  ;; Disable help string (set it once you learn the commands)
+  ;; (denote-search-help-string "")
+  ;; Display keywords in results buffer
+  (denote-search-format-heading-function #'denote-search-format-heading-with-keywords))
+
 (use-package consult-notes
   :ensure t
   :commands (consult-notes
@@ -1016,22 +1069,22 @@ or related, to make changes apply to another Ef theme."
   :config
   (consult-notes-denote-mode t))
 
-(use-package dashboard
-  :ensure t
-  :config
-  (setq dashboard-week-agenda t)
-  (setq dashboard-startup-banner 'official)
-  (setq dashboard-center-content t)
-  (setq dashboard-items '(
-                          (agenda    . 5)
-			  (recents   . 5)
-                          (bookmarks . 5)
-                          (projects  . 5)
-                          (registers . 5)))
-  (dashboard-setup-startup-hook))
-(dashboard-open)
+;; (use-package dashboard
+;;   :ensure t
+;;   :config
+;;   (setq dashboard-week-agenda t)
+;;   (setq dashboard-startup-banner 'official)
+;;   (setq dashboard-center-content t)
+;;   (setq dashboard-items '(
+;;                           (agenda    . 5)
+;; 			  (recents   . 5)
+;;                           (bookmarks . 5)
+;;                           (projects  . 5)
+;;                           (registers . 5)))
+;;   (dashboard-setup-startup-hook))
+;; (dashboard-open)
 
 (use-package calfw
   :ensure t)
 
-(delete-window (get-buffer-window "*scratch*"))
+;; (delete-window (get-buffer-window "*scratch*"))
