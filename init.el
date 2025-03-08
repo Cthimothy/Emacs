@@ -599,7 +599,7 @@ or related, to make changes apply to another Ef theme."
   (setq ivy-posframe-height-relative t)
 
   (setq ivy-posframe-width 180
-      ivy-posframe-height 20)
+	ivy-posframe-height 10)
 ;(setq ivy-posframe-width-relative-factor 0.62)
 ;(setq ivy-posframe-height-relative-factor 0.1)
 
@@ -863,9 +863,6 @@ or related, to make changes apply to another Ef theme."
   ;;         ("~/Org/RPG.org" :maxlevel . 1)
   ;;         ("~/Org/Work.org" :maxlevel . 3)
 ;;         ("~/Org/Inbox.org" :maxlevel . 1)))
-
-(setq org-refile-targets
-      '(denote-journal-extras--entry-today))
 
 (setq org-refile-targets
       `((,(denote-journal-extras--entry-today) . (:maxlevel . 2))
