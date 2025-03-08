@@ -123,7 +123,7 @@
       (progn (revert-buffer) ; otherwise just revert to re-show
 	     (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
-(defun elfeed-mark-all-as-read ()
+(Defun Elfeed-mark-all-as-read ()
   (interactive)
   (mark-whole-buffer)
   (elfeed-search-untag-all-unread))
@@ -591,9 +591,19 @@ or related, to make changes apply to another Ef theme."
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  (setq ivy-posframe-parameters
-      '((left-fringe . 10)
-        (right-fringe . 10)))
+;  (setq ivy-posframe-parameters
+;      '((left-fringe . 0)
+;        (right-fringe . 0)))
+
+  (setq ivy-posframe-width-relative t)
+  (setq ivy-posframe-height-relative t)
+
+  (setq ivy-posframe-width 180
+      ivy-posframe-height 20)
+;(setq ivy-posframe-width-relative-factor 0.62)
+;(setq ivy-posframe-height-relative-factor 0.1)
+
+  
 ;;  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#000000")
   (ivy-posframe-mode 1))
 
@@ -865,6 +875,8 @@ or related, to make changes apply to another Ef theme."
 	("~/Denote/20250305T141315--projects.org" :maxlevel . 1)
 	("~/Denote/20250305T073302--work.org" :maxlevel . 1)))
 
+
+
   (setq org-capture-templates `(
                                 ("i" "INBOX" entry
                                  (file+headline "~/Denote/20250304T122024--inbox.org"
@@ -992,8 +1004,8 @@ or related, to make changes apply to another Ef theme."
   ;; (denote-dired-mode t)
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
-  ;; (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
-  (global-set-key (kbd "C-c d j n") 'denote-journal-extras-new-or-existing-entry)
+  (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
+  ;; (global-set-key (kbd "C-c d j n") 'denote-journal-extras-new-or-existing-entry)
   (global-set-key (kbd "C-c d o") (lambda ()
 				    (interactive)
 				    (dired denote-directory)))
@@ -1003,7 +1015,6 @@ or related, to make changes apply to another Ef theme."
 				    (dired denote-journal-extras-directory)))
 
   (denote-rename-buffer-mode)
-
 
   (require 'denote-org-extras)
   (with-eval-after-load 'org-capture
@@ -1028,7 +1039,19 @@ or related, to make changes apply to another Ef theme."
     "Create an entry tagged 'journal' with the date as its title."
     (interactive)
     (denote (format-time-string "%A %e %B %Y") '("journal"))
-    (insert "* Today's Journal\n" "** Tasks\n" "** Notes\n")
+    (insert "* Daily Morning Routine
+- [ ] Review yesterday's journal (c-c d j o)
+- [ ] Review task list and refile in to journal (c-c o a t)
+- [ ] Check Beorg for tasks
+- [ ] Check for changed files (C-c l c f)
+- [ ] Review Outlook calendar
+- [ ] Review Org INBOX
+- [ ] Review Raindrop INBOX   https://app.raindrop.io/my/-1
+
+* Tasks
+
+* Notes
+"))
     
 (let ((heading "Tasks")
       (case-fold-search t)) ; Make search case-insensitive
