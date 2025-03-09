@@ -1,4 +1,4 @@
-(setq debug-on-error t)
+;; (setq debug-on-error t)
 
 (load "server")
 (unless (server-running-p)
@@ -123,7 +123,7 @@
       (progn (revert-buffer) ; otherwise just revert to re-show
 	     (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
-(Defun Elfeed-mark-all-as-read ()
+(defun elfeed-mark-all-as-read ()
   (interactive)
   (mark-whole-buffer)
   (elfeed-search-untag-all-unread))
@@ -373,7 +373,7 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
 
-(setq dired-listing-switches "-lha")
+(setq dired-listing-switches "-lharT")
 (setq large-file-warning-threshold 50000000)
 (setq dired-kill-when-opening-new-dired-buffer t)
 
@@ -1009,7 +1009,8 @@ or related, to make changes apply to another Ef theme."
 
     (global-set-key (kbd "C-c d j o") (lambda ()
 				    (interactive)
-				    (dired denote-journal-extras-directory)))
+				    (dired (concat denote-directory "/journal/"))))
+;;				    (dired denote-journal-extras-directory)))
 
   (denote-rename-buffer-mode)
 
@@ -1027,7 +1028,7 @@ or related, to make changes apply to another Ef theme."
 (with-eval-after-load 'org-capture
   (add-to-list 'org-capture-templates
                '("j" "Journal" entry
-                 (file denote-journal-extras-path-to-new-or-existing-entry)
+                 (file denote-journal-extras-path-to-new-or-existing-entry)x
                  "* %U %?\n%i\n%a"
                  :kill-buffer t
                  :empty-lines 1)))
@@ -1050,15 +1051,15 @@ or related, to make changes apply to another Ef theme."
 * Notes
 "))
     
-(let ((heading "Tasks")
-      (case-fold-search t)) ; Make search case-insensitive
-  (goto-char (point-min)) ; Start from the beginning of the buffer
-  (if (re-search-forward (format org-complex-heading-regexp-format (regexp-quote heading)) nil t)
-      (progn
-        (end-of-line)          ; Move to the end of the heading line
-        (newline)              ; Insert a newline if needed
-        (message "Moved to the line under heading: %s" heading))
-    (message "Heading '%s' not found" heading))))
+;; (let ((heading "Tasks")
+;;       (case-fold-search t)) ; Make search case-insensitive
+;;   (goto-char (point-min)) ; Start from the beginning of the buffer
+;;   (if (re-search-forward (format org-complex-heading-regexp-format (regexp-quote heading)) nil t)
+;;       (progn
+;;         (end-of-line)          ; Move to the end of the heading line
+;;         (newline)              ; Insert a newline if needed
+;;         (message "Moved to the line under heading: %s" heading))
+;;     (message "Heading '%s' not found" heading)))
 
   (defun tw/denote-find-file ()
   "Use Ivy to finda Denote file."
