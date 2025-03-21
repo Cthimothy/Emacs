@@ -1,4 +1,4 @@
-;; (setq debug-on-error t)
+; (setq debug-on-error t)
 
 (load "server")
 (unless (server-running-p)
@@ -37,9 +37,6 @@
 ;;    (t
 ;;     (message "No specific configuration for this host"))))
 
-;; --------------------------------------------------------------------------------
-
-;; Init-Macbook.el / called from init.el 2024-September-10
 (setq inhibit-startup-screen t)
 ;; (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 ;;(add-hook 'after-init-hook (lambda () (kill-buffer "*scratch*")))
@@ -49,12 +46,16 @@
    '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                           :slant normal :weight medium :width normal)))))
 
-;(set-frame-parameter nil 'alpha-transparency 50)
-;(set-frame-parameter (selected-frame) 'alpha '(96 96))
-(set-frame-parameter nil 'alpha-transparency 0)
-(set-frame-parameter (selected-frame) 'alpha '(100 100))
+(set-frame-parameter nil 'alpha-transparency 50)
+(set-frame-parameter (selected-frame) 'alpha '(95 95))
+;(set-frame-parameter nil 'alpha-transparency 0)
+;(set-frame-parameter (selected-frame) 'alpha '(100 100))
 
+;; -----------------------------------------------------------------------------
 ;; Custom functions
+
+;; Read in Journelly to Denote code
+(load-file "~/Projects/Code/Elisp/journelly-to-denote.el")
 
 (defun tw/toggle-fill-column-indicator ()
   "Enable `display-fill-column-indicator-mode` only if the current line exceeds `fill-column`."
@@ -232,11 +233,36 @@ or related, to make changes apply to another Ef theme."
             ("DONE" . ,blue-cooler)
 	    ("IN-PROGRESS" . ,green-warmer)
 	    ("NEXT" . ,yellow-warmer)
-	    ("PROJECT" . ,blue-warmer)))))
+	    ("PROJECT" . ,blue-warmer)
+	    ("UNSCHEDULED" . ,grey-warmer)))))
 (add-hook 'ef-themes-post-load-hook #'tw/ef-themes-org-todo-faces)
 
 ;; Custom functions
-(defun tw/raycast-show-agenda ()
+
+(defun tw/create-jekyll-post ()
+"Create a new Jekyll blog post in ~/Projects/cthimothy.github.io/_posts/."
+  (interactive)
+  (let* ((title (read-string "Post title: "))
+         (slug (replace-regexp-in-string "[^a-z0-9-]" "" (downcase (replace-regexp-in-string " " "-" title))))
+         (date (format-time-string "%Y-%m-%d"))
+         (filename (expand-file-name (format "%s-%s.md" date slug)
+                                     "~/Projects/cthimothy.github.io/_posts/")))
+    (if (file-exists-p filename)
+        (message "File already exists: %s" filename)
+      (find-file filename)
+      (insert (format
+               "---\n\
+layout: post\n\
+title: \"%s\"\n\
+date: %s\n\
+categories: blog\n\
+tags: \n\
+---\n\n"
+               title date))
+      (save-buffer)
+      (message "Created new Jekyll post: %s" filename))))
+
+(defun Tt/raycast-show-agenda ()
   (interactive)
   (let ((agenda-frame (make-frame-command)))
     (select-frame agenda-frame)
@@ -324,6 +350,19 @@ or related, to make changes apply to another Ef theme."
 (setq auto-save-file-name-transforms
       `((".*" "~/.emacs.d/Backups/" t)))
 
+(setq column-number-mode t)
+
+;; ----------------------------------------------------------------------------
+(global-set-key (kbd "C-c t l") (lambda ()
+				  (interactive)
+				  (set-frame-parameter nil 'alpha-transparency 50)
+				  (set-frame-parameter (selected-frame) 'alpha '(95 95))))
+
+(global-set-key (kbd "C-c t d") (lambda ()
+				  (interactive)
+				  (set-frame-parameter nil 'alpha-transparency 0)
+				  (set-frame-parameter (selected-frame) 'alpha '(100 100))))
+
 (global-set-key (kbd "C-x a s") 'async-shell-command)
 (global-set-key (kbd "C-x v t") 'multi-vterm)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
@@ -365,15 +404,16 @@ or related, to make changes apply to another Ef theme."
 (global-set-key (kbd "C-c =") 'balance-windows-area)
 (global-set-key (kbd "C-c e") 'forward-sexp)
 (global-set-key (kbd "C-c a") 'backward-sexp)
-
-;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
-;;(global-unset-key (kbd "M-<return>"))
-
 (global-set-key (kbd "C-c t h") 'tw/hide-org-tags)
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
 
-(setq dired-listing-switches "-lharT")
+;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
+;;(global-unset-key (kbd "M-<return>"))
+
+
+(setq insert-directory-program "/opt/homebrew/bin/gls")
+(setq dired-listing-switches "-lhtgo")
 (setq large-file-warning-threshold 50000000)
 (setq dired-kill-when-opening-new-dired-buffer t)
 
@@ -690,7 +730,7 @@ or related, to make changes apply to another Ef theme."
 (use-package treemacs
   :ensure t
   :config
-  (setq treemacs-width 63)
+  (setq treemacs-width 75)
   (treemacs))
 
 (use-package paredit
@@ -865,14 +905,13 @@ or related, to make changes apply to another Ef theme."
 ;;         ("~/Org/Inbox.org" :maxlevel . 1)))
 
 (setq org-refile-targets
-      `((,(denote-journal-extras--entry-today) . (:maxlevel . 2))
+      `((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
+	("~/Denote/journal/" :maxlevel . 1)
 	("~/Denote/20231016T101943--atheism.org" :maxlevel . 1)
 	("~/Denote/20250305T141314--emacs.org" :maxlevel . 1)
-;;	("~/Denote/20250304T152326--rpg.org" :maxlevel . 1)
+	("~/Denote/20250304T152326--rpg.org" :maxlevel . 1)
 	("~/Denote/20250305T141315--projects.org" :maxlevel . 1)
 	("~/Denote/20250305T073302--work.org" :maxlevel . 1)))
-
-
 
   (setq org-capture-templates `(
                                 ("i" "INBOX" entry
@@ -993,7 +1032,7 @@ or related, to make changes apply to another Ef theme."
   :ensure t
   :custom
   (denote-directory "~/Denote/")
-
+  (denote-journal-directory "~/Denote/Journal/")
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
@@ -1001,7 +1040,9 @@ or related, to make changes apply to another Ef theme."
   ;; (denote-dired-mode t)
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
+    (global-set-key (kbd "C-c d s") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
+  (global-set-key (kbd "C-c d j j") 'tw/journelly-to-denote-journal)
   ;; (global-set-key (kbd "C-c d j n") 'denote-journal-extras-new-or-existing-entry)
   (global-set-key (kbd "C-c d o") (lambda ()
 				    (interactive)
@@ -1009,7 +1050,7 @@ or related, to make changes apply to another Ef theme."
 
     (global-set-key (kbd "C-c d j o") (lambda ()
 				    (interactive)
-				    (dired (concat denote-directory "/journal/"))))
+				    (dired (concat denote-directory "/Journal/"))))
 ;;				    (dired denote-journal-extras-directory)))
 
   (denote-rename-buffer-mode)
@@ -1033,13 +1074,34 @@ or related, to make changes apply to another Ef theme."
                  :kill-buffer t
                  :empty-lines 1)))
   
-  (defun tw/denote-journal ()
-    "Create an entry tagged 'journal' with the date as its title."
-    (interactive)
+  ;; (defun tw/denote-journal ()
+;;     "Create an entry tagged 'journal' with the date as its title."
+;;     (interactive)
+;;     (denote (format-time-string "%A %e %B %Y") '("journal"))
+;;     (insert "* Daily Morning Routine
+;; - [ ] Review yesterday's journal (c-c d j o)
+;; - [ ] Review task list and refile in to journal (c-c o a t)
+;; - [ ] Check Beorg for tasks
+;; - [ ] Check for changed files (C-c l c f)
+;; - [ ] Review Outlook calendar
+;; - [ ] Review Org INBOX
+;; - [ ] Review Raindrop INBOX   https://app.raindrop.io/my/-1
+
+;; * Tasks
+
+;; * Notes
+;; "))
+
+(defun tw/denote-journal ()
+  "Create an entry tagged 'journal' with the date as its title in `~/Denote/journal/`."
+  (interactive)
+  (let ((denote-directory "~/Denote/journal/"))  ;; Temporarily set the Denote directory
     (denote (format-time-string "%A %e %B %Y") '("journal"))
-    (insert "* Daily Morning Routine
-- [ ] Review yesterday's journal (c-c d j o)
-- [ ] Review task list and refile in to journal (c-c o a t)
+    (goto-char (point-max))  ;; Move to the end of the metadata
+    (insert "\n* Daily Morning Routine
+- [ ] tw/journelly-to-denote
+- [ ] Review yesterday's journal (C-c d j o)
+- [ ] Review task list and refile into journal (C-c o a t)
 - [ ] Check Beorg for tasks
 - [ ] Check for changed files (C-c l c f)
 - [ ] Review Outlook calendar
@@ -1050,7 +1112,16 @@ or related, to make changes apply to another Ef theme."
 
 * Notes
 "))
-    
+  (setq org-refile-targets
+	`((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
+	  ("~/Denote/journal/" :maxlevel . 1)
+	  ("~/Denote/20231016T101943--atheism.org" :maxlevel . 1)
+	  ("~/Denote/20250305T141314--emacs.org" :maxlevel . 1)
+	  ("~/Denote/20250304T152326--rpg.org" :maxlevel . 1)
+	  ("~/Denote/20250305T141315--projects.org" :maxlevel . 1)
+	  ("~/Denote/20250305T073302--work.org" :maxlevel . 1))))
+
+  
 ;; (let ((heading "Tasks")
 ;;       (case-fold-search t)) ; Make search case-insensitive
 ;;   (goto-char (point-min)) ; Start from the beginning of the buffer
@@ -1074,7 +1145,7 @@ or related, to make changes apply to another Ef theme."
   :ensure t
   :bind
   ;; Customize keybindings to your liking
-  (("C-c s s" . denote-search)
+  (("C-c d g" . denote-search)
    ("C-c s d" . denote-search-marked-dired-files)
    ("C-c s r" . denote-search-files-referenced-in-region))
   :custom
