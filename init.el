@@ -55,7 +55,7 @@
 ;; Custom functions
 
 ;; Read in Journelly to Denote code
-(load-file "~/Projects/Code/Elisp/journelly-to-denote.el")
+(load-file "~/Projects/Code/Elisp/journelly-to-denote-2.el")
 
 (defun tw/toggle-fill-column-indicator ()
   "Enable `display-fill-column-indicator-mode` only if the current line exceeds `fill-column`."
@@ -413,7 +413,8 @@ tags: \n\
 
 
 (setq insert-directory-program "/opt/homebrew/bin/gls")
-(setq dired-listing-switches "-lhtgo")
+(setq dired-use-ls-dired t)
+(setq dired-listing-switches "-lht")
 (setq large-file-warning-threshold 50000000)
 (setq dired-kill-when-opening-new-dired-buffer t)
 
@@ -1036,13 +1037,13 @@ tags: \n\
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "family" "music" "books"))
+  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "family" "music" "books" "blog"))
   ;; (denote-dired-mode t)
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
-    (global-set-key (kbd "C-c d s") 'denote-sort-dired)
+  (global-set-key (kbd "C-c d s") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
-  (global-set-key (kbd "C-c d j j") 'tw/journelly-to-denote-journal)
+  (global-set-key (kbd "C-c d j j") 'tw/journelly-to-denote-journal-2)
   ;; (global-set-key (kbd "C-c d j n") 'denote-journal-extras-new-or-existing-entry)
   (global-set-key (kbd "C-c d o") (lambda ()
 				    (interactive)
@@ -1051,10 +1052,11 @@ tags: \n\
     (global-set-key (kbd "C-c d j o") (lambda ()
 				    (interactive)
 				    (dired (concat denote-directory "/Journal/"))))
-;;				    (dired denote-journal-extras-directory)))
 
   (denote-rename-buffer-mode)
 
+  (require 'denote-journal-extras)
+  
   (require 'denote-org-extras)
   (with-eval-after-load 'org-capture
     (add-to-list 'org-capture-templates
@@ -1101,25 +1103,30 @@ tags: \n\
     (insert "\n* Daily Morning Routine
 - [ ] tw/journelly-to-denote
 - [ ] Review yesterday's journal (C-c d j o)
+- [ ] Review tasks set for today (C-c o a a)
 - [ ] Review task list and refile into journal (C-c o a t)
 - [ ] Check Beorg for tasks
 - [ ] Check for changed files (C-c l c f)
 - [ ] Review Outlook calendar
 - [ ] Review Org INBOX
 - [ ] Review Raindrop INBOX   https://app.raindrop.io/my/-1
+- [ ] Check 2025 Reading List
 
 * Tasks
 
 * Notes
+
+** Denote keystrokes
+- C-c d n: New Denote note
+- C-c d f Find Denote notes
+- C-c d s Denote open 
+- C-c d j n: Create daily journal
+- C-c d j j tw/journelly-to-denote-journal-2
+- C-c d o: Open Denote directory
+- C-c d j o: Open journal directory (non-sorted)
 "))
-  (setq org-refile-targets
-	`((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
-	  ("~/Denote/journal/" :maxlevel . 1)
-	  ("~/Denote/20231016T101943--atheism.org" :maxlevel . 1)
-	  ("~/Denote/20250305T141314--emacs.org" :maxlevel . 1)
-	  ("~/Denote/20250304T152326--rpg.org" :maxlevel . 1)
-	  ("~/Denote/20250305T141315--projects.org" :maxlevel . 1)
-	  ("~/Denote/20250305T073302--work.org" :maxlevel . 1))))
+  (add-to-list 'org-refile-targets '((,(denote-journal-extras--entry-today) . (:maxlevel . 2)))))
+;;	`((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
 
   
 ;; (let ((heading "Tasks")
@@ -1140,6 +1147,12 @@ tags: \n\
               (directory-files denote-directory nil "^[^.].*\\.org$")
               :action (lambda (file)
                         (find-file (expand-file-name file denote-directory)))))))
+
+(use-package denote-journal
+  :ensure t)
+
+(use-package denote-menu
+  :ensure t)
 
 (use-package denote-search
   :ensure t
