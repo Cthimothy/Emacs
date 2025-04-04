@@ -42,14 +42,14 @@
 ;;(add-hook 'after-init-hook (lambda () (kill-buffer "*scratch*")))
 (add-hook 'after-init-hook (lambda () (kill-buffer "*Messages*")))
 
-  (custom-set-faces
-   '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
-                          :slant normal :weight medium :width normal)))))
+(custom-set-faces
+ '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
+                        :slant normal :weight medium :width normal)))))
 
 (set-frame-parameter nil 'alpha-transparency 50)
 (set-frame-parameter (selected-frame) 'alpha '(95 95))
-;(set-frame-parameter nil 'alpha-transparency 0)
-;(set-frame-parameter (selected-frame) 'alpha '(100 100))
+					;(set-frame-parameter nil 'alpha-transparency 0)
+					;(set-frame-parameter (selected-frame) 'alpha '(100 100))
 
 ;; -----------------------------------------------------------------------------
 ;; Custom functions
@@ -89,7 +89,7 @@
 	  (set-window-buffer (next-window) next-win-buffer)
 	  (select-window first-win)
 	  (if this-win-2nd (other-window 1))))))
- 
+
 (defun tw/display-async-shell-output-in-active-window (buffer _action)
   "Display BUFFER by splitting the active window below."
   (let ((win (selected-window))) ; Get the active window
@@ -167,11 +167,11 @@
                         (select-window (cdr (assoc buffer-name window-buffer-alist)))))))
 
 (defun tw/set-margins ()
-(interactive)
-(setq left-margin-width 1)
-(setq right-margin-width 1)
-(set-window-buffer (selected-window) (current-buffer))
-(set-window-buffer nil (current-buffer)))
+  (interactive)
+  (setq left-margin-width 1)
+  (setq right-margin-width 1)
+  (set-window-buffer (selected-window) (current-buffer))
+  (set-window-buffer nil (current-buffer)))
 
 (add-hook 'window-configuration-change-hook 'tw/set-margins)
 
@@ -186,8 +186,8 @@
   "Open the file in a vertical split to the right."
   (interactive)
   (Let ((File (dired-get-file-for-visit)))
-    (select-window (split-window-right))
-    (find-file file)))
+       (select-window (split-window-right))
+       (find-file file)))
 
 (defun tw/dired-find-file-split ()
   "Open the file in the right-hand vertical split."
@@ -240,7 +240,7 @@ or related, to make changes apply to another Ef theme."
 ;; Custom functions
 
 (defun tw/create-jekyll-post ()
-"Create a new Jekyll blog post in ~/Projects/cthimothy.github.io/_posts/."
+  "Create a new Jekyll blog post in ~/Projects/cthimothy.github.io/_posts/."
   (interactive)
   (let* ((title (read-string "Post title: "))
          (slug (replace-regexp-in-string "[^a-z0-9-]" "" (downcase (replace-regexp-in-string " " "-" title))))
@@ -269,14 +269,14 @@ tags: \n\
     (org-agenda-list)
     (x-focus-frame agenda-frame)))
 
-; (defun tw/dired-ediff-marked-files ()
-;   "Run ediff-files on a pair of files marked in dired buffer"
-;   (interactive)
-;   (let ((marked-files (dired-get-marked-files nil)))
-;     (if (not (= (length marked-files) 2))
-;         (message "mark exactly 2 files")
-;       (ediff-files (nth 0 marked-files)
-;                    (nth 1 marked-files)))))
+					; (defun tw/dired-ediff-marked-files ()
+					;   "Run ediff-files on a pair of files marked in dired buffer"
+					;   (interactive)
+					;   (let ((marked-files (dired-get-marked-files nil)))
+					;     (if (not (= (length marked-files) 2))
+					;         (message "mark exactly 2 files")
+					;       (ediff-files (nth 0 marked-files)
+					;                    (nth 1 marked-files)))))
 
 (defun tw/hide-org-tags ()
   (interactive)
@@ -289,6 +289,18 @@ tags: \n\
   (set-mark-command nil)
   (move-end-of-line 1))
 
+(defun tw/dired-find-file-split-below ()
+  "Open the file at point in another window, split below the Dired buffer."
+  (interactive)
+  (let ((window (split-window-below)))
+    (select-window window)
+    (dired-find-file)))
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "C-c d j o") #'tw/dired-find-file-split-below))
+
+;;--------------------------------------------------------------------------------
+
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -299,8 +311,12 @@ tags: \n\
 ;; (fringe-mode 0)
 ;; Always split windows vertically
 (setq split-width-threshold nil)
-(setq tsplit-height-threshold nil)
+(setq split-height-threshold nil)
+(setq use-short-answers t)
+(setq confirm-nonexistent-file-or-buffer nil)
 
+(setq scroll-conservatively 10
+      scroll-margin 15)
 
 (setq magit-display-buffer-function
       (lambda (buffer)
@@ -353,6 +369,7 @@ tags: \n\
 (setq column-number-mode t)
 
 ;; ----------------------------------------------------------------------------
+
 (global-set-key (kbd "C-c t l") (lambda ()
 				  (interactive)
 				  (set-frame-parameter nil 'alpha-transparency 50)
@@ -386,16 +403,16 @@ tags: \n\
 (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
 (global-set-key (kbd "C-c C-f") 'find-name-dired)
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
-;(global-set-key (kbd "C-x r e") 'eval-region)
-;(global-set-key (kbd "C-x r b") 'eval-buffer)
-;(Global-Setkey (kbd "C-c C-l") 'package-list-packages)
+					;(global-set-key (kbd "C-x r e") 'eval-region)
+					;(global-set-key (kbd "C-x r b") 'eval-buffer)
+					;(Global-Setkey (kbd "C-c C-l") 'package-list-packages)
 (global-set-key (kbd "C-c h") 'dired-dotfiles-toggle)
 (global-set-key (kbd "C-c y") 'popup-kill-ring)
 (global-set-key (kbd "C-c w") 'make-frame)
 (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows)
 (global-set-key (kbd "C-s") 'swiper-isearch)
 (global-set-key (kbd "C-r") 'swiper-isearch-backward)
-;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
+					;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
 (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
 (global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c l c f") 'tw/list-files-changed-on-disk)
@@ -419,7 +436,7 @@ tags: \n\
 (setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; Hook some modes
-;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
+					;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
 (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
 (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'dired-find-file-other-window)))
 (add-hook 'dired-mode-hook 'hl-line-mode)
@@ -431,7 +448,7 @@ tags: \n\
         (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
 (add-hook 'org-agenda-mode 'hl-line-mode)
 (add-hook 'org-mode-hook 'hl-line-mode)
-;(add-hook 'org-mode-hook 'display-line-numbers-mode)
+					;(add-hook 'org-mode-hook 'display-line-numbers-mode)
 ;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 (add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
@@ -485,6 +502,22 @@ tags: \n\
 
 (load-theme 'ef-owl)
 
+(use-package easysession
+  :ensure t
+  :commands (easysession-switch-to
+             easysession-save-as
+             easysession-save-mode
+             easysession-load-including-geometry)
+
+  :custom
+  (easysession-mode-line-misc-info t)  ; Display the session in the modeline
+  (easysession-save-interval (* 10 60))  ; Save every 10 minutes
+
+  :init
+  (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
+  (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
+  (global-set-key (kbd "C-c s s") 'easysession-switch-to))
+
 (use-package zygospore
   :ensure t)
 
@@ -509,7 +542,7 @@ tags: \n\
 (use-package magit
   :ensure t
   :config
-    (global-set-key (kbd "C-x g") 'magit))
+  (global-set-key (kbd "C-x g") 'magit))
 
 (use-package noflet
   :ensure t)
@@ -526,10 +559,10 @@ tags: \n\
 ;;   :ensure t)
 
 (use-package visual-replace
-   :defer t
-   :bind (("C-c r" . visual-replace)
-          :map isearch-mode-map
-          ("C-c r" . visual-replace-from-isearch)))
+  :defer t
+  :bind (("C-c r" . visual-replace)
+         :map isearch-mode-map
+         ("C-c r" . visual-replace-from-isearch)))
 
 (use-package multiple-cursors
   :ensure t
@@ -575,14 +608,14 @@ tags: \n\
   (setq aw-keys '(?a ?s ?d ?q ?w ?z ?x))
   (setq aw-ignore-current t)
   (custom-set-faces
- '(aw-leading-char-face
-   ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "yellow"))))))
+   '(aw-leading-char-face
+     ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "yellow"))))))
 
 (use-package activities
   :ensure t
   :init
   (activities-mode)
-;  (activities-tabs-mode)
+					;  (activities-tabs-mode)
   ;; Prevent `edebug' default bindings from interfering.
   (setq edebug-inhibit-emacs-lisp-mode-bindings t)
 
@@ -604,7 +637,7 @@ tags: \n\
   (setq enable-recursive-minibuffers t)
   :custom
   (setq ivy-re-builders-alist
-      '((t . ivy--regex-ignore-order)))
+	'((t . ivy--regex-ignore-order)))
   :config
   (setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
   (add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight))
@@ -615,9 +648,9 @@ tags: \n\
   :config
   (defun tw/counsel-org-todo ()
     "Use `counsel-org-goto-all` to search only TODO items."
-  (interactive)
-  (let ((ivy-re-builders-alist '((t . ivy--regex-ignore-order))))
-    (counsel-org-goto-all)))
+    (interactive)
+    (let ((ivy-re-builders-alist '((t . ivy--regex-ignore-order))))
+      (counsel-org-goto-all)))
   :bind (("C-c c f t" . tw/counsel-org-todo)))
 
 (use-package ivy-posframe
@@ -632,20 +665,20 @@ tags: \n\
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-;  (setq ivy-posframe-parameters
-;      '((left-fringe . 0)
-;        (right-fringe . 0)))
+					;  (setq ivy-posframe-parameters
+					;      '((left-fringe . 0)
+					;        (right-fringe . 0)))
 
   (setq ivy-posframe-width-relative t)
   (setq ivy-posframe-height-relative t)
 
   (setq ivy-posframe-width 180
 	ivy-posframe-height 10)
-;(setq ivy-posframe-width-relative-factor 0.62)
-;(setq ivy-posframe-height-relative-factor 0.1)
+					;(setq ivy-posframe-width-relative-factor 0.62)
+					;(setq ivy-posframe-height-relative-factor 0.1)
 
   
-;;  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#000000")
+  ;;  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#000000")
   (ivy-posframe-mode 1))
 
 (use-package company
@@ -681,10 +714,10 @@ tags: \n\
   :ensure t)
 
 (use-package nerd-icons-dired
-  :ensure t
-  :config
-  (nerd-icons-dired-mode t))
- 
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
+
 (use-package nerd-icons-ibuffer
   :ensure t
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
@@ -713,7 +746,7 @@ tags: \n\
   (marginalia-align 'right)
   :init
   (marginalia-mode))
-  
+
 (use-package popup-kill-ring
   :ensure t)
 
@@ -741,7 +774,7 @@ tags: \n\
   (add-hook 'ielm-mode-hook 'paredit-mode)
   (define-key paredit-mode-map (kbd "RET") nil)
   (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
-;  (add-hook 'ielm-mode-hook 'g-ielm-init-history))
+					;  (add-hook 'ielm-mode-hook 'g-ielm-init-history))
 
 ;;(load (expand-file-name "~/.quicklisp/slime-helper.el"))
 ;;(setq inferior-lisp-program "sbcl")
@@ -755,7 +788,7 @@ tags: \n\
   :init
 
   ;; --- Org-agenda functions
-    (defun tw/org-skip-subtree-if-priority (priority)
+  (defun tw/org-skip-subtree-if-priority (priority)
     "Skip an agenda subtree if it has a priority of PRIORITY.
   PRIORITY may be one of the characters ?A, ?B, or ?C."
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
@@ -773,15 +806,15 @@ tags: \n\
         nil)))
 
   (defun tw/archive-done-tasks-in-agenda-files ()
-  "Archive all DONE tasks in all files listed in `org-agenda-files`."
-  (interactive)
-  (dolist (file org-agenda-files)
-    (with-current-buffer (find-file-noselect file)
-      (org-map-entries
-       (lambda ()
-         (org-archive-s/-ubtree))
-       "/DONE" 'file)
-      (save-buffer))))
+    "Archive all DONE tasks in all files listed in `org-agenda-files`."
+    (interactive)
+    (dolist (file org-agenda-files)
+      (with-current-buffer (find-file-noselect file)
+	(org-map-entries
+	 (lambda ()
+           (org-archive-s/-ubtree))
+	 "/DONE" 'file)
+	(save-buffer))))
   
   (defadvice org-capture-finalize 
       (after delete-capture-frame activate)
@@ -794,7 +827,7 @@ tags: \n\
     "Advise capture-destroy to close the frame"
     (if (equal "capture" (frame-parameter nil 'name))
         (delete-frame)))
- 
+  
   (defun make-capture-frame ()
     "Create a new frame and run org-capture."
     (interactive)
@@ -814,9 +847,9 @@ tags: \n\
   
   :config
   (custom-set-faces
-     '(org-agenda-structure
+   '(org-agenda-structure
      ((t (:foreground "LightSkyBlue" :weight bold :height 1.2 :underline nil :height 1.1))))
-     '(org-agenda-date-today ((t (:weight bold :height 1.4 :foreground "LightSkyBlue")))))
+   '(org-agenda-date-today ((t (:weight bold :height 1.4 :foreground "LightSkyBlue")))))
 
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
@@ -827,8 +860,8 @@ tags: \n\
   
   (require 'color)
   (set-face-attribute 'org-block nil :background
-                    (color-darken-name
-                     (face-attribute 'default :background) 6))
+                      (color-darken-name
+                       (face-attribute 'default :background) 6))
   
   (setq org-todo-keyword-faces
 	'(
@@ -840,32 +873,32 @@ tags: \n\
 	  ("DONE" . (:foreground "#8f9C55" :background ""))))
 
   (setq org-todo-keywords
-      '((sequence "NEXT(n)" "TODO(t)" "UNSCHEDULED(u)" "PROJECT(p)" "|" "DONE(d)")))
+	'((sequence "NEXT(n)" "TODO(t)" "UNSCHEDULED(u)" "PROJECT(p)" "|" "DONE(d)")))
 
   (setq org-adapt-indentation t
-      org-hide-leading-stars t
-      org-hide-emphasis-markers t
-      org-pretty-entities t
-	  org-ellipsis "  ·")
+	org-hide-leading-stars t
+	org-hide-emphasis-markers t
+	org-pretty-entities t
+	org-ellipsis "  ·")
   ;;  
 
-(setq org-adapt-indentation t
-      org-hide-leading-stars t
-      org-hide-emphasis-markers t
-      org-pretty-entities t
-	  org-ellipsis " ❱") ;;;  · ❱ ❯ ⃕ ↴  ̬ ➥ ➧⤸ ⤵ 🠻 🠺 🡃 🡫 🡮 🡻 🡾 ▼ ⬎ ⤷
+  (setq org-adapt-indentation t
+	org-hide-leading-stars t
+	org-hide-emphasis-markers t
+	org-pretty-entities t
+	org-ellipsis " ❱") ;;;  · ❱ ❯ ⃕ ↴  ̬ ➥ ➧⤸ ⤵ 🠻 🠺 🡃 🡫 🡮 🡻 🡾 ▼ ⬎ ⤷
   
-; (setq org-agenda-start-with-follow-mode t)
-; (setq org-base-path "/Users/t.welch2/Library/CloudStorage/Dropbox")
-; (setq org-directory (concat org-base-path "/Org/"))
+					; (setq org-agenda-start-with-follow-mode t)
+					; (setq org-base-path "/Users/t.welch2/Library/CloudStorage/Dropbox")
+					; (setq org-directory (concat org-base-path "/Org/"))
   (setq org-directory "~/Org/")
   (setq org-agenda-window-setup 'current-window)
   (setq org-adapt-xindentation t)
   (setq org-adapt-indentation t)
-  ;(setq org-agenda-show-current-time-in-grid t)
+					;(setq org-agenda-show-current-time-in-grid t)
   (setq org-agenda-time-grid '((daily today remove-match require-timed)
-                             (800 900 1000 1100  1200 1300 1400 1500 1600 1700 1800)
-                             " - " ""))
+                               (800 900 1000 1100  1200 1300 1400 1500 1600 1700 1800)
+                               " - " ""))
   (setq org-agenda-show-all-dates nil)
   (setq org-agenda-compact-blocks t)
 
@@ -879,19 +912,19 @@ tags: \n\
 
   (setq org-archive-location "~/Org/Org-Archive/Archive.org::")
   
-;; (setq org-agenda-files
-;;  	(append
-;;  	 '(
-;;  	   "~/Org/Emacs.org"
-;;  	   "~/Org/Inbox.org"
-;;  	   "~/Org/Projects.org"
-;;  	   "~/Org/RPG.org"
-;;  	   "~/Org/Tasks.org"
-;;  	   "~/Org/Work.org")
-;; 	 (directory-files-recursively "~/Denote/" "\\.org$")
-;; 	 (directory-files-recursively "~/Denote/Journal/" "__journal\\.org$")
-;; 	 (directory-files "~/Denote/" t "\\.org$")
-;; 	 (directory-files "~/Denote/Journal" t "__journal\\.org$")))))
+  ;; (setq org-agenda-files
+  ;;  	(append
+  ;;  	 '(
+  ;;  	   "~/Org/Emacs.org"
+  ;;  	   "~/Org/Inbox.org"
+  ;;  	   "~/Org/Projects.org"
+  ;;  	   "~/Org/RPG.org"
+  ;;  	   "~/Org/Tasks.org"
+  ;;  	   "~/Org/Work.org")
+  ;; 	 (directory-files-recursively "~/Denote/" "\\.org$")
+  ;; 	 (directory-files-recursively "~/Denote/Journal/" "__journal\\.org$")
+  ;; 	 (directory-files "~/Denote/" t "\\.org$")
+  ;; 	 (directory-files "~/Denote/Journal" t "__journal\\.org$")))))
 
   (setq org-agenda-files
 	(directory-files-recursively "~/Denote/" "\\.org$"))
@@ -903,16 +936,16 @@ tags: \n\
   ;;         ("~/Org/Emacs.org" :maxlevel . 1)
   ;;         ("~/Org/RPG.org" :maxlevel . 1)
   ;;         ("~/Org/Work.org" :maxlevel . 3)
-;;         ("~/Org/Inbox.org" :maxlevel . 1)))
+  ;;         ("~/Org/Inbox.org" :maxlevel . 1)))
 
-(setq org-refile-targets
-      `((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
-	("~/Denote/journal/" :maxlevel . 1)
-	("~/Denote/20231016T101943--atheism.org" :maxlevel . 1)
-	("~/Denote/20250305T141314--emacs.org" :maxlevel . 1)
-	("~/Denote/20250304T152326--rpg.org" :maxlevel . 1)
-	("~/Denote/20250305T141315--projects.org" :maxlevel . 1)
-	("~/Denote/20250305T073302--work.org" :maxlevel . 1)))
+  (setq org-refile-targets
+	`((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
+	  ("~/Denote/journal/" :maxlevel . 1)
+	  ("~/Denote/20231016T101943--atheism.org" :maxlevel . 1)
+	  ("~/Denote/20250305T141314--emacs.org" :maxlevel . 1)
+	  ("~/Denote/20250304T152326--rpg.org" :maxlevel . 1)
+	  ("~/Denote/20250305T141315--projects.org" :maxlevel . 1)
+	  ("~/Denote/20250305T073302--work.org" :maxlevel . 1)))
 
   (setq org-capture-templates `(
                                 ("i" "INBOX" entry
@@ -945,34 +978,33 @@ tags: \n\
 			(setq org-deadline-warning-days 0)
 			;;(makunbound 'org-agenda-prefix-format)
 			;;(makunbound 'org-prefix-format)
-			(setq org-agenda-prefix-format '((agenda  . " %-12T")))
-
+			;;(setq org-agenda-prefix-format '((agenda  . " %-12T")))
 			(setq org-agenda-prefix-format
-      '((agenda . " %i %?-12t% s")
-        (todo . " %i ")
-        (tags . " %i ")
-        (search . " %i ")))
+			      '((agenda . " %i %?-12t% s")
+				(todo . " %i ")
+				(tags . " %i ")
+				(search . " %i ")))
 
-;; (setq org-prefix-format
-;;       '(
-;;         (agenda . "  %-12:c%?-12t% s")
-;; 	(timeline . "  %?-12t% s")
-;; 	(todo . "  %-12:c")
-;; 	(search . "  %-12:c")
-;; 	(tags . "  %-12:c")
-;; 	(tags-todo . "  %-12:c")))
+			;; (setq org-prefix-format
+			;;       '(
+			;;         (agenda . "  %-12:c%?-12t% s")
+			;; 	(timeline . "  %?-12t% s")
+			;; 	(todo . "  %-12:c")
+			;; 	(search . "  %-12:c")
+			;; 	(tags . "  %-12:c")
+			;; 	(tags-todo . "  %-12:c")))
 
-(setq org-agenda-prefix-format
-      '((agenda . "  %i %?-12t% s")  ;; Remove `%c`
-        (todo . "  %i ")
-        (tags . "  %i ")
-        (search . "  %i ")))
+			;; (setq org-agenda-prefix-format
+			;;       '((agenda . "  %i %?-12t% s")  ;; Remove `%c`
+			;;         (todo . "  %i ")
+			;;         (tags . "  %i ")
+			;;         (search . "  %i ")))
 
-(setq org-agenda-remove-tags nil)
+			(setq org-agenda-remove-tags nil)
 
-(org-agenda-entry-types '(:deadline :scheduled :timestamp))
-(org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))
-(org-agenda-block-separator "\n")))
+			(org-agenda-entry-types '(:deadline :scheduled :timestamp))
+			(org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'any))
+			(org-agenda-block-separator "\n")))
 	    
 	    (tags-todo "+PRIORITY=\"A\"" ((org-agenda-overriding-header "\nPriority Tasks")))
 	    (tags-todo "@INBOX" ((org-agenda-overriding-header "\nInbox")))
@@ -987,7 +1019,7 @@ tags: \n\
 	   ((agenda "" (org-agenda-overriding-header "Today's Summary")))
 	   (tags-todo "+PRIORITY=\"A\"" ((org-agenda-overriding-header "\nPriority Tasks")))
 	   (tags-todo "@INBOX" ((org-agenda-overriding-header "\nInbox")))
-	    (todo "NEXT" ((org-agenda-overriding-header "\nNext Tasks"))))
+	   (todo "NEXT" ((org-agenda-overriding-header "\nNext Tasks"))))
 	  
           ("w" "Work Tasks"
            ((agenda "" ((org-agenda-overriding-header "Work Tasks")))
@@ -1009,7 +1041,8 @@ tags: \n\
            ((tags-todo "@INBOX" ((org-agenda-overriding-header "INBOX")))
             (agenda "")))))
   )
-;;End of org-mode
+;; -----------------------------------------------------------------------
+;; End of org-mode
 
 ;; (use-package org-notify
 ;;   :ensure t
@@ -1037,21 +1070,24 @@ tags: \n\
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "family" "music" "books" "blog"))
+  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg"
+				    "radio" "family" "music" "books"
+				    "TODO" "blog"))
   ;; (denote-dired-mode t)
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
   (global-set-key (kbd "C-c d s") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
+  (global-set-key (kbd "C-c d j o") 'tw/dired-find-file-split-below)
   (global-set-key (kbd "C-c d j j") 'tw/journelly-to-denote-journal-2)
   ;; (global-set-key (kbd "C-c d j n") 'denote-journal-extras-new-or-existing-entry)
   (global-set-key (kbd "C-c d o") (lambda ()
 				    (interactive)
 				    (dired denote-directory)))
 
-    (global-set-key (kbd "C-c d j o") (lambda ()
-				    (interactive)
-				    (dired (concat denote-directory "/Journal/"))))
+  (global-set-key (kbd "C-c d j o") (lambda ()
+				      (interactive)
+				      (dired (concat denote-directory "/Journal/"))))
 
   (denote-rename-buffer-mode)
 
@@ -1068,39 +1104,39 @@ tags: \n\
                    :kill-buffer t
                    :jump-to-captured nil)))
 
-(with-eval-after-load 'org-capture
-  (add-to-list 'org-capture-templates
-               '("j" "Journal" entry
-                 (file denote-journal-extras-path-to-new-or-existing-entry)x
-                 "* %U %?\n%i\n%a"
-                 :kill-buffer t
-                 :empty-lines 1)))
+  (with-eval-after-load 'org-capture
+    (add-to-list 'org-capture-templates
+		 '("j" "Journal" entry
+                   (file denote-journal-extras-path-to-new-or-existing-entry)x
+                   "* %U %?\n%i\n%a"
+                   :kill-buffer t
+                   :empty-lines 1)))
   
   ;; (defun tw/denote-journal ()
-;;     "Create an entry tagged 'journal' with the date as its title."
-;;     (interactive)
-;;     (denote (format-time-string "%A %e %B %Y") '("journal"))
-;;     (insert "* Daily Morning Routine
-;; - [ ] Review yesterday's journal (c-c d j o)
-;; - [ ] Review task list and refile in to journal (c-c o a t)
-;; - [ ] Check Beorg for tasks
-;; - [ ] Check for changed files (C-c l c f)
-;; - [ ] Review Outlook calendar
-;; - [ ] Review Org INBOX
-;; - [ ] Review Raindrop INBOX   https://app.raindrop.io/my/-1
+  ;;     "Create an entry tagged 'journal' with the date as its title."
+  ;;     (interactive)
+  ;;     (denote (format-time-string "%A %e %B %Y") '("journal"))
+  ;;     (insert "* Daily Morning Routine
+  ;; - [ ] Review yesterday's journal (c-c d j o)
+  ;; - [ ] Review task list and refile in to journal (c-c o a t)
+  ;; - [ ] Check Beorg for tasks
+  ;; - [ ] Check for changed files (C-c l c f)
+  ;; - [ ] Review Outlook calendar
+  ;; - [ ] Review Org INBOX
+  ;; - [ ] Review Raindrop INBOX   https://app.raindrop.io/my/-1
 
-;; * Tasks
+  ;; * Tasks
 
-;; * Notes
-;; "))
+  ;; * Notes
+  ;; "))
 
-(defun tw/denote-journal ()
-  "Create an entry tagged 'journal' with the date as its title in `~/Denote/journal/`."
-  (interactive)
-  (let ((denote-directory "~/Denote/journal/"))  ;; Temporarily set the Denote directory
-    (denote (format-time-string "%A %e %B %Y") '("journal"))
-    (goto-char (point-max))  ;; Move to the end of the metadata
-    (insert "\n* Daily Morning Routine
+  (defun tw/denote-journal ()
+    "Create an entry tagged 'journal' with the date as its title in `~/Denote/journal/`."
+    (interactive)
+    (let ((denote-directory "~/Denote/journal/"))  ;; Temporarily set the Denote directory
+      (denote (format-time-string "%A %e %B %Y") '("journal"))
+      (goto-char (point-max))  ;; Move to the end of the metadata
+      (insert "\n* Daily Morning Routine
 - [ ] tw/journelly-to-denote
 - [ ] Review yesterday's journal (C-c d j o)
 - [ ] Review tasks set for today (C-c o a a)
@@ -1119,34 +1155,35 @@ tags: \n\
 ** Denote keystrokes
 - C-c d n: New Denote note
 - C-c d f Find Denote notes
+- C-c d g Search for @Tag in Denote journals
 - C-c d s Denote open 
 - C-c d j n: Create daily journal
 - C-c d j j tw/journelly-to-denote-journal-2
 - C-c d o: Open Denote directory
 - C-c d j o: Open journal directory (non-sorted)
 "))
-  (add-to-list 'org-refile-targets '((,(denote-journal-extras--entry-today) . (:maxlevel . 2)))))
-;;	`((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
+    (Add-To-list 'org-refile-targets '((,(denote-journal-extras--entry-today) . (:maxlevel . 2)))))
+  ;;	`((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
 
   
-;; (let ((heading "Tasks")
-;;       (case-fold-search t)) ; Make search case-insensitive
-;;   (goto-char (point-min)) ; Start from the beginning of the buffer
-;;   (if (re-search-forward (format org-complex-heading-regexp-format (regexp-quote heading)) nil t)
-;;       (progn
-;;         (end-of-line)          ; Move to the end of the heading line
-;;         (newline)              ; Insert a newline if needed
-;;         (message "Moved to the line under heading: %s" heading))
-;;     (message "Heading '%s' not found" heading)))
+  ;; (let ((heading "Tasks")
+  ;;       (case-fold-search t)) ; Make search case-insensitive
+  ;;   (goto-char (point-min)) ; Start from the beginning of the buffer
+  ;;   (if (re-search-forward (format org-complex-heading-regexp-format (regexp-quote heading)) nil t)
+  ;;       (progn
+  ;;         (end-of-line)          ; Move to the end of the heading line
+  ;;         (newline)              ; Insert a newline if needed
+  ;;         (message "Moved to the line under heading: %s" heading))
+  ;;     (message "Heading '%s' not found" heading)))
 
   (defun tw/denote-find-file ()
-  "Use Ivy to finda Denote file."
-  (interactive)
-  (let ((default-directory denote-directory))
-    (ivy-read "Find Denote file: "
-              (directory-files denote-directory nil "^[^.].*\\.org$")
-              :action (lambda (file)
-                        (find-file (expand-file-name file denote-directory)))))))
+    "Use Ivy to finda Denote file."
+    (interactive)
+    (let ((default-directory denote-directory))
+      (ivy-read "Find Denote file: "
+		(directory-files denote-directory nil "^[^.].*\\.org$")
+		:action (lambda (file)
+                          (find-file (expand-file-name file denote-directory)))))))
 
 (use-package denote-journal
   :ensure t)
@@ -1174,20 +1211,23 @@ tags: \n\
   :config
   (consult-notes-denote-mode t))
 
-;; (use-package dashboard
-;;   :ensure t
-;;   :config
-;;   (setq dashboard-week-agenda t)
-;;   (setq dashboard-startup-banner 'official)
-;;   (setq dashboard-center-content t)
-;;   (setq dashboard-items '(
-;;                           (agenda    . 5)
-;; 			  (recents   . 5)
-;;                           (bookmarks . 5)
-;;                           (projects  . 5)
-;;                           (registers . 5)))
-;;   (dashboard-setup-startup-hook))
-;; (dashboard-open)
+(use-package dashboard
+  :ensure t
+  :config
+;;  (setq dashboard-week-agenda t)
+  (setq dashboard-startup-banner 'official)
+  (setq dashboard-center-content t)
+  (setq dashboard-items '(
+                          (agenda    . 5)
+			  (recents   . 5)
+                          (bookmarks . 5)
+                          (projects  . 5)
+                          (registers . 5)))
+  (dashboard-setup-startup-hook))
+
+
+
+(dashboard-open)
 
 (use-package calfw
   :ensure t)
