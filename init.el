@@ -54,6 +54,21 @@
 ;; -----------------------------------------------------------------------------
 ;; Custom functions
 
+(defun tw/reload-all-buffers-changed-on-disks ()
+  "Revert all file buffers without confirmation.
+Buffers visiting files that have changed on disk are reloaded."
+  (interactive)
+  (let ((reverted-count 0))
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (and (buffer-file-name buf)
+                   (file-exists-p (buffer-file-name buf))
+                   (not (buffer-modified-p buf))
+                   (not (verify-visited-file-modtime buf)))
+          (revert-buffer :ignore-auto :noconfirm)
+          (cl-incf reverted-count))))
+    (message "Reverted %d buffer(s)." reverted-count)))
+
 ;; Read in Journelly to Denote code
 (load-file "~/Projects/Code/Elisp/journelly-to-denote-2.el")
 
@@ -237,8 +252,6 @@ or related, to make changes apply to another Ef theme."
 	    ("UNSCHEDULED" . ,grey-warmer)))))
 (add-hook 'ef-themes-post-load-hook #'tw/ef-themes-org-todo-faces)
 
-;; Custom functions
-
 (defun tw/create-jekyll-post ()
   "Create a new Jekyll blog post in ~/Projects/cthimothy.github.io/_posts/."
   (interactive)
@@ -262,21 +275,21 @@ tags: \n\
       (save-buffer)
       (message "Created new Jekyll post: %s" filename))))
 
-(defun Tt/raycast-show-agenda ()
+(defun tw/raycast-show-agenda ()
   (interactive)
   (let ((agenda-frame (make-frame-command)))
     (select-frame agenda-frame)
     (org-agenda-list)
     (x-focus-frame agenda-frame)))
 
-					; (defun tw/dired-ediff-marked-files ()
-					;   "Run ediff-files on a pair of files marked in dired buffer"
-					;   (interactive)
-					;   (let ((marked-files (dired-get-marked-files nil)))
-					;     (if (not (= (length marked-files) 2))
-					;         (message "mark exactly 2 files")
-					;       (ediff-files (nth 0 marked-files)
-					;                    (nth 1 marked-files)))))
+; (defun tw/dired-ediff-marked-files ()
+;   "Run ediff-files on a pair of files marked in dired buffer"
+;   (interactive)
+;   (let ((marked-files (dired-get-marked-files nil)))
+;     (if (not (= (length marked-files) 2))
+;         (message "mark exactly 2 files")
+;       (ediff-files (nth 0 marked-files)
+;                    (nth 1 marked-files)))))
 
 (defun tw/hide-org-tags ()
   (interactive)
@@ -299,7 +312,9 @@ tags: \n\
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "C-c d j o") #'tw/dired-find-file-split-below))
 
+;; End of custom functions
 ;;--------------------------------------------------------------------------------
+;; Begin default global settings and hooks
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -330,6 +345,35 @@ tags: \n\
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
+
+(setq insert-directory-program "/opt/homebrew/bin/gls")
+(setq dired-use-ls-dired t)
+(setq dired-listing-switches "-lht")
+(setq large-file-warning-threshold 50000000)
+(setq dired-kill-when-opening-new-dired-buffer t)
+
+(setq electric-pair-inhibit-predicate
+      (lambda (c)
+        (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
+
+
+
+;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
+(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
+(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'dired-find-file-other-window)))
+(add-hook 'dired-mode-hook 'hl-line-mode)
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'prog-mode-hook 'hl-line-mode)
+(add-hook 'prog-mode-hook 'electric-pair-mode)
+(add-hook 'org-agenda-mode 'hl-line-mode)
+(add-hook 'org-mode-hook 'hl-line-mode)
+;;(add-hook 'org-mode-hook 'display-line-numbers-mode)
+;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
+(add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
+(add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
+(add-hook 'ibuffer-mode-hook (lambda () (hl-line-mode 1)))
+(add-hook 'text-mode-hook #'visual-line-mode)
 
 ;; Some Macos nonsense
 (setq mac-command-modifier 'meta)
@@ -393,7 +437,6 @@ tags: \n\
 (global-set-key (kbd "C-c y") 'clipboard-yank)
 (global-set-key (kbd "C-c c w") 'clipboard-kill-ring-save)
 (global-set-key (kbd "C-x C-a") 'mark-whole-buffer)
-(global-set-key (kbd "C-c o a") 'org-agenda)
 (global-set-key (kbd "C-x k") 'kill-buffer)
 (global-set-key (kbd "M-n") 'scroll-up-command)
 (global-set-key (kbd "M-p") 'scroll-down-command)
@@ -417,7 +460,7 @@ tags: \n\
 (global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c l c f") 'tw/list-files-changed-on-disk)
 (global-set-key (kbd "C-c v") 'visual-line-mode)
-(global-set-key (kbd "C-c g d") 'find-grep-dired)
+
 (global-set-key (kbd "C-c =") 'balance-windows-area)
 (global-set-key (kbd "C-c e") 'forward-sexp)
 (global-set-key (kbd "C-c a") 'backward-sexp)
@@ -429,31 +472,6 @@ tags: \n\
 ;;(global-unset-key (kbd "M-<return>"))
 
 
-(setq insert-directory-program "/opt/homebrew/bin/gls")
-(setq dired-use-ls-dired t)
-(setq dired-listing-switches "-lht")
-(setq large-file-warning-threshold 50000000)
-(setq dired-kill-when-opening-new-dired-buffer t)
-
-;; Hook some modes
-					;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
-(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
-(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'dired-find-file-other-window)))
-(add-hook 'dired-mode-hook 'hl-line-mode)
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-hook 'prog-mode-hook 'hl-line-mode)
-(add-hook 'prog-mode-hook 'electric-pair-mode)
-(setq electric-pair-inhibit-predicate
-      (lambda (c)
-        (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
-(add-hook 'org-agenda-mode 'hl-line-mode)
-(add-hook 'org-mode-hook 'hl-line-mode)
-					;(add-hook 'org-mode-hook 'display-line-numbers-mode)
-;;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
-(add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
-(add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
-(add-hook 'ibuffer-mode-hook (lambda () (hl-line-mode 1)))
-(add-hook 'text-mode-hook #'visual-line-mode)
 
 ;; (use-package cloud-theme
 ;;   :ensure t
@@ -471,6 +489,9 @@ tags: \n\
 ;;   :config
 ;;   (setq tw-light-theme 'timu-macos-theme))
 
+(setq tw-dark-theme 'material-dark
+      tw-light-theme 'cloud)
+
 (use-package modus-themes
   :ensure t
   :config
@@ -478,29 +499,28 @@ tags: \n\
   (global-set-key (kbd "C-c l l")
 		  (lambda ()
 		    (interactive)
-;		    (custom-set-faces
-;		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
-;		     '(aw-leading-char-face
-;		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
+		    (custom-set-faces
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
+		     '(aw-leading-char-face
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
 		    (disable-theme (car custom-enabled-themes))
   		    (load-theme tw-light-theme)))
 
   (global-set-key (kbd "C-c l d")
 		  (lambda ()
 		    (interactive)
-;		    (custom-set-faces
-;		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "steelblue"))))
-;				     '(aw-leading-char-face
-;		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
+		    (custom-set-faces
+		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "steelblue"))))
+				     '(aw-leading-char-face
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
 		    (disable-theme (car custom-enabled-themes))
 		    (load-theme tw-dark-theme))))
-;; End of custom fuctions
 
 ;; Define light and dark color themes
-(setq tw-dark-theme 'ef-owl
-      tw-light-theme 'ef-frost)
+;; (setq tw-dark-theme 'ef-owl
+;;      tw-light-theme 'ef-frost)
+;;(load-theme 'ef-owl)
 
-(load-theme 'ef-owl)
 
 (use-package easysession
   :ensure t
@@ -608,27 +628,28 @@ tags: \n\
   (setq aw-keys '(?a ?s ?d ?q ?w ?z ?x))
   (setq aw-ignore-current t)
   (custom-set-faces
-   '(aw-leading-char-face
-     ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "yellow"))))))
+;   '(aw-leading-char-face
+;   ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "yellow"))))
+  ))
 
-(use-package activities
-  :ensure t
-  :init
-  (activities-mode)
-					;  (activities-tabs-mode)
-  ;; Prevent `edebug' default bindings from interfering.
-  (setq edebug-inhibit-emacs-lisp-mode-bindings t)
+;; (use-package activities
+;;   :ensure t
+;;   :init
+;;   (activities-mode)
+;; 					;  (activities-tabs-mode)
+;;   ;; Prevent `edebug' default bindings from interfering.
+;;   (setq edebug-inhibit-emacs-lisp-mode-bindings t)
 
-  :bind
-  (("C-c C-a C-n" . activities-new)
-   ("C-c C-a C-d" . activities-define)
-   ("C-c C-a C-a" . activities-resume)
-   ("C-c C-a C-s" . activities-suspend)
-   ("C-c C-a C-k" . activities-kill)
-   ("C-c C-a b" . activities-switch-buffer)
-   ("C-c d d"  . activities-switch)
-   ("C-c C-a g" . activities-revert)
-   ("C-c C-a l" . activities-list)))
+;;   :bind
+;;   (("C-c C-a C-n" . activities-new)
+;;    ("C-c C-a C-d" . activities-define)
+;;    ("C-c C-a C-a" . activities-resume)
+;;    ("C-c C-a C-s" . activities-suspend)
+;;    ("C-c C-a C-k" . activities-kill)
+;;    ("C-c C-a b" . activities-switch-buffer)
+;;    ("C-c d d"  . activities-switch)
+;;    ("C-c C-a g" . activities-revert)
+;;    ("C-c C-a l" . activities-list)))
 
 (use-package ivy
   :ensure t
@@ -764,7 +785,9 @@ tags: \n\
 (use-package treemacs
   :ensure t
   :config
-  (setq treemacs-width 75)
+  (setq treemacs-width 85)
+  (setq treemacs-follow-mode t)
+  (setq treemacs-tag-follow-delay 0.5)
   (treemacs))
 
 (use-package paredit
@@ -1073,9 +1096,11 @@ tags: \n\
   (setq denote-known-keywords (list "journal" "atheism" "work" "rpg"
 				    "radio" "family" "music" "books"
 				    "TODO" "blog"))
+  
   ;; (denote-dired-mode t)
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
+  (global-set-key (kbd "C-c d g") 'find-grep-dired)
   (global-set-key (kbd "C-c d s") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
   (global-set-key (kbd "C-c d j o") 'tw/dired-find-file-split-below)
@@ -1137,32 +1162,24 @@ tags: \n\
       (denote (format-time-string "%A %e %B %Y") '("journal"))
       (goto-char (point-max))  ;; Move to the end of the metadata
       (insert "\n* Daily Morning Routine
+
 - [ ] tw/journelly-to-denote
 - [ ] Review yesterday's journal (C-c d j o)
-- [ ] Review tasks set for today (C-c o a a)
-- [ ] Review task list and refile into journal (C-c o a t)
+- [ ] Review and re-file today's scheduled tasks (C-c o a a)
+- [ ] Review and re-file  all othe4r tasks (C-c o a t)
 - [ ] Check Beorg for tasks
 - [ ] Check for changed files (C-c l c f)
 - [ ] Review Outlook calendar
 - [ ] Review Org INBOX
-- [ ] Review Raindrop INBOX   https://app.raindrop.io/my/-1
+- [ ] Review Raindrop INBOX https://app.raindrop.io/my/-1
 - [ ] Check 2025 Reading List
 
 * Tasks
 
 * Notes
 
-** Denote keystrokes
-- C-c d n: New Denote note
-- C-c d f Find Denote notes
-- C-c d g Search for @Tag in Denote journals
-- C-c d s Denote open 
-- C-c d j n: Create daily journal
-- C-c d j j tw/journelly-to-denote-journal-2
-- C-c d o: Open Denote directory
-- C-c d j o: Open journal directory (non-sorted)
 "))
-    (Add-To-list 'org-refile-targets '((,(denote-journal-extras--entry-today) . (:maxlevel . 2)))))
+    (add-to-list 'org-refile-targets '((,(denote-journal-extras--entry-today) . (:maxlevel . 2)))))
   ;;	`((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
 
   
@@ -1218,8 +1235,8 @@ tags: \n\
   (setq dashboard-startup-banner 'official)
   (setq dashboard-center-content t)
   (setq dashboard-items '(
-                          (agenda    . 5)
-			  (recents   . 5)
+                          (agenda    . 10)
+			  (recents   . 10)
                           (bookmarks . 5)
                           (projects  . 5)
                           (registers . 5)))
@@ -1233,3 +1250,7 @@ tags: \n\
   :ensure t)
 
 ;; (delete-window (get-buffer-window "*scratch*"))
+
+(add-to-list 'ibuffer-saved-filters
+    '("non-denote-journals"
+        (not (filename . "__journal\\.org$"))))
