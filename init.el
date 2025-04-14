@@ -1,4 +1,4 @@
-; (setq debug-on-error t)
+(setq debug-on-error t)
 
 (load "server")
 (unless (server-running-p)
@@ -47,9 +47,10 @@
                         :slant normal :weight medium :width normal)))))
 
 (set-frame-parameter nil 'alpha-transparency 50)
-(set-frame-parameter (selected-frame) 'alpha '(95 95))
+(set-frame-parameter (selected-frame) 'alpha '(97 97))
 					;(set-frame-parameter nil 'alpha-transparency 0)
 					;(set-frame-parameter (selected-frame) 'alpha '(100 100))
+
 
 ;; -----------------------------------------------------------------------------
 ;; Custom functions
@@ -325,6 +326,8 @@ tags: \n\
 (global-prettify-symbols-mode 1)
 ;; (fringe-mode 0)
 ;; Always split windows vertically
+
+(setq ibuffer-default-sorting-mode 'recency)
 (setq split-width-threshold nil)
 (setq split-height-threshold nil)
 (setq use-short-answers t)
@@ -351,6 +354,7 @@ tags: \n\
 (setq dired-listing-switches "-lht")
 (setq large-file-warning-threshold 50000000)
 (setq dired-kill-when-opening-new-dired-buffer t)
+(setq org-use-sub-superscripts nil)
 
 (setq electric-pair-inhibit-predicate
       (lambda (c)
@@ -471,7 +475,8 @@ tags: \n\
 ;; (global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
 ;;(global-unset-key (kbd "M-<return>"))
 
-
+;; -----------------------------------------------------------------------------
+;; Configure themes
 
 ;; (use-package cloud-theme
 ;;   :ensure t
@@ -489,8 +494,15 @@ tags: \n\
 ;;   :config
 ;;   (setq tw-light-theme 'timu-macos-theme))
 
-(setq tw-dark-theme 'material-dark
-      tw-light-theme 'cloud)
+(use-package spacemacs-theme
+  :ensure t
+  :config
+  (setq tw-light-theme 'spacemacs-light))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (setq tw-dark-theme 'doom-spacegrey))
 
 (use-package modus-themes
   :ensure t
@@ -520,7 +532,8 @@ tags: \n\
 ;; (setq tw-dark-theme 'ef-owl
 ;;      tw-light-theme 'ef-frost)
 ;;(load-theme 'ef-owl)
-
+;;(setq tw-dark-theme 'doom-spacegrey)
+;;(setq tw-light-theme 'spacemacs-light)
 
 (use-package easysession
   :ensure t
@@ -896,15 +909,14 @@ tags: \n\
 	  ("DONE" . (:foreground "#8f9C55" :background ""))))
 
   (setq org-todo-keywords
-	'((sequence "NEXT(n)" "TODO(t)" "UNSCHEDULED(u)" "PROJECT(p)" "|" "DONE(d)")))
+	'((sequence "NEXT(n)" "TODO(t)" "IN-PROGRESS"(i) ")UNSCHEDULED(u)" "PROJECT(p)" "|" "DONE(d)")))
 
-  (setq org-adapt-indentation t
-	org-hide-leading-stars t
-	org-hide-emphasis-markers t
-	org-pretty-entities t
-	org-ellipsis "  ·")
-  ;;  
-
+;;  (setq org-adapt-indentation t
+;;	org-hide-leading-stars t
+;;	org-hide-emphasis-markers t
+;;	org-pretty-entities t
+;;	org-ellipsis "  ·")
+  
   (setq org-adapt-indentation t
 	org-hide-leading-stars t
 	org-hide-emphasis-markers t
@@ -927,9 +939,14 @@ tags: \n\
 
   (setq org-tag-alist
         '(("@Emacs" . ?e)
+	  ("@Workflow" . ?f)
           ("@Tasks" . ?t)
+          ("@ToWatch" . ?T)	  
           ("@Work" . ?w)
+	  ("@Atheism" . ?a)
+	  ("@Thoughts" . ?h)
           ("@ADA" . ?a)
+	  ("@ADHD" . ?d)
           ("@RPG" . ?r)
           ("@INBOX" . ?i)))
 
@@ -1101,9 +1118,9 @@ tags: \n\
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
   (global-set-key (kbd "C-c d g") 'find-grep-dired)
-  (global-set-key (kbd "C-c d s") 'denote-sort-dired)
+  (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
-  (global-set-key (kbd "C-c d j o") 'tw/dired-find-file-split-below)
+;;  (global-set-key (kbd "C-c d j o") 'tw/dired-find-file-split-below)
   (global-set-key (kbd "C-c d j j") 'tw/journelly-to-denote-journal-2)
   ;; (global-set-key (kbd "C-c d j n") 'denote-journal-extras-new-or-existing-entry)
   (global-set-key (kbd "C-c d o") (lambda ()
@@ -1161,7 +1178,7 @@ tags: \n\
     (let ((denote-directory "~/Denote/journal/"))  ;; Temporarily set the Denote directory
       (denote (format-time-string "%A %e %B %Y") '("journal"))
       (goto-char (point-max))  ;; Move to the end of the metadata
-      (insert "\n* Daily Morning Routine
+      (insert "* Daily Morning Routine
 
 - [ ] tw/journelly-to-denote
 - [ ] Review yesterday's journal (C-c d j o)
@@ -1173,13 +1190,19 @@ tags: \n\
 - [ ] Review Org INBOX
 - [ ] Review Raindrop INBOX https://app.raindrop.io/my/-1
 - [ ] Check 2025 Reading List
+- [ ] Add anything to To Read/Listen/Watch etc.
+- [ ] Check Daily Workflow
 
 * Tasks
 
+** TODO Set 2 hour daily Pomodoro
+
 * Notes
 
-"))
-    (add-to-list 'org-refile-targets '((,(denote-journal-extras--entry-today) . (:maxlevel . 2)))))
+** 
+* Timesheet
+"  ;; (insert (format "SCHEDULED: <%s>" (format-time-string "%Y-%m-%d %a")))))
+    (add-to-list 'org-refile-targets '((,(denote-journal-extras--entry-today) . (:maxlevel . 2)))))))
   ;;	`((,(denote-journal-extras--entry-today) . (:maxlevel . 1))
 
   
@@ -1228,19 +1251,19 @@ tags: \n\
   :config
   (consult-notes-denote-mode t))
 
-(use-package dashboard
-  :ensure t
-  :config
-;;  (setq dashboard-week-agenda t)
-  (setq dashboard-startup-banner 'official)
-  (setq dashboard-center-content t)
-  (setq dashboard-items '(
-                          (agenda    . 10)
-			  (recents   . 10)
-                          (bookmarks . 5)
-                          (projects  . 5)
-                          (registers . 5)))
-  (dashboard-setup-startup-hook))
+;; (use-package dashboard
+;;   :ensure t
+;;   :config
+;; ;;  (setq dashboard-week-agenda t)
+;;   (setq dashboard-startup-banner 'official)
+;;   (setq dashboard-center-content t)
+;;   (setq dashboard-items '(
+;;                           (agenda    . 10)
+;; 			  (recents   . 10)
+;;                           (bookmarks . 5)
+;;                           (projects  . 5)
+;;                           (registers . 5)))
+;;   (dashboard-setup-startup-hook))
 
 
 
@@ -1253,4 +1276,8 @@ tags: \n\
 
 (add-to-list 'ibuffer-saved-filters
     '("non-denote-journals"
-        (not (filename . "__journal\\.org$"))))
+      (not (filename . "__journal\\.org$"))))
+
+(add-to-list 'ibuffer-saved-filters
+    '("all-denote-journals"
+        (filename . "__journal\\.org$")))
