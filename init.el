@@ -43,7 +43,7 @@
 ;; -----------------------------------------------------------------------------
 ;; Load custom code from external files
 ;; -----------------------------------------------------------------------------
-(load-file "~/Projects/Code/Elisp/journelly-to-denote-2.el")
+(load-file "~/Projects/Code/Elisp/journelly-to-denote.el")
 
 ;; -----------------------------------------------------------------------------
 ;; Define custom functions
@@ -69,6 +69,24 @@
 	(display-fill-column-indicator-mode 1)
       (display-fill-column-indicator-mode -1)))
 (add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
+
+
+(defun tw/close-old-denote-journal-buffers ()
+  "Close all open Denote journal buffers except today's and non-journals."
+  (interactive)
+  (let* ((denote-dir (expand-file-name "~/Org//"))
+         (today (format-time-string "%Y%m%d"))
+         (today-regex (concat "\\b" today "\\b")))
+    (dolist (buf (buffer-list))
+      (let ((file (buffer-file-name buf)))
+        (when (and file
+                   (string-prefix-p denote-dir file)
+                   (string-match-p "__journal" file)
+                   (not (string-match-p today-regex file)))
+          (kill-buffer buf))))))
+
+(add-hook 'emacs-startup-hook #'tw/close-old-denote-journal-buffers)
+(advice-add 'org-agenda :after #'tw/close-old-denote-journal-buffers)
 
 
 (defun tw/list-files-changed-on-disk ()
