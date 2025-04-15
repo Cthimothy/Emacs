@@ -176,6 +176,7 @@ tags: \n\
                title date))
       (save-buffer)
       (message "Created new Jekyll post: %s" filename))))
+;; Keyboard shortcut C-c j b
 
 
 (defun tw/highlight-line ()
@@ -394,6 +395,7 @@ tags: \n\
 ;;       are defined within the (use-package) definition.
 ;;       Those keyboard shortcuts should also be referenced here for clarity
 
+(global-set-key (kbd "C-c j b") 'tw/create-jekyll-post)
 (global-set-key (kbd "C-c t t") 'tw/toggle-transparency)
 (global-set-key (kbd "C-x a s") 'async-shell-command)
 (global-set-key (kbd "C-x v t") 'multi-vterm)
@@ -786,6 +788,7 @@ tags: \n\
           ("@Tasks" . ?t)
           ("@ToWatch" . ?T)	  
           ("@Work" . ?w)
+          ("@Timesheet" . ?)
 	  ("@Atheism" . ?a)
 	  ("@Thoughts" . ?h)
           ("@ADA" . ?a)
@@ -803,18 +806,10 @@ tags: \n\
   ;; NOTE: Refile Target for current daily journal is set in Denote use-package section
   ;; FIXME: It's still not working
 
-
-(setq org-refile-targets
-      '(("~/Org/20250305T141315--projects.org" :maxlevel . 1)
-        ("~/Org/20250304T113200--tasks.org" :maxlevel . 1)
-        ("~/Org/20250212T142617--atheism__atheism.org" :maxlevel . 1)
-        ("~/Org/20250305T141314--emacs.org" :maxlevel . 1)
-        ("~/Org/20250304T152326--rpg.org" :maxlevel . 1)
-        ("~/Org/20250305T073302--work.org" :maxlevel . 3)))
-
 ;(add-to-list 'org-refile-targets
 ;             (let ((latest-journal (car (last (denote-journal-extras--entry-today)))))
 ;               (cons latest-journal '(:maxlevel . 1))))
+
 )
 ;; End of Org configuration
 ;; -----------------------------------------------------------------------------
@@ -870,17 +865,26 @@ tags: \n\
                    :kill-buffer t
                    :empty-lines 1)))
 
-  (defun tw/denote-journal ()
-    "Create an entry tagged 'journal' with the date as its title in `~/Org/Journal/`."
-    (interactive)
-    (let ((denote-directory "~/Org/Journal/"))
-      (denote (format-time-string "%A %e %B %Y") '("journal"))
-      (goto-char (point-max))
-      (insert "* Daily Morning Routine
+(defun tw/denote-journal ()
+  "Open today's Denote journal if it exists, otherwise create it with a template."
+  (interactive)
+  (let* ((denote-directory "~/Org/Journal/")
+         (today (format-time-string "%Y%m%d"))
+         (files (directory-files denote-directory t "\\.org$"))
+         (existing-file (seq-find (lambda (file)
+                                    (and (string-match-p today file)
+                                         (string-match-p "journal" file)))
+                                  files)))
+    (if existing-file
+        (find-file existing-file)
+      (let ((denote-directory denote-directory)) ; set locally for denote
+        (denote (format-time-string "%A %e %B %Y") '("journal"))
+        (goto-char (point-max))
+        (insert "* Daily Morning Routine
 - [ ] tw/journelly-to-denote
 - [ ] Review yesterday's journal (C-c d j o)
 - [ ] Review and re-file today's scheduled tasks (C-c o a a)
-- [ ] Review and re-file  all othe4r tasks (C-c o a t)
+- [ ] Review and re-file all other tasks (C-c o a t)
 - [ ] Check Beorg for tasks
 - [ ] Check for changed files (C-c l c f)
 - [ ] Review Outlook calendar
@@ -891,14 +895,14 @@ tags: \n\
 - [ ] Check Daily Workflow
 
 * Tasks
-** TODO Set 2 hour daily Pomodoro
 
 * Notes
-** 
+** Two hour Pomodoro
 
-* Timesheet
-** "))
-    (add-to-list 'org-refile-targets '((,(denote-journal-extras--entry-today) . (:maxlevel . 2)))))
+* Timesheet :@Timesheet:
+** ")
+        (add-to-list 'org-refile-targets
+                     `((,(denote-journal-extras--entry-today)) . (:maxlevel . 2)))))))
     ;; FIXME: This isn't working
 
 
