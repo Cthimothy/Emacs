@@ -31,7 +31,6 @@
       '((".*" "~/.emacs.d/lockfiles/" t)))
 
 (setq inhibit-startup-screen t)
-(add-hook 'after-init-hook (lambda () (kill-buffer "*Messages*")))
 
 (custom-set-faces
  '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
@@ -68,7 +67,8 @@
     (if (> (current-column) fill-column)
 	(display-fill-column-indicator-mode 1)
       (display-fill-column-indicator-mode -1)))
-(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
+;; Hooks and advice referenced:
+;(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
 
 
 (defun tw/close-old-denote-journal-buffers ()
@@ -367,6 +367,8 @@ tags: \n\
 ;; -----------------------------------------------------------------------------
 ;; Configure mode hooks
 ;; -----------------------------------------------------------------------------
+(add-hook 'after-init-hook (lambda () (kill-buffer "*Messages*")))
+(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
 (add-hook 'dired-mode-hook 'hl-line-mode)
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
