@@ -84,9 +84,9 @@
                    (string-match-p "__journal" file)
                    (not (string-match-p today-regex file)))
           (kill-buffer buf))))))
-
-(add-hook 'emacs-startup-hook #'tw/close-old-denote-journal-buffers)
-(advice-add 'org-agenda :after #'tw/close-old-denote-journal-buffers)
+;; Hooks and advice referenced:
+;(add-hook 'emacs-startup-hook #'tw/close-old-denote-journal-buffers)
+;(advice-add 'org-agenda :after #'tw/close-old-denote-journal-buffers)
 
 
 (defun tw/list-files-changed-on-disk ()
@@ -377,6 +377,8 @@ tags: \n\
 (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
 (add-hook 'ibuffer-mode-hook (lambda () (hl-line-mode 1)))
 (add-hook 'text-mode-hook #'visual-line-mode)
+(add-hook 'emacs-startup-hook #'tw/close-old-denote-journal-buffers)
+(advice-add 'org-agenda :after #'tw/close-old-denote-journal-buffers)
 ;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 ;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
 ;(add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
