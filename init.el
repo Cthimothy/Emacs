@@ -42,12 +42,42 @@
 ;; -----------------------------------------------------------------------------
 ;; Load custom code from external files
 ;; -----------------------------------------------------------------------------
-(load-file "~/Projects/Code/Elisp/journelly-to-denote.el")
+;(load-file "~/Projects/Code/Elisp/journelly-to-denote.el")
+;(load-file "~/Projects/Code/Elisp/tag-explorer/tag-explorer.el")
+(add-to-list 'load-path "~/Projects/Code/Elisp/tag-explorer/")
+(add-to-list 'load-path "~/Projects/Code/Elisp/journelly-to-denote/")
+(require 'tag-explorer)
 
 ;; -----------------------------------------------------------------------------
 ;; Define custom functions
 ;; NOTE: All org-mode related functions defined win org (use-package)
 ;; -----------------------------------------------------------------------------
+(use-package ivy-posframe
+  :ensure t
+  :config
+  ;; display at `ivy-posframe-style'
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+;  (setq ivy-posframe-parameters
+;	'((left-fringe . 0)
+;	  (right-fringe . 0)))
+  (setq ivy-posframe-width-relative t)
+  (setq ivy-posframe-height-relative t)
+  (setq ivy-posframe-border-width 1)
+  (set-face-attribute 'ivy-posframe-border nil :background "#666666")
+  (setq ivy-posframe-width 180
+	ivy-posframe-height 10)
+;  (setq ivy-posframe-width-relative-factor 0.62)
+;  (setq ivy-posframe-height-relative-factor 0.1)
+  (ivy-posframe-mode 1))
+
+
 (defun tw/toggle-transparency ()
   "Toggle between light and dark frame transparency."
   (interactive)
@@ -396,7 +426,7 @@ tags: \n\
 ;;       Those keyboard shortcuts should also be referenced here for clarity
 
 (global-set-key (kbd "C-c j b") 'tw/create-jekyll-post)
-(global-set-key (kbd "C-c t t") 'tw/toggle-transparency)
+
 (global-set-key (kbd "C-x a s") 'async-shell-command)
 (global-set-key (kbd "C-x v t") 'multi-vterm)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
@@ -788,7 +818,7 @@ tags: \n\
           ("@Tasks" . ?t)
           ("@ToWatch" . ?T)	  
           ("@Work" . ?w)
-          ("@Timesheet" . ?)
+          ("@Timesheet" . ?s)
 	  ("@Atheism" . ?a)
 	  ("@Thoughts" . ?h)
           ("@ADA" . ?a)
@@ -893,14 +923,38 @@ tags: \n\
 - [ ] Check 2025 Reading List
 - [ ] Add anything to To Read/Listen/Watch etc.
 - [ ] Check Daily Workflow
+- [ ] Set two hour Pomodoro
 
 * Tasks
+** 
 
 * Notes
-** Two hour Pomodoro
+** 
 
 * Timesheet :@Timesheet:
-** ")
+** ")* Daily Morning Routine
+- [ ] tw/journelly-to-denote
+- [ ] Review yesterday's journal (C-c d j o)
+- [ ] Review and re-file today's scheduled tasks (C-c o a a)
+- [ ] Review and re-file all other tasks (C-c o a t)
+- [ ] Check Beorg for tasks
+- [ ] Check for changed files (C-c l c f)
+- [ ] Review Outlook calendar
+- [ ] Review Org INBOX
+- [ ] Review Raindrop INBOX https://app.raindrop.io/my/-1
+- [ ] Check 2025 Reading List
+- [ ] Add anything to To Read/Listen/Watch etc.
+- [ ] Check Daily Workflow
+- [ ] Set two hour Pomodoro
+
+* Tasks
+** 
+
+* Notes
+** 
+
+* Timesheet :@Timesheet:
+** 
         (add-to-list 'org-refile-targets
                      `((,(denote-journal-extras--entry-today)) . (:maxlevel . 2)))))))
     ;; FIXME: This isn't working
