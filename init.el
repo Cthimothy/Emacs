@@ -37,7 +37,7 @@
                         :slant normal :weight medium :width normal)))))
 
 (set-frame-parameter nil 'alpha-transparency 50)
-(set-frame-parameter (selected-frame) 'alpha '(97 97))
+(set-frame-parameter (selected-frame) 'alpha '(100 100))
 
 ;; -----------------------------------------------------------------------------
 ;; Load custom code from external files
@@ -46,7 +46,10 @@
 ;(load-file "~/Projects/Code/Elisp/tag-explorer/tag-explorer.el")
 (add-to-list 'load-path "~/Projects/Code/Elisp/tag-explorer/")
 (add-to-list 'load-path "~/Projects/Code/Elisp/journelly-to-denote/")
-(require 'tag-explorer)
+(add-to-list 'load-path "~/Projects/Code/Elisp/denote-tag-find-dired/")
+;(require 'tag-explorer)
+(require 'journelly-to-denote)
+(require 'denote-tag-find-dired)
 
 ;; -----------------------------------------------------------------------------
 ;; Define custom functions
@@ -426,7 +429,7 @@ tags: \n\
 ;;       Those keyboard shortcuts should also be referenced here for clarity
 
 (global-set-key (kbd "C-c j b") 'tw/create-jekyll-post)
-
+(global-set-key (kbd "C-c t t") 'tw/toggle-transparency)
 (global-set-key (kbd "C-x a s") 'async-shell-command)
 (global-set-key (kbd "C-x v t") 'multi-vterm)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
@@ -516,6 +519,7 @@ tags: \n\
   :config
   (setq doom-modeline-workspace-name t)
   (setq doom-modeline-modal t)
+  (setq doom-modeline-buffer-file-name-style 'truncate-all)
   (doom-modeline-mode t))
 
 
@@ -932,29 +936,7 @@ tags: \n\
 ** 
 
 * Timesheet :@Timesheet:
-** ")* Daily Morning Routine
-- [ ] tw/journelly-to-denote
-- [ ] Review yesterday's journal (C-c d j o)
-- [ ] Review and re-file today's scheduled tasks (C-c o a a)
-- [ ] Review and re-file all other tasks (C-c o a t)
-- [ ] Check Beorg for tasks
-- [ ] Check for changed files (C-c l c f)
-- [ ] Review Outlook calendar
-- [ ] Review Org INBOX
-- [ ] Review Raindrop INBOX https://app.raindrop.io/my/-1
-- [ ] Check 2025 Reading List
-- [ ] Add anything to To Read/Listen/Watch etc.
-- [ ] Check Daily Workflow
-- [ ] Set two hour Pomodoro
-
-* Tasks
-** 
-
-* Notes
-** 
-
-* Timesheet :@Timesheet:
-** 
+** ")
         (add-to-list 'org-refile-targets
                      `((,(denote-journal-extras--entry-today)) . (:maxlevel . 2)))))))
     ;; FIXME: This isn't working
@@ -972,4 +954,5 @@ tags: \n\
 ;; End of Denote configuration
 ;; -----------------------------------------------------------------------------
 
-(dashboard-open)
+(unless (get-buffer "*dashboard*")
+  (dashboard-open))
