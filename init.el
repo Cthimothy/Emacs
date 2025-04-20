@@ -53,7 +53,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;; Define custom functions
-;; NOTE: All org-mode related functions defined win org (use-package)
+;; NOTE: All org-mode related functions defined within (use-package org-mode)
 ;; -----------------------------------------------------------------------------
 (use-package ivy-posframe
   :ensure t
@@ -428,6 +428,7 @@ tags: \n\
 ;;       are defined within the (use-package) definition.
 ;;       Those keyboard shortcuts should also be referenced here for clarity
 
+(global-set-key (kbd "C-c g") 'elpher)
 (global-set-key (kbd "C-c j b") 'tw/create-jekyll-post)
 (global-set-key (kbd "C-c t t") 'tw/toggle-transparency)
 (global-set-key (kbd "C-x a s") 'async-shell-command)
@@ -479,6 +480,12 @@ tags: \n\
 ;; -----------------------------------------------------------------------------
 ;; Configure exernal packages
 ;; -----------------------------------------------------------------------------
+(use-package elpher
+  :ensure t
+  :config
+  (add-hook 'elpher-mode 'hl-line-mode))
+
+
 (use-package easysession
   :ensure t
   :commands (easysession-switch-to
@@ -817,18 +824,18 @@ tags: \n\
 	; · ❱ ❯ ⃕ ↴  ̬ ➥ ➧⤸ ⤵ 🠻 🠺 🡃 🡫 🡮 🡻 🡾 ▼ ⬎ ⤷
 
   (setq org-tag-alist
-        '(("@Emacs" . ?e)
-	  ("@Workflow" . ?f)
-          ("@Tasks" . ?t)
-          ("@ToWatch" . ?T)	  
-          ("@Work" . ?w)
-          ("@Timesheet" . ?s)
-	  ("@Atheism" . ?a)
-	  ("@Thoughts" . ?h)
-          ("@ADA" . ?a)
-	  ("@ADHD" . ?d)
-          ("@RPG" . ?r)
-          ("@INBOX" . ?i)))
+        '(("Emacs" . ?e)
+	  ("Workflow" . ?f)
+          ("Tasks" . ?t)
+          ("ToWatch" . ?T)	  
+          ("Work" . ?w)
+          ("Timesheet" . ?s)
+	  ("Atheism" . ?a)
+	  ("Thoughts" . ?h)
+          ("ADA" . ?a)
+	  ("ADHD" . ?d)
+          ("RPG" . ?r)
+          ("INBOX" . ?i)))
 
   (setq org-refile-targets
         '(("~/Org/20250305T141315--projects.org" :maxlevel . 1)
@@ -863,10 +870,10 @@ tags: \n\
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
   (global-set-key (kbd "C-c d g") 'find-grep-dired)
-  (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
+;  (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
   ; (global-set-key (kbd "C-c d j o") 'tw/dired-find-file-split-below)
-  (global-set-key (kbd "C-c d j j") 'tw/journelly-to-denote-journal-2)
+  (global-set-key (kbd "C-c d j j") 'tw/journelly-to-denote-journal)
   ; (global-set-key (kbd "C-c d j n") 'denote-journal-extras-new-or-existing-entry)
   (global-set-key (kbd "C-c d o") (lambda ()
 				    (interactive)
