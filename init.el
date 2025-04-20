@@ -217,6 +217,7 @@ tags: \n\
   (move-beginning-of-line 1)
   (set-mark-command nil)
   (move-end-of-line 1))
+;; Keyboard shortcut C-x C-h
 
 
 (defun tw/insert-current-date ()
@@ -328,11 +329,11 @@ tags: \n\
 ;; Some Macos nonsense
 (setq mac-command-modifier 'meta)
 (define-key key-translation-map (kbd "M-3") (kbd "#"))
-(define-key key-translation-map (kbd "M-£") (kbd "#"))
+; (define-key key-translation-map (kbd "M-£") (kbd "#"))
 (define-key key-translation-map (kbd "H-3") (kbd "#"))
-(define-key key-translation-map (kbd "H-£") (kbd "#"))
-(define-key key-translation-map (kbd "S-3") (kbd "#"))
-(define-key key-translation-map (kbd "S-£") (kbd "#"))
+; (define-key key-translation-map (kbd "H-£") (kbd "#"))
+; (define-key key-translation-map (kbd "S-3") (kbd "#"))
+; (define-key key-translation-map (kbd "S-£") (kbd "#"))
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
@@ -451,9 +452,6 @@ tags: \n\
 (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows)
 (global-set-key (kbd "C-s") 'swiper-isearch)
 (global-set-key (kbd "C-r") 'swiper-isearch-backward)
-;; Add code so as following two shortcuts are disabled in org-mode
-;(global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
-;(global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
 (global-set-key (kbd "C-c l c f") 'tw/list-files-changed-on-disk)
 (global-set-key (kbd "C-c v") 'visual-line-mode)
 (global-set-key (kbd "C-c =") 'balance-windows-area)
@@ -476,6 +474,9 @@ tags: \n\
 ;(global-set-key (kbd "C-c y") 'popup-kill-ring)
 ;(global-set-key (kbd "C-c w") 'make-frame)
 ;(global-set-key (kbd "C-x w t") 'tw/toggle-window-dedication)
+;; Uncomment after adding hook to disable in org-mode
+; (global-set-key (kbd "C-<return>") (lambda () (interactive) (tw/smart-open-line-below)))
+; (global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
 
 ;; -----------------------------------------------------------------------------
 ;; Configure exernal packages
@@ -500,7 +501,6 @@ tags: \n\
   :init
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
-
   (global-set-key (kbd "C-c s s") 'easysession-switch-to))
 
 
@@ -595,34 +595,6 @@ tags: \n\
 
 (use-package counsel
   :ensure t)
-
-
-;; (use-package ivy-posframe
-;;   :ensure t
-;;   :config
-;;   ;; display at `ivy-posframe-style'
-;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-;; 					;  (setq ivy-posframe-parameters
-;; 					;      '((left-fringe . 0)
-;; 					;        (right-fringe . 0)))
-;;   (setq ivy-posframe-width-relative t)
-;;   (setq ivy-posframe-height-relative t)
-
-;;   (setq ivy-posframe-width 180
-;; 	ivy-posframe-height 10)
-;; 	;(setq ivy-posframe-width-relative-factor 0.62)
-;; 	;(setq ivy-posframe-height-relative-factor 0.1)
-  
-;;   ;;  (set-face-attribute 'ivy-posframe nil :foreground "#3f8c9b" :background "#000000")
-;;   (ivy-posframe-mode 1))
-
 
 
 (use-package company
@@ -960,6 +932,7 @@ tags: \n\
 )
 ;; End of Denote configuration
 ;; -----------------------------------------------------------------------------
+
 
 (unless (get-buffer "*dashboard*")
   (dashboard-open))
