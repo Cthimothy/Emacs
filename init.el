@@ -819,9 +819,9 @@ tags: \n\
   ;; NOTE: Refile Target for current daily journal is set in Denote use-package section
   ;; FIXME: It's still not working
 
-;(add-to-list 'org-refile-targets
-;             (let ((latest-journal (car (last (denote-journal-extras--entry-today)))))
-;               (cons latest-journal '(:maxlevel . 1))))
+(add-to-list 'org-refile-targets
+             (let ((latest-journal (car (last (denote-journal-extras--entry-today)))))
+               (cons latest-journal '(:maxlevel . 1))))
 
 )
 ;; End of Org configuration
