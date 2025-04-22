@@ -794,18 +794,19 @@ tags: \n\
 	; · ❱ ❯ ⃕ ↴  ̬ ➥ ➧⤸ ⤵ 🠻 🠺 🡃 🡫 🡮 🡻 🡾 ▼ ⬎ ⤷
 
   (setq org-tag-alist
-        '(("Emacs" . ?e)
+	'(("Atheism" . ?A)
+          ("ADA" . ?a)
+	  ("Emacs" . ?e)
+	  ("ADHD" . ?d)
 	  ("Workflow" . ?f)
+          ("INBOX" . ?i)
+	  ("Thoughts" . ?h)
+          ("Meeting" . ?m)
+          ("RPG" . ?r)
+          ("Timesheet" . ?s)
           ("Tasks" . ?t)
           ("ToWatch" . ?T)	  
-          ("Work" . ?w)
-          ("Timesheet" . ?s)
-	  ("Atheism" . ?a)
-	  ("Thoughts" . ?h)
-          ("ADA" . ?a)
-	  ("ADHD" . ?d)
-          ("RPG" . ?r)
-          ("INBOX" . ?i)))
+          ("Work" . ?w)))
 
   (setq org-refile-targets
         '(("~/Org/20250305T141315--projects.org" :maxlevel . 1)
@@ -914,7 +915,7 @@ tags: \n\
 * Notes
 ** 
 
-* Timesheet :@Timesheet:
+* Timesheet :Timesheet:
 ** ")
         (add-to-list 'org-refile-targets
                      `((,(denote-journal-extras--entry-today)) . (:maxlevel . 2)))))))
