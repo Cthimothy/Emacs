@@ -379,19 +379,17 @@ tags: \n\
 ;; FIXME: Combine following function into single toggle function
 (defun tw/toggle-theme-light ()
 		    (interactive)
-;		    (custom-set-faces
-;		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "Olive"))))
-;		     '(aw-leading-char-face
-;		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkMagenta")))))
+		    (custom-set-faces
+		     '(aw-leading-char-face
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkBlue")))))
 		    (disable-theme (car custom-enabled-themes))
   		    (load-theme tw-light-theme))
 
 (defun tw/toggle-theme-dark ()
 		    (interactive)
-;		    (custom-set-faces
-;		     '(org-agenda-date-today ((t (:weight bold :italic t :foreground "steelblue"))))
-;				     '(aw-leading-char-face
-;		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
+		    (custom-set-faces
+		     '(aw-leading-char-face
+		       ((t (:inherit ace-jump-face-foreground :height 3.0 :foreground "DarkOrange")))))
 		    (disable-theme (car custom-enabled-themes))
 		    (load-theme tw-dark-theme))
 
@@ -836,13 +834,15 @@ tags: \n\
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" 
+  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "emacs" 
 				    "family" "music" "books" "blog" "workflow"))
-  
+  (setq denote-sort-dired-extra-prompts '(sort-by-component reverse-sort))
+
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
   (global-set-key (kbd "C-c d g") 'find-grep-dired)
-;  (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
+(setq ivy-history (delete "__project" ivy-history))
+  (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
   ; (global-set-key (kbd "C-c d j o") 'tw/dired-find-file-split-below)
   (global-set-key (kbd "C-c d j j") 'tw/journelly-to-denote-journal)
