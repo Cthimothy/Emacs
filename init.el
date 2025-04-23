@@ -8,6 +8,7 @@
 (setq process-adaptive-read-buffering nil)
 (setq read-process-output-max (* 4 1024 1024))
 (setq frame-resize-pixelwise t)
+(setq org-element-cache-persistent t)
 (setq browse-url-browser-function 'browse-url-default-browser)
 
 (setenv "PATH" (concat (getenv "PATH") ":/opt/homebrew/bin"))
@@ -55,32 +56,6 @@
 ;; Define custom functions
 ;; NOTE: All org-mode related functions defined within (use-package org-mode)
 ;; -----------------------------------------------------------------------------
-(use-package ivy-posframe
-  :ensure t
-  :config
-  ;; display at `ivy-posframe-style'
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-;  (setq ivy-posframe-parameters
-;	'((left-fringe . 0)
-;	  (right-fringe . 0)))
-  (setq ivy-posframe-width-relative t)
-  (setq ivy-posframe-height-relative t)
-  (setq ivy-posframe-border-width 1)
-  (set-face-attribute 'ivy-posframe-border nil :background "#666666")
-  (setq ivy-posframe-width 180
-	ivy-posframe-height 10)
-;  (setq ivy-posframe-width-relative-factor 0.62)
-;  (setq ivy-posframe-height-relative-factor 0.1)
-  (ivy-posframe-mode 1))
-
-
 (defun tw/toggle-transparency ()
   "Toggle between light and dark frame transparency."
   (interactive)
@@ -413,7 +388,7 @@ tags: \n\
 (add-hook 'ibuffer-mode-hook (lambda () (hl-line-mode 1)))
 (add-hook 'text-mode-hook #'visual-line-mode)
 (add-hook 'emacs-startup-hook #'tw/close-old-denote-journal-buffers)
-(advice-add 'org-agenda :after #'tw/close-old-denote-journal-buffers)
+;(advice-add 'org-agenda :after #'tw/close-old-denote-journal-buffers)
 ;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
 ;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
 ;(add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
@@ -447,7 +422,7 @@ tags: \n\
 (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
 (global-set-key (kbd "C-c h") 'dired-dotfiles-toggle)
-(global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows)
+;(global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows)
 (global-set-key (kbd "C-s") 'swiper-isearch)
 (global-set-key (kbd "C-r") 'swiper-isearch-backward)
 (global-set-key (kbd "C-c l c f") 'tw/list-files-changed-on-disk)
@@ -479,6 +454,31 @@ tags: \n\
 ;; -----------------------------------------------------------------------------
 ;; Configure exernal packages
 ;; -----------------------------------------------------------------------------
+(use-package ivy-posframe
+  :ensure t
+  :config
+  ;; display at `ivy-posframe-style'
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+;  (setq ivy-posframe-parameters
+;	'((left-fringe . 0)
+;	  (right-fringe . 0)))
+  (setq ivy-posframe-width-relative t)
+  (setq ivy-posframe-height-relative t)
+  (setq ivy-posframe-border-width 1)
+;  (set-face-attribute 'ivy-posframe-border nil :background "#666666")
+  (set-face-attribute 'ivy-posframe-border nil :background "#666666")
+  (setq ivy-posframe-width 180
+	ivy-posframe-height 10)
+;  (setq ivy-posframe-width-relative-factor 0.62)
+;  (setq ivy-posframe-height-relative-factor 0.1)
+  (ivy-posframe-mode 1))
+
 (use-package elpher
   :ensure t
   :config
@@ -677,10 +677,25 @@ tags: \n\
 
 (use-package treemacs
   :ensure t
+  :defer t
   :config
+  (defvar tw/treemacs-denote-root (expand-file-name "~/Org/"))
+
+  ;; Define the transformer to remove the Denote identifier
+  (defun tw/treemacs-denote-transformer (filename full-path)
+    "Strip Denote identifier prefix from filenames in ~/Org/."
+    (if (and (string-prefix-p tw/treemacs-denote-root full-path)
+             (string-match "\\`[0-9]\\{8\\}T[0-9]\\{6\\}--\$begin:math:text$.*\\$end:math:text$" filename))
+        (match-string 1 filename)
+      filename))
+
+  (treemacs-modify-theme "Default"
+    :files '((".*" tw/treemacs-denote-transformer)))
+
   (setq treemacs-width 85)
   (setq treemacs-follow-mode t)
   (setq treemacs-tag-follow-delay 0.5)
+
   (unless (treemacs-current-visibility)
     (treemacs)))
 
@@ -841,20 +856,19 @@ tags: \n\
 
 (use-package denote
   :ensure t
-  :custom
+  :init
   (setq denote-directory "~/Org/")
   (setq denote-journal-directory "~/Org/Journal/")
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
   (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "emacs" 
-				    "family" "music" "books" "blog" "workflow"))
+				    "personal" "family" "music" "books" "blog" "workflow"))
   (setq denote-sort-dired-extra-prompts '(sort-by-component reverse-sort))
 
   (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d f") 'consult-notes)
   (global-set-key (kbd "C-c d g") 'find-grep-dired)
-(setq ivy-history (delete "__project" ivy-history))
   (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
   ; (global-set-key (kbd "C-c d j o") 'tw/dired-find-file-split-below)
@@ -869,10 +883,9 @@ tags: \n\
 				      (dired (concat denote-directory "/Journal/"))))
 
   (denote-rename-buffer-mode)
-
   (require 'denote-journal-extras)
-  
   (require 'denote-org-extras)
+
   (with-eval-after-load 'org-capture
     (add-to-list 'org-capture-templates
                  '("n" "New note (with Denote)" plain
@@ -927,7 +940,7 @@ tags: \n\
 * Notes
 ** 
 
-* Timesheet :Timesheet:
+* Timesheet :timesheet:
 ** ")
         (add-to-list 'org-refile-targets
                      `((,(denote-journal-extras--entry-today)) . (:maxlevel . 2)))))))
