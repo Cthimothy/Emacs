@@ -835,20 +835,26 @@ tags: \n\
 ;  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "emacs" 
 ;				    "family" "music" "books" "blog" "workflow"))
 
-  (setq org-refile-targets
-        '(("~/Org/20250305T141315--projects.org" :maxlevel . 1)
-          ("~/Org/20250304T113200--tasks.org" :maxlevel . 1)
-          ("~/Org/20250212T142617--atheism__atheism.org" :maxlevel . 1)
-          ("~/Org/20250305T141314--emacs.org" :maxlevel . 1)
-          ("~/Org/20250304T152326--rpg.org" :maxlevel . 1)
-          ("~/Org/20250305T073302--work.org" :maxlevel . 2)))
-  ;; NOTE: Refile Target for current daily journal is set in Denote use-package section
-  ;; FIXME: It's still not working
+;;   (setq org-refile-targets
+;;         '(("~/Org/20250305T141315--projects.org" :maxlevel . 1)
+;;           ("~/Org/20250304T113200--tasks.org" :maxlevel . 1)
+;;           ("~/Org/20250212T142617--atheism__atheism.org" :maxlevel . 1)
+;;           ("~/Org/20250305T141314--emacs.org" :maxlevel . 1)
+;;           ("~/Org/20250304T152326--rpg.org" :maxlevel . 1)
+;;           ("~/Org/20250305T073302--work.org" :maxlevel . 2)))
+;;   ;; NOTE: Refile Target for current daily journal is set in Denote use-package section
+;;   ;; FIXME: It's still not working
 
-(add-to-list 'org-refile-targets
-             (let ((latest-journal (car (last (denote-journal-extras--entry-today)))))
-               (cons latest-journal '(:maxlevel . 1))))
+;; (add-to-list 'org-refile-targets
+;;              (let ((latest-journal (car (last (denote-journal-extras--entry-today)))))
+;;                (cons latest-journal '(:maxlevel . 1))))
 
+(setq org-refile-targets
+      (mapcar (lambda (f)
+                (cons f '(:maxlevel . 2)))
+              (seq-filter (lambda (file)
+                            (not (string-match-p "@" (file-name-nondirectory file))))
+                          (directory-files-recursively "~/Org/" "\\.org$"))))
 )
 ;; End of Org configuration
 ;; -----------------------------------------------------------------------------
@@ -942,8 +948,9 @@ tags: \n\
 
 * Timesheet :timesheet:
 ** ")
-        (add-to-list 'org-refile-targets
-                     `((,(denote-journal-extras--entry-today)) . (:maxlevel . 2)))))))
+;        (add-to-list 'org-refile-targets
+;                     `((,(denote-journal-extras--entry-today)) . (:maxlevel . 2)))
+))))
     ;; FIXME: This isn't working
 
 
