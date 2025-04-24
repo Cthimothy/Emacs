@@ -37,6 +37,40 @@
  '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                         :slant normal :weight medium :width normal)))))
 
+(with-eval-after-load 'eww
+  (dolist (face '(eww-form-checkbox
+                  eww-form-file
+                  eww-form-select
+                  eww-form-submit
+                  eww-form-text
+                  eww-form-textarea
+                  eww-invalid-certificate
+                  eww-valid-certificate
+                  eww-button
+                  eww-link
+                  eww-heading-1
+                  eww-heading-2
+                  eww-heading-3
+                  eww-heading-4
+                  eww-heading-5
+                  eww-heading-6))
+    (when (facep face)
+      (set-face-attribute face nil :inherit 'default))))
+
+(defun my/eww-use-iosevka-font ()
+  "Force EWW and shr to use Iosevka."
+  (let ((font "Iosevka")
+        (height 120)) ;; Adjust height as you like
+    (set-face-attribute 'shr-text nil :family font :height height)
+    (set-face-attribute 'shr-link nil :family font :height height)
+    (set-face-attribute 'eww-form-text nil :family font :height height)
+    (set-face-attribute 'eww-form-submit nil :family font :height height)
+    (set-face-attribute 'eww-form-select nil :family font :height height)
+    (set-face-attribute 'eww-form-textarea nil :family font :height height)
+    (set-face-attribute 'eww-form-checkbox nil :family font :height height)))
+
+(add-hook 'eww-after-render-hook #'my/eww-use-iosevka-font)
+
 (set-frame-parameter nil 'alpha-transparency 50)
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
 
