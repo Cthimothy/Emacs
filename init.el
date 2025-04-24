@@ -255,14 +255,14 @@ tags: \n\
         (select-window new-window)))  ; Split vertically and move to the new window if it's live
     (find-file buffer)))              ; Open the file in the new window
 
-(defun tw/dired-find-file-split-below ()
-  "Open the file at point in another window, split below the Dired buffer."
-  (interactive)
-  (let ((window (split-window-below)))
-    (select-window window)
-    (dired-find-file)))
-(with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "C-c d j o") #'tw/dired-find-file-split-below))
+;; (defun tw/dired-find-file-split-below ()
+;;   "Open the file at point in another window, split below the Dired buffer."
+;;   (interactive)
+;;   (let ((window (split-window-below)))
+;;     (select-window window)
+;;     (dired-find-file)))
+;; (with-eval-after-load 'dired
+;;   (define-key dired-mode-map (kbd "C-c d j o") #'tw/dired-find-file-split-below))
 
 ;; -----------------------------------------------------------------------------
 ;; Set personal and Macbook specific defaults 
@@ -293,7 +293,7 @@ tags: \n\
 (set-window-buffer nil (current-buffer))
 (setq insert-directory-program "/opt/homebrew/bin/gls")
 (setq dired-use-ls-dired t)
-(setq dired-listing-switches "-lht")
+(setq dired-listing-switches "-lh --group-directories-first")
 (setq large-file-warning-threshold 50000000)
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq org-use-sub-superscripts nil)
@@ -388,8 +388,13 @@ tags: \n\
 (add-hook 'ibuffer-mode-hook (lambda () (hl-line-mode 1)))
 (add-hook 'text-mode-hook #'visual-line-mode)
 (add-hook 'emacs-startup-hook #'tw/close-old-denote-journal-buffers)
-;(advice-add 'org-agenda :after #'tw/close-old-denote-journal-buffers)
-;(add-hook 'prog-mode-hook (setq display-line-numbers 'absolute)'display-line-numbers-mode)
+(advice-add 'org-agenda :after #'tw/close-old-denote-journal-buffers)
+(remove-hook 'prog-mode-hook 'display-line-numbers-mode)
+;(remove-hook 'prog-mode-hook (setq display-line-numbers 'absolute) 'display-line-numbers-mode)
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (setq display-line-numbers 'relative)
+            (display-line-numbers-mode 1)))
 ;(add-hook 'dired-mode-hook 'auto-revert-mode) ;; Auto-refresh dired on file change
 ;(add-hook 'elfeed-mode-hook (lambda () (local-set-key (kbd "g") #'elfeed-update)))
 ;(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "w") #'tw/dired-find-file-other-application)))
@@ -724,18 +729,7 @@ tags: \n\
   ;(add-hook 'ielm-mode-hook 'g-ielm-init-history)
 
 
-(use-package org-superstar
-  :ensure t
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
-  (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.0 :underline t))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-   '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
-  (setq org-superstar-leading-bullet ?\s)
-  (org-superstar-mode t))
+
 
 
 (use-package dashboard
@@ -818,7 +812,7 @@ tags: \n\
 	  ("thoughts" . ?h)
 	  ("house" . ?H)
           ("inbox" . ?I)
-	  ("blog" . ?l)
+	  ("blog" . ?L)
           ("meeting" . ?m)
           ("homelab" . ?o)
           ("personal" . ?p)
@@ -858,6 +852,20 @@ tags: \n\
 )
 ;; End of Org configuration
 ;; -----------------------------------------------------------------------------
+
+
+(use-package org-superstar
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+  (custom-set-faces
+   '(org-level-1 ((t (:inherit outline-1 :height 1.0 :underline t))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+   '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+  (setq org-superstar-leading-bullet ?\s)
+  (org-superstar-mode t))
 
 
 (use-package denote
@@ -930,10 +938,10 @@ tags: \n\
 - [ ] Review yesterday's journal (C-c d j o)
 - [ ] Review and re-file today's scheduled tasks (C-c o a a)
 - [ ] Review and re-file all other tasks (C-c o a t)
+- [ ] Review [[denote:20250413T135725][daily workflow]]
 - [ ] Check Beorg for tasks
 - [ ] Check for changed files (C-c l c f)
 - [ ] Review Outlook calendar
-- [ ] Review Org INBOX
 - [ ] Review Raindrop INBOX https://app.raindrop.io/my/-1
 - [ ] Check 2025 Reading List
 - [ ] Add anything to To Read/Listen/Watch etc.
