@@ -327,7 +327,7 @@ tags: \n\
 (set-window-buffer nil (current-buffer))
 (setq insert-directory-program "/opt/homebrew/bin/gls")
 (setq dired-use-ls-dired t)
-(setq dired-listing-switches "-lh --group-directories-first")
+(setq dired-listing-switches "-lGh1v --reverse --group-directories-first")
 (setq large-file-warning-threshold 50000000)
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq org-use-sub-superscripts nil)
@@ -795,9 +795,15 @@ tags: \n\
   (add-hook 'org-agenda-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook 'hl-line-mode)
   (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
+  (add-hook 'org-agenda-before-read-hook
+            (lambda ()
+              (setq org-agenda-files
+                    (directory-files-recursively "~/Org/" "\\.org$"))))
   ;(add-hook 'org-mode-hook (lambda () (local-set-key (kbd "M-<return>") 'org-meta-return)))
   (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up) 
   (global-set-key (kbd "C-S-<down>") 'org-move-subtree-down)
+
+(setq org-adapt-indentation t)
 
   (setq org-agenda-window-setup 'current-window)
 
@@ -837,28 +843,13 @@ tags: \n\
 	; · ❱ ❯ ⃕ ↴  ̬ ➥ ➧⤸ ⤵ 🠻 🠺 🡃 🡫 🡮 🡻 🡾 ▼ ⬎ ⤷
 
   (setq org-tag-alist
-	'(("atheism" . ?A)
-          ("ada" . ?a)
-	  ("adhd" . ?d)
-	  ("emacs" . ?e)
-	  ("workflow" . ?f)
-	  ("programming" . ?g)
-	  ("thoughts" . ?h)
-	  ("house" . ?H)
-          ("inbox" . ?I)
-	  ("blog" . ?L)
-          ("meeting" . ?m)
-          ("homelab" . ?o)
-          ("personal" . ?p)
-          ("rpg" . ?R)
-          ("timesheet" . ?s)
-          ("tasks" . ?T)
-          ("to_read" . ?r)
-          ("to_install" . ?i)
-          ("to_listen" . ?l)	  	  	  
-          ("to_buy" . ?b)	  	  	  
-          ("to_watch" . ?w)	  
-          ("work" . ?W)))
+	'(("atheism" . ?A) ("ada" . ?a) ("adhd" . ?d) ("emacs" . ?e)
+	  ("workflow" . ?f) ("programming" . ?g) ("thoughts" . ?h)
+	  ("house" . ?H) ("inbox" . ?I) ("blog" . ?L) ("meeting" . ?m)
+          ("homelab" . ?o) ("personal" . ?p)
+          ("rpg" . ?R) ("timesheet" . ?s) ("tasks" . ?T) ("to_read" . ?r)
+          ("to_install" . ?i) ("to_listen" . ?l) ("to_buy" . ?b)	  	  	  
+          ("to_watch" . ?w) ("work" . ?W)))
 
 ;  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "emacs" 
 ;				    "family" "music" "books" "blog" "workflow"))
@@ -968,7 +959,7 @@ tags: \n\
         (denote (format-time-string "%A %e %B %Y") '("journal"))
         (goto-char (point-max))
         (insert "* Daily Morning Routine
-- [ ] tw/journelly-to-denote
+- [ ] tw/journelly-to-denote (C-c d j j)
 - [ ] Review yesterday's journal (C-c d j o)
 - [ ] Review and re-file today's scheduled tasks (C-c o a a)
 - [ ] Review and re-file all other tasks (C-c o a t)
