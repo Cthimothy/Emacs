@@ -759,8 +759,8 @@ tags: \n\
   (add-hook 'ielm-mode-hook 'eldoc-mode)
   (add-hook 'ielm-mode-hook 'paredit-mode)
   (define-key paredit-mode-map (kbd "RET") nil)
-  (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
-  ;(add-hook 'ielm-mode-hook 'g-ielm-init-history)
+;  (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
+;  (add-hook 'ielm-mode-hook 'g-ielm-init-history)
 
 
 
