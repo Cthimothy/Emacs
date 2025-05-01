@@ -964,13 +964,11 @@ tags: \n\
 - [ ] Review and re-file today's scheduled tasks (C-c o a a)
 - [ ] Review and re-file all other tasks (C-c o a t)
 - [ ] Review [[denote:20250413T135725][daily workflow]]
-- [ ] Check Beorg for tasks
 - [ ] Check for changed files (C-c l c f)
 - [ ] Review Outlook calendar
 - [ ] Review Raindrop INBOX https://app.raindrop.io/my/-1
 - [ ] Check 2025 Reading List
 - [ ] Add anything to To Read/Listen/Watch etc.
-- [ ] Check Daily Workflow
 - [ ] Set two hour Pomodoro
 
 * Tasks
