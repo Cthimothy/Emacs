@@ -971,14 +971,12 @@ tags: \n\
 - [ ] Add anything to To Read/Listen/Watch etc.
 - [ ] Set two hour Pomodoro
 
+
 * Tasks
-** 
+
 
 * Notes
-** 
-
-* Timesheet :timesheet:
-** ")
+")
 ;        (add-to-list 'org-refile-targets
 ;                     `((,(denote-journal-extras--entry-today)) . (:maxlevel . 2)))
 ))))
