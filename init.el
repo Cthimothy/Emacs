@@ -60,7 +60,7 @@
 (defun my/eww-use-iosevka-font ()
   "Force EWW and shr to use Iosevka."
   (let ((font "Iosevka")
-        (height 120)) ;; Adjust height as you like
+        (height 135)) ;; Adjust height as you like
     (set-face-attribute 'shr-text nil :family font :height height)
     (set-face-attribute 'shr-link nil :family font :height height)
     (set-face-attribute 'eww-form-text nil :family font :height height)
@@ -77,9 +77,7 @@
 ;; -----------------------------------------------------------------------------
 ;; Load custom code from external files
 ;; -----------------------------------------------------------------------------
-;(load-file "~/Projects/Code/Elisp/journelly-to-denote.el")
-;(load-file "~/Projects/Code/Elisp/tag-explorer/tag-explorer.el")
-(add-to-list 'load-path "~/Projects/Code/Elisp/tag-explorer/")
+;(add-to-list 'load-path "~/Projects/Code/Elisp/tag-explorer/")
 (add-to-list 'load-path "~/Projects/Code/Elisp/journelly-to-denote/")
 (add-to-list 'load-path "~/Projects/Code/Elisp/denote-tag-find-dired/")
 ;(require 'tag-explorer)
@@ -101,17 +99,15 @@
 ;; Keyboard shortcut: C-c t
 
 
-;; FIXME: This is only toggling in one direction
-(defun tw/toggle-fill-column-indicator ()
-  (interactive)
-    "Enable `display-fill-column-indicator-mode` only if the current line exceeds `fill-column`."
-    (setq-default fill-column 80)
-    (if (> (current-column) fill-column)
-	(display-fill-column-indicator-mode 1)
-      (display-fill-column-indicator-mode -1)))
+;; (defun tw/toggle-fill-column-indicator ()
+;;   "Toggle `display-fill-column-indicator-mode` in the current buffer."
+;;   (interactive)
+;;   (setq fill-column 80) ;; Optional: sets fill-column to 80 for this buffer
+;;   (if display-fill-column-indicator-mode
+;;       (display-fill-column-indicator-mode -1)
+;;     (display-fill-column-indicator-mode 1)))
 ;; Hooks and advice referenced:
 ;(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
-
 
 (defun tw/close-old-denote-journal-buffers ()
   "Close all open Denote journal buffers except today's and non-journals."
@@ -410,7 +406,8 @@ tags: \n\
 ;; Configure mode hooks
 ;; -----------------------------------------------------------------------------
 (add-hook 'after-init-hook (lambda () (kill-buffer "*Messages*")))
-(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
+;(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
+;(remove-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
 (add-hook 'dired-mode-hook 'hl-line-mode)
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -440,7 +437,8 @@ tags: \n\
 ;; NOTE: Any keyboard shortcuts that are bound to external packages
 ;;       are defined within the (use-package) definition.
 ;;       Those keyboard shortcuts should also be referenced here for clarity
-
+(global-set-key (kbd "C-c c f") 'global-display-fill-column-indicator-mode)
+(global-set-key (kbd "C-c d t") 'tw/denote-search-by-tag-dired-ivy)
 (global-set-key (kbd "C-c g") 'elpher)
 (global-set-key (kbd "C-c j b") 'tw/create-jekyll-post)
 (global-set-key (kbd "C-c t t") 'tw/toggle-transparency)
@@ -846,7 +844,7 @@ tags: \n\
 	'(("atheism" . ?A) ("ada" . ?a) ("adhd" . ?d) ("emacs" . ?e)
 	  ("workflow" . ?f) ("programming" . ?g) ("thoughts" . ?h)
 	  ("house" . ?H) ("inbox" . ?I) ("blog" . ?L) ("meeting" . ?m)
-          ("homelab" . ?o) ("personal" . ?p)
+          ("homelab" . ?o) ("personal" . ?p) ("occult" .?l )
           ("rpg" . ?R) ("timesheet" . ?s) ("tasks" . ?T) ("to_read" . ?r)
           ("to_install" . ?i) ("to_listen" . ?l) ("to_buy" . ?b)	  	  	  
           ("to_watch" . ?w) ("work" . ?W)))
@@ -884,7 +882,7 @@ tags: \n\
   :config
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
   (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.0 :underline t))))
+   '(org-level-1 ((t (:inherit outline-1 :height 1.2))))
    '(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold))))
    '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
