@@ -101,10 +101,16 @@
   (setq org-agenda-files
   	(directory-files-recursively "~/Org/" "\\.org$"))
 
+  (setq org-adapt-indentation t
+	org-hide-leading-stars t
+	org-hide-emphasis-markers t
+	org-pretty-entities t
+	org-ellipsis " ❱")
+
   (setq ivy-posframe-width-relative t)
   (setq ivy-posframe-height-relative t)
   (setq ivy-posframe-border-width 1)
-  (set-face-attribute 'ivy-posframe-border nil :background "#666666")
+  (set-face-attribute 'ivy-posframe-border nil :background "#666666"))
 
 (defun tw/toggle-transparency ()
   "Toggle between light and dark frame transparency."
