@@ -5,6 +5,7 @@
 (load "server")
 (unless (server-running-p)
   (server-start))
+(setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark)))
 (setq process-adaptive-read-buffering nil)
 (setq read-process-output-max (* 4 1024 1024))
 (setq frame-resize-pixelwise t)
@@ -88,6 +89,23 @@
 ;; Define custom functions
 ;; NOTE: All org-mode related functions defined within (use-package org-mode)
 ;; -----------------------------------------------------------------------------
+(defun unfuck-all ()
+  (interactive)
+  (setq org-refile-targets
+	(mapcar (lambda (f)
+                  (cons f '(:maxlevel . 2)))
+		(seq-filter (lambda (file)
+                              (not (string-match-p "@" (file-name-nondirectory file))))
+                            (directory-files-recursively "~/Org/" "\\.org$"))))
+
+  (setq org-agenda-files
+  	(directory-files-recursively "~/Org/" "\\.org$"))
+
+  (setq ivy-posframe-width-relative t)
+  (setq ivy-posframe-height-relative t)
+  (setq ivy-posframe-border-width 1)
+  (set-face-attribute 'ivy-posframe-border nil :background "#666666")
+
 (defun tw/toggle-transparency ()
   "Toggle between light and dark frame transparency."
   (interactive)
@@ -756,11 +774,9 @@ tags: \n\
   :config
   (add-hook 'ielm-mode-hook 'eldoc-mode)
   (add-hook 'ielm-mode-hook 'paredit-mode)
-  (define-key paredit-mode-map (kbd "RET") nil)
+  (define-key paredit-mode-map (kbd "RET") nil))
 ;  (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
 ;  (add-hook 'ielm-mode-hook 'g-ielm-init-history)
-
-
 
 
 
