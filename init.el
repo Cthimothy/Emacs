@@ -133,6 +133,22 @@
 ;; Hooks and advice referenced:
 ;(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
 
+
+(defun tw/denote-search-by-tag-dired-ivy ()
+  "Search Denote files by tag using Ivy, then open Dired on the matching files."
+  (interactive)
+  (let* ((tags (delete-dups (mapcan #'denote-extract-keywords-from-path
+                                    (directory-files-recursively denote-directory "\\.org$"))))
+         (selected-tag (ivy-completing-read "Tag: " tags))
+         (matching-files (seq-filter
+                          (lambda (file)
+                            (member selected-tag (denote-extract-keywords-from-path file)))
+                          (directory-files-recursively denote-directory "\\.org$"))))
+    (if matching-files
+        (dired (cons denote-directory matching-files))
+      (message "No files found with tag: %s" selected-tag))))
+
+
 (defun tw/close-old-denote-journal-buffers ()
   "Close all open Denote journal buffers except today's and non-journals."
   (interactive)
