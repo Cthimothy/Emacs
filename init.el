@@ -135,7 +135,7 @@
 	org-hide-leading-stars t
 	org-hide-emphasis-markers t
 	org-pretty-entities t
-	org-ellipsis " ❱")
+	org-ellipsis " ❱") 
 
   (setq ivy-posframe-width-relative t)
   (setq ivy-posframe-height-relative t)
@@ -470,7 +470,7 @@ tags: \n\
 
 (global-set-key (kbd "C-c l d") 'tw/toggle-theme-dark)
 (global-set-key (kbd "C-c l l") 'tw/toggle-theme-light)
-(load-theme tw-dark-theme)
+(load-theme tw-light-theme)
 
 ;; -----------------------------------------------------------------------------
 ;; Configure mode hooks
@@ -521,7 +521,10 @@ tags: \n\
 (global-set-key (kbd "C-c o a") 'org-agenda) ;; FIXME: move to org use-package
 (global-set-key (kbd "C-c f") 'tw/dired-filter-files)
 (global-set-key (kbd "C-c b") 'ivy-switch-buffer-other-window)
-(global-set-key (kbd "C-c c c") 'org-capture) ;; FIXME :move to org use-package
+;; This isn't needed due to moving to Denote
+;; Denote analogue is to simply call 'denote (denote-create-note) or 'denote-create-journal
+;(global-set-key (kbd "C-c c c") 'org-capture) ;; FIXME :move to org use-package
+(global-set-key (kbd "C-c c c") 'dneote)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x k") 'kill-buffer)
 (global-set-key (kbd "M-n") 'scroll-up-command)
@@ -979,7 +982,8 @@ tags: \n\
 				    "personal" "family" "music" "books" "blog" "workflow"))
   (setq denote-sort-dired-extra-prompts '(sort-by-component reverse-sort))
 
-  (global-set-key (kbd "C-c d n") 'denote-create-note)
+;  (global-set-key (kbd "C-c d n") 'denote-create-note)
+  (global-set-key (kbd "C-c d n") 'denote)
   (global-set-key (kbd "C-c d f") 'consult-notes)
   (global-set-key (kbd "C-c d g") 'find-grep-dired)
   (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
