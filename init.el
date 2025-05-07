@@ -75,6 +75,36 @@
 (set-frame-parameter nil 'alpha-transparency 50)
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
 
+
+;;Make Ielm Great Again
+(add-hook 'ielm-mode-hook 'eldoc-mode)
+(add-hook 'ielm-mode-hook 'paredit-mode)
+(define-key paredit-mode-map (kbd "RET") nil)
+(define-key paredit-mode-map (kbd "C-j") 'paredit-newline)
+
+(defun g-ielm-init-history ()
+  (let ((path (expand-file-name "ielm/history" user-emacs-directory)))
+    (make-directory (file-name-directory path) t)
+    (setq-local comint-input-ring-file-name path))
+  (setq-local comint-input-ring-size 10000)
+  (setq-local comint-input-ignoredups t)
+  (comint-read-input-ring))
+
+(add-hook 'ielm-mode-hook 'g-ielm-init-history)
+
+(defun g-ielm-write-history (&rest _args)
+  (with-file-modes #o600
+    (comint-write-input-ring)))
+  
+(advice-add 'ielm-send-input :after 'g-ielm-write-history)
+
+(define-key inferior-emacs-lisp-mode-map (kbd "C-l")
+            'comint-clear-buffer)
+
+(define-key inferior-emacs-lisp-mode-map (kbd "C-r")
+            'helm-comint-input-ring)
+
+
 ;; -----------------------------------------------------------------------------
 ;; Load custom code from external files
 ;; -----------------------------------------------------------------------------
@@ -82,7 +112,7 @@
 (add-to-list 'load-path "~/Projects/Code/Elisp/journelly-to-denote/")
 (add-to-list 'load-path "~/Projects/Code/Elisp/denote-tag-find-dired/")
 ;(require 'tag-explorer)
-(require 'journelly-to-denote)
+(require 'journelly-to-denote-journal)
 (require 'denote-tag-find-dired)
 
 ;; -----------------------------------------------------------------------------
@@ -446,6 +476,8 @@ tags: \n\
 ;; Configure mode hooks
 ;; -----------------------------------------------------------------------------
 (add-hook 'after-init-hook (lambda () (kill-buffer "*Messages*")))
+(add-hook 'messages-buffer-mode-hook
+          (lambda () (setq-local scroll-conservatively 101)))
 ;(add-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
 ;(remove-hook 'post-command-hook #'tw/toggle-fill-column-indicator)
 (add-hook 'dired-mode-hook 'hl-line-mode)
@@ -477,6 +509,7 @@ tags: \n\
 ;; NOTE: Any keyboard shortcuts that are bound to external packages
 ;;       are defined within the (use-package) definition.
 ;;       Those keyboard shortcuts should also be referenced here for clarity
+(global-set-key (kbd "C-x ]") 'enlarge-window)
 (global-set-key (kbd "C-c c f") 'global-display-fill-column-indicator-mode)
 (global-set-key (kbd "C-c d t") 'tw/denote-search-by-tag-dired-ivy)
 (global-set-key (kbd "C-c g") 'elpher)
@@ -889,6 +922,11 @@ tags: \n\
 
 ;  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "emacs" 
 ;				    "family" "music" "books" "blog" "workflow"))
+
+  (setq denote-known-keywords (list "atheism" "ada" "adhd" "emacs" "workflow" "programming""thoughts"
+				    "house" "inbox" "blog" "meeting" "homelab" "personal" "occult" "retro"
+				    "rpg" "timesheet" "tasks" "to_read" "to_install" "to_listen" "to_buy"
+				    "to_watch" "work"))
 
 ;;   (setq org-refile-targets
 ;;         '(("~/Org/20250305T141315--projects.org" :maxlevel . 1)
