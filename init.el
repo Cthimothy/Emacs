@@ -533,6 +533,9 @@ tags: \n\
 (global-set-key (kbd "M-.") 'end-of-buffer)
 (global-set-key (kbd "C-x C-l") 'avy-goto-line)
 (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
+;; Make M-f and M-b behave like Vim's w and b
+(global-set-key (kbd "M-f") #'forward-to-word)
+(global-set-key (kbd "M-b") (lambda () (interactive) (backward-word) (forward-to-word 0)))
 (global-set-key (kbd "C-c C-o") 'browse-url-of-dired-file)
 (global-set-key (kbd "C-c h") 'dired-dotfiles-toggle)
 ;(global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows)
