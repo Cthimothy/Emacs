@@ -142,6 +142,14 @@
   (setq ivy-posframe-border-width 1)
   (set-face-attribute 'ivy-posframe-border nil :background "#666666"))
 
+
+(defun search-web (start end)
+  "Search the web for the selected region."
+  (interactive "r")
+  (let ((query (buffer-substring-no-properties start end)))
+    (browse-url (concat "https://www.duckduckgo.com/search?q=" (url-hexify-string query)))))
+;; (global-set-key (kbd "C-c g") #'search-web-at-point)
+
 (defun tw/toggle-transparency ()
   "Toggle between light and dark frame transparency."
   (interactive)
@@ -509,6 +517,7 @@ tags: \n\
 ;; NOTE: Any keyboard shortcuts that are bound to external packages
 ;;       are defined within the (use-package) definition.
 ;;       Those keyboard shortcuts should also be referenced here for clarity
+(global-set-key (kbd "C-c w") #'search-web)
 (global-set-key (kbd "C-x ]") 'enlarge-window)
 (global-set-key (kbd "C-c c f") 'global-display-fill-column-indicator-mode)
 (global-set-key (kbd "C-c d t") 'tw/denote-search-by-tag-dired-ivy)
@@ -526,7 +535,7 @@ tags: \n\
 ;(global-set-key (kbd "C-c c c") 'org-capture) ;; FIXME :move to org use-package
 (global-set-key (kbd "C-c c c") 'dneote)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-x k") 'kill-buffer)
+(global-set-key (kbd "C-x k") 'kil-buffer)
 (global-set-key (kbd "M-n") 'scroll-up-command)
 (global-set-key (kbd "M-p") 'scroll-down-command)
 (global-set-key (kbd "M-,") 'beginning-of-buffer)
@@ -568,8 +577,26 @@ tags: \n\
 ; (global-set-key (kbd "M-<return>") 'tw/smart-open-line-above)
 
 ;; -----------------------------------------------------------------------------
-;; Configure exernal packages
+;; Configure external packages
 ;; -----------------------------------------------------------------------------
+(use-package mastodon
+    :ensure t
+    :config
+    (setq mastodon-instance-url "https://dice.camp"
+          mastodon-active-user "Cthimothy")
+    (mastodon-discover))
+
+ 
+(use-package denote-menu
+  :ensure t
+  :config
+  (define-key denote-menu-mode-map (kbd "c") #'denote-menu-clear-filters)
+  (define-key denote-menu-mode-map (kbd "/ r") #'denote-menu-filter)
+  (define-key denote-menu-mode-map (kbd "/ k") #'denote-menu-filter-by-keyword)
+  (define-key denote-menu-mode-map (kbd "/ o") #'denote-menu-filter-out-keyword)
+  (define-key denote-menu-mode-map (kbd "e") #'denote-menu-export-to-dired))
+
+
 (use-package ivy-posframe
   :ensure t
   :config
@@ -609,8 +636,8 @@ tags: \n\
              easysession-load-including-geometry)
 
   :custom
-  (easysession-mode-line-misc-info t)  ; Display the session in the modeline
-  (easysession-save-interval (* 10 60))  ; Save every 10 minutes
+  (easysession-mode-line-misc-info t))  ; Display the session in the modeline
+;  (easysession-save-interval (* 10 60))  ; Save every 10 minutes
 
   :init
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
@@ -915,7 +942,7 @@ tags: \n\
 	org-hide-emphasis-markers t
 	org-pretty-entities t
 	org-ellipsis " ❱")
-	; · ❱ ❯ ⃕ ↴  ̬ ➥ ➧⤸ ⤵ 🠻 🠺 🡃 🡫 🡮 🡻 🡾 ▼ ⬎ ⤷
+
 
   (setq org-tag-alist
 	'(("atheism" . ?A) ("ada" . ?a) ("adhd" . ?d) ("emacs" . ?e)
@@ -931,8 +958,8 @@ tags: \n\
 
   (setq denote-known-keywords (list "atheism" "ada" "adhd" "emacs" "workflow" "programming""thoughts"
 				    "house" "inbox" "blog" "meeting" "homelab" "personal" "occult" "retro"
-				    "rpg" "timesheet" "tasks" "to_read" "to_install" "to_listen" "to_buy"
-				    "to_watch" "work"))
+				    "rpg" "timesheet" "tasks" "tech" "to_read" "to_install" "to_listen" 
+				    "to_buy" "to_watch" "work"))
 
 ;;   (setq org-refile-targets
 ;;         '(("~/Org/20250305T141315--projects.org" :maxlevel . 1)
@@ -981,13 +1008,18 @@ tags: \n\
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-  (setq denote-known-keywords (list "journal" "atheism" "work" "rpg" "radio" "emacs" 
-				    "personal" "family" "music" "books" "blog" "workflow"))
+
+  (setq denote-known-keywords (list "atheism" "ada" "adhd" "emacs" "workflow" "programming""thoughts"
+				    "house" "inbox" "blog" "meeting" "homelab" "personal" "occult" "retro"
+				    "rpg" "timesheet" "tasks" "tech" "to_read" "to_install" "to_listen" 
+				    "to_buy" "to_watch" "work"))
+
   (setq denote-sort-dired-extra-prompts '(sort-by-component reverse-sort))
 
 ;  (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d n") 'denote)
   (global-set-key (kbd "C-c d f") 'consult-notes)
+  (global-set-key (kbd "C-c d m f") 'denote-menu-filter-by-keyword)
   (global-set-key (kbd "C-c d g") 'find-grep-dired)
   (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
