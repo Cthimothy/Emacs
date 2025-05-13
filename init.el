@@ -517,6 +517,7 @@ tags: \n\
 ;; NOTE: Any keyboard shortcuts that are bound to external packages
 ;;       are defined within the (use-package) definition.
 ;;       Those keyboard shortcuts should also be referenced here for clarity
+(global-set-key (kbd "C-c j") (lambda () (interactive) (info "/usr/local/share/info/jargon.info.gz")))
 (global-set-key (kbd "C-c w") #'search-web)
 (global-set-key (kbd "C-x ]") 'enlarge-window)
 (global-set-key (kbd "C-c c f") 'global-display-fill-column-indicator-mode)
@@ -590,6 +591,13 @@ tags: \n\
 (use-package denote-menu
   :ensure t
   :config
+  (setq denote-menu-title-column-width 80)
+
+  (advice-add 'denote-menu :after
+	      (lambda (&rest _)
+		(with-current-buffer "*Denote Menu*"
+		  (hl-line-mode 1))))
+
   (define-key denote-menu-mode-map (kbd "c") #'denote-menu-clear-filters)
   (define-key denote-menu-mode-map (kbd "/ r") #'denote-menu-filter)
   (define-key denote-menu-mode-map (kbd "/ k") #'denote-menu-filter-by-keyword)
