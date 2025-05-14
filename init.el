@@ -109,11 +109,15 @@
 ;; Load custom code from external files
 ;; -----------------------------------------------------------------------------
 ;(add-to-list 'load-path "~/Projects/Code/Elisp/tag-explorer/")
-(add-to-list 'load-path "~/Projects/Code/Elisp/journelly-to-denote/")
-(add-to-list 'load-path "~/Projects/Code/Elisp/denote-tag-find-dired/")
 ;(require 'tag-explorer)
+(add-to-list 'load-path "~/Projects/Code/Elisp/journelly-to-denote/")
 (require 'journelly-to-denote-journal)
+
+(add-to-list 'load-path "~/Projects/Code/Elisp/denote-tag-find-dired/")
 (require 'denote-tag-find-dired)
+
+(add-to-list 'load-path "~/Projects/Code/Elisp/gptel/")
+(require 'gptel-setup)
 
 ;; -----------------------------------------------------------------------------
 ;; Define custom functions
@@ -591,7 +595,12 @@ tags: \n\
 (use-package denote-menu
   :ensure t
   :config
-  (setq denote-menu-title-column-width 80)
+  (setq denote-menu-title-column-width 60)
+  (setq denote-menu-show-file-signature nil)
+  (setq denote-menu-signature-column-width 20)
+
+;  (setq denote-menu-signature-column-width 20)
+  (makunbound 'denote-menu-signature-column-width)
 
   (advice-add 'denote-menu :after
 	      (lambda (&rest _)
