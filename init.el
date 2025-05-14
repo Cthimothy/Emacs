@@ -119,6 +119,11 @@
 (add-to-list 'load-path "~/Projects/Code/Elisp/gptel/")
 (require 'gptel-setup)
 
+(add-to-list 'load-path "~/Projects/Code/Elisp/key-logger/")
+(require 'key-logger)
+
+
+
 ;; -----------------------------------------------------------------------------
 ;; Define custom functions
 ;; NOTE: All org-mode related functions defined within (use-package org-mode)
@@ -596,18 +601,23 @@ tags: \n\
   :ensure t
   :config
   (setq denote-menu-title-column-width 60)
-  (setq denote-menu-show-file-signature nil)
-  (setq denote-menu-signature-column-width 20)
-
 ;  (setq denote-menu-signature-column-width 20)
-  (makunbound 'denote-menu-signature-column-width)
+;  (makunbound 'denote-menu-signature-column-width)
 
   (advice-add 'denote-menu :after
 	      (lambda (&rest _)
 		(with-current-buffer "*Denote Menu*"
 		  (hl-line-mode 1))))
 
+  (defun tw/find-grep-in-window ()
+    "Run case-insensitive find-grep-dired in ~/Org directory and subdirectories."
+    (interactive)
+    (let ((dir (expand-file-name denote-directory))
+          (find-grep-options "-i")) ; Case-insensitive option
+      (find-grep-dired dir (read-string "Run find (grep -i): "))))
+
   (define-key denote-menu-mode-map (kbd "c") #'denote-menu-clear-filters)
+  (define-key denote-menu-mode-map (kbd "g") #'tw/find-grep-in-window)
   (define-key denote-menu-mode-map (kbd "/ r") #'denote-menu-filter)
   (define-key denote-menu-mode-map (kbd "/ k") #'denote-menu-filter-by-keyword)
   (define-key denote-menu-mode-map (kbd "/ o") #'denote-menu-filter-out-keyword)
@@ -1050,6 +1060,11 @@ tags: \n\
   (global-set-key (kbd "C-c d j o") (lambda ()
 				      (interactive)
 				      (dired (concat denote-directory "/Journal/"))))
+
+  (global-set-key (kbd "C-c d m o") (lambda ()
+				    (interactive)
+				    (denote-menu-list-notes)))
+
 
   (denote-rename-buffer-mode)
   (require 'denote-journal-extras)
