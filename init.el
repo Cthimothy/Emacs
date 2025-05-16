@@ -98,12 +98,12 @@
   
 (advice-add 'ielm-send-input :after 'g-ielm-write-history)
 
-(define-key inferior-emacs-lisp-mode-map (kbd "C-l")
-            'comint-clear-buffer)
+(with-eval-after-load 'ielm
+  (define-key inferior-emacs-lisp-mode-map (kbd "C-l") 'comint-clear-buffer))
 
-(define-key inferior-emacs-lisp-mode-map (kbd "C-r")
-            'helm-comint-input-ring)
-
+(with-eval-after-load 'elm
+  (define-key inferior-emacs-lisp-mode-map (kbd "C-r")
+              'helm-comint-input-ring))
 
 ;; -----------------------------------------------------------------------------
 ;; Load custom code from external files
@@ -111,7 +111,7 @@
 ;(add-to-list 'load-path "~/Projects/Code/Elisp/tag-explorer/")
 ;(require 'tag-explorer)
 (add-to-list 'load-path "~/Projects/Code/Elisp/journelly-to-denote/")
-(require 'journelly-to-denote-journal)
+(require 'journelly-to-denote)
 
 (add-to-list 'load-path "~/Projects/Code/Elisp/denote-tag-find-dired/")
 (require 'denote-tag-find-dired)
@@ -121,8 +121,6 @@
 
 (add-to-list 'load-path "~/Projects/Code/Elisp/key-logger/")
 (require 'key-logger)
-
-
 
 ;; -----------------------------------------------------------------------------
 ;; Define custom functions
@@ -527,10 +525,12 @@ tags: \n\
 ;;       are defined within the (use-package) definition.
 ;;       Those keyboard shortcuts should also be referenced here for clarity
 (global-set-key (kbd "C-c j") (lambda () (interactive) (info "/usr/local/share/info/jargon.info.gz")))
+
 (global-set-key (kbd "C-c w") #'search-web)
 (global-set-key (kbd "C-x ]") 'enlarge-window)
 (global-set-key (kbd "C-c c f") 'global-display-fill-column-indicator-mode)
 (global-set-key (kbd "C-c d t") 'tw/denote-search-by-tag-dired-ivy)
+(global-set-key (kbd "C-c d m") #'denote-menu-list-notes)
 (global-set-key (kbd "C-c g") 'elpher)
 (global-set-key (kbd "C-c j b") 'tw/create-jekyll-post)
 (global-set-key (kbd "C-c t t") 'tw/toggle-transparency)
@@ -600,23 +600,31 @@ tags: \n\
 (use-package denote-menu
   :ensure t
   :config
-  (setq denote-menu-title-column-width 60)
+  (setq denote-menu-title-column-width 85)
+;  (setq denote-menu-signature-column t)
 ;  (setq denote-menu-signature-column-width 20)
 ;  (makunbound 'denote-menu-signature-column-width)
+
+  (defun tw/find-grep-in-window ()
+    "Run case-insensitive find-grep-dired in ~/Org directory and subdirectories."
+    (interactive)
+    (let ((dir (expand-file-name denote-directory)))
+;          (find-grep-options "-i")) ; Case-insensitive option
+      (find-grep-dired dir (read-string "Run find (grep -i): "))))
 
   (advice-add 'denote-menu :after
 	      (lambda (&rest _)
 		(with-current-buffer "*Denote Menu*"
 		  (hl-line-mode 1))))
 
-  (defun tw/find-grep-in-window ()
-    "Run case-insensitive find-grep-dired in ~/Org directory and subdirectories."
-    (interactive)
-    (let ((dir (expand-file-name denote-directory))
-          (find-grep-options "-i")) ; Case-insensitive option
-      (find-grep-dired dir (read-string "Run find (grep -i): "))))
+  (add-hook 'denote-menu-mode-hook
+            (lambda ()
+              (rename-buffer "*denote-menu*" t)))
+
+  (add-hook 'denote-menu-mode-hook #'hl-line-mode)
 
   (define-key denote-menu-mode-map (kbd "c") #'denote-menu-clear-filters)
+  (define-key denote-menu-mode-map (kbd "n") #'denote)
   (define-key denote-menu-mode-map (kbd "g") #'tw/find-grep-in-window)
   (define-key denote-menu-mode-map (kbd "/ r") #'denote-menu-filter)
   (define-key denote-menu-mode-map (kbd "/ k") #'denote-menu-filter-by-keyword)
