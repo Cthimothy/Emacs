@@ -37,6 +37,7 @@
 (custom-set-faces
  '(default ((t (:height 125 :family "Iosevka" :foundry "nil"
                         :slant normal :weight medium :width normal)))))
+(set-face-attribute 'link nil :foreground "#ee6600" :underline t)
 
 (with-eval-after-load 'eww
   (dolist (face '(eww-form-checkbox
