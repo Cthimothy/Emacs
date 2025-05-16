@@ -316,10 +316,10 @@ tags: \n\
   (insert (format-time-string "%Y-%B-%d")))
 
 
-;(defun tw/toggle-window-dedication ()
-;  (interactive)
-;  (set-window-dedicated-p (selected-window)
-;                          (not (window-dedicated-p (selected-window)))))
+(defun tw/toggle-window-dedication ()
+  (interactive)
+  (set-window-dedicated-p (selected-window)
+                          (not (window-dedicated-p (selected-window)))))
 ;; Keyboard shortcut C-c w t
 
 
@@ -601,8 +601,9 @@ tags: \n\
   :ensure t
   :config
   (setq denote-menu-title-column-width 85)
+  (setq denote-menu-show-file-type nil)
 ;  (setq denote-menu-signature-column t)
-;  (setq denote-menu-signature-column-width 20)
+;  (setq denote-menu-signature-column-width 5)
 ;  (makunbound 'denote-menu-signature-column-width)
 
   (defun tw/find-grep-in-window ()
@@ -614,12 +615,12 @@ tags: \n\
 
   (advice-add 'denote-menu :after
 	      (lambda (&rest _)
-		(with-current-buffer "*Denote Menu*"
+		(with-current-buffer "*Denote Explorer*"
 		  (hl-line-mode 1))))
 
   (add-hook 'denote-menu-mode-hook
             (lambda ()
-              (rename-buffer "*denote-menu*" t)))
+              (rename-buffer "*Denote Explorer*" t)))
 
   (add-hook 'denote-menu-mode-hook #'hl-line-mode)
 
@@ -634,28 +635,43 @@ tags: \n\
 
 (use-package ivy-posframe
   :ensure t
-  :config
-  ;; display at `ivy-posframe-style'
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+  :custom
+  ;; Use top-center placement - this is good!
+  (ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-  ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-;  (setq ivy-posframe-parameters
-;	'((left-fringe . 0)
-;	  (right-fringe . 0)))
-  (setq ivy-posframe-width-relative t)
-  (setq ivy-posframe-height-relative t)
-  (setq ivy-posframe-border-width 1)
-;  (set-face-attribute 'ivy-posframe-border nil :background "#666666")
+  
+  ;; Fixed dimensions - these look good
+  (ivy-posframe-width 180)
+  (ivy-posframe-height 10)
+  
+  ;; Border width
+  (ivy-posframe-border-width 1)
+  
+  ;; Add frame parameters to persist border settings
+  (ivy-posframe-parameters
+   '((internal-border-width . 1)
+     (internal-border-color . "#666666")))
+  
+  :config
+  ;; Apply border color through face attribute 
   (set-face-attribute 'ivy-posframe-border nil :background "#666666")
-  (setq ivy-posframe-width 180
-	ivy-posframe-height 10)
-;  (setq ivy-posframe-width-relative-factor 0.62)
-;  (setq ivy-posframe-height-relative-factor 0.1)
+  
+  ;; Function to refresh border settings
+  (defun tw/refresh-ivy-posframe-border (&rest _)
+    (set-face-attribute 'ivy-posframe-border nil :background "#666666"))
+  
+  ;; Apply border settings on posframe creation
+  (advice-add 'ivy-posframe--display :after #'tw/refresh-ivy-posframe-border)
+  
+  ;; Ensure border persists after theme changes
+  (add-hook 'after-load-theme-hook #'tw/refresh-ivy-posframe-border)
+  
+  ;; Enable mode
   (ivy-posframe-mode 1))
+
 
 (use-package elpher
   :ensure t
@@ -755,6 +771,57 @@ tags: \n\
   (ivy-mode t))
 
 
+(use-package ivy-rich
+  :ensure t
+  :config
+  (setq ivy-rich-path-style 'abbrev)
+  
+  ;; Adjust these values to fit your screen
+  (setq ivy-rich-display-transformers-max-width 150)
+  (setq ivy-rich-width-percentage 0.75)
+  
+  (ivy-rich-mode 1))
+
+
+
+
+(use-package ivy-rich
+  :ensure t
+  :config
+  ;; Define a custom transformer with tighter spacing
+  (setq ivy-rich-display-transformers-list
+        '(ivy-switch-buffer
+          (:columns
+           ((ivy-rich-candidate (:width 40))  ; Buffer name
+            (ivy-rich-switch-buffer-size (:width 7 :right-padding 1))  ; Size with minimal padding
+            (ivy-rich-switch-buffer-indicators (:width 4 :face error :right-padding 1))  ; Indicators
+            (ivy-rich-switch-buffer-major-mode (:width 12 :face warning :right-padding 1))  ; Major mode
+            (ivy-rich-switch-buffer-project (:width 15 :face success :right-padding 1))  ; Project
+            (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; Path
+           :predicate
+           (lambda (cand) (get-buffer cand)))
+          
+          counsel-M-x
+          (:columns
+           ((counsel-M-x-transformer (:width 40))  ; Command name
+            (ivy-rich-counsel-function-docstring (:face font-lock-doc-face))))  ; Docstring
+          
+          ;; Add other commands as needed
+          ))
+  
+  ;; Decrease column padding globally
+  (setq ivy-rich-display-transformers-padding 1)
+  
+  ;; Modify the path style
+  (setq ivy-rich-path-style 'abbrev)
+  
+  ;; Apply changes
+  (ivy-rich-mode 1))
+
+
+
+
+
 (use-package noflet
   :ensure t)
 
@@ -830,12 +897,30 @@ tags: \n\
 (use-package marginalia
   :ensure t
   :custom
-  (marginalia-max-relative-age 0)
-  (marginalia-align 'right)
+  ;; Align annotations to the left (instead of right)
+  (marginalia-align 'left)
+  
+  ;; Set a smaller threshold to prevent descriptions going off-screen
+  (marginalia-margin-threshold 10)
+  
+  ;; Truncate descriptions more aggressively
+  (marginalia-truncate-width 60)
+  
+  ;; Adjust field widths to be more compact
+  (marginalia-field-width
+   '((description . 30)     ;; Shorter description field
+     (icon . 2)
+     (type . 6)
+     (key . 5)
+     (size . 5)
+     (date . 10)))
+   
+  ;; Display more consisely 
+  (marginalia-separator " · ")
   :init
-  (marginalia-mode))
+  (marginalia-mode 1))
 
-
+  
 (use-package popup-kill-ring
   :ensure t)
 
@@ -845,8 +930,7 @@ tags: \n\
   (defun turn-off-chrome ()
     (global-hl-line-mode -1))
   :hook
-  (vterm-mode . turn-off-chrome)
-  (tw/toggle-window-dedication))
+  (vterm-mode . turn-off-chrome))
 
 
 (use-package multi-vterm
@@ -876,20 +960,6 @@ tags: \n\
 
   (unless (treemacs-current-visibility)
     (treemacs)))
-
-
-(use-package marginalia
-  ;; Either bind `marginalia-cycle` globally or only in the minibuffer
-  :bind (("M-A" . marginalia-cycle)
-         :map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
-
-  ;; The :init configuration is always executed (Not lazy!)
-  :init
-
-  ;; Must be in the :init section of use-package such that the mode gets
-  ;; enabled right away. Note that this forces loading the package.
-  (marginalia-mode))
 
 
 (use-package paredit
