@@ -11,6 +11,7 @@
 (setq frame-resize-pixelwise t)
 (setq org-element-cache-persistent t)
 (setq browse-url-browser-function 'browse-url-default-browser)
+(setq ns-use-proxy-icon nil) ;; Remove icon in centre of title bar
 
 (setenv "PATH" (concat (getenv "PATH") ":/opt/homebrew/bin"))
 (setq exec-path (append exec-path '("/opt/homebrew/bin")))
@@ -602,6 +603,7 @@ tags: \n\
   :ensure t
   :config
   (setq denote-menu-title-column-width 85)
+  (setq denote-menu-title-column-width 45)
   (setq denote-menu-show-file-type nil)
 ;  (setq denote-menu-signature-column t)
 ;  (setq denote-menu-signature-column-width 5)
