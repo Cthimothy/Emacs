@@ -40,6 +40,10 @@
                         :slant normal :weight medium :width normal)))))
 (set-face-attribute 'link nil :foreground "#ee6600" :underline t)
 
+(set-face-attribute 'link nil
+                    :foreground "#C45B54"
+                    :underline t)
+
 (with-eval-after-load 'eww
   (dolist (face '(eww-form-checkbox
                   eww-form-file
@@ -77,8 +81,9 @@
 (set-frame-parameter nil 'alpha-transparency 50)
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
 
-
-;;Make Ielm Great Again
+;; -----------------------------------------------------------------------------
+;; Make Ielm Great Again
+;; -----------------------------------------------------------------------------
 (add-hook 'ielm-mode-hook 'eldoc-mode)
 (add-hook 'ielm-mode-hook 'paredit-mode)
 (define-key paredit-mode-map (kbd "RET") nil)
@@ -128,6 +133,23 @@
 ;; Define custom functions
 ;; NOTE: All org-mode related functions defined within (use-package org-mode)
 ;; -----------------------------------------------------------------------------
+(defun tw/insert-src-block (&optional language)
+  "Insert an Org source block with LANGUAGE and position cursor inside.
+If LANGUAGE is not provided, prompt for it with completion."
+  (interactive 
+   (list (completing-read "Language: " 
+                         '("elisp" "python" "bash" "sh" "C" "C++" "rust" "java" "javascript" "typescript"
+                           "css" "scss" "html" "xml" "yaml" "json" "sql" "org" "text" "markdown")
+                         nil nil nil nil "elisp")))
+  (let ((start (point)))
+    (insert (format "#+begin_src %s\n\n#+end_src\n" language))
+    (goto-char (+ start 13 (length language)))
+    (recenter)))
+
+;; Bind to a convenient key
+; (global-set-key (kbd "C-c i c b") 'tw/insert-src-block)
+
+
 (defun unfuck-all ()
   (interactive)
   (setq org-refile-targets
@@ -149,8 +171,13 @@
   (setq ivy-posframe-width-relative t)
   (setq ivy-posframe-height-relative t)
   (setq ivy-posframe-border-width 1)
-  (set-face-attribute 'ivy-posframe-border nil :background "#666666"))
+  (set-face-attribute 'ivy-posframe-border nil :background "#666666")
 
+  (set-face-attribute 'link nil
+                      :foreground "#C45B54"
+                      :underline t)
+  (custom-set-faces
+   '(font-lock-comment-face ((t (:foreground "#8BB08A" :slant italic))))))
 
 (defun search-web (start end)
   "Search the web for the selected region."
@@ -521,20 +548,20 @@ tags: \n\
 ;(add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "o") #'dired-find-file-other-window)))
 
 ;; -----------------------------------------------------------------------------
-;; Configure custom keyboard shortcuts
+;; Configure custom global key bindings keyboard shortcuts
 ;; -----------------------------------------------------------------------------
 ;; NOTE: Any keyboard shortcuts that are bound to external packages
 ;;       are defined within the (use-package) definition.
 ;;       Those keyboard shortcuts should also be referenced here for clarity
 (global-set-key (kbd "C-c j") (lambda () (interactive) (info "/usr/local/share/info/jargon.info.gz")))
-
+(global-set-key (kbd "C-c i c b") 'tw/insert-src-block)
 (global-set-key (kbd "C-c w") #'search-web)
 (global-set-key (kbd "C-x ]") 'enlarge-window)
 (global-set-key (kbd "C-c c f") 'global-display-fill-column-indicator-mode)
 (global-set-key (kbd "C-c d t") 'tw/denote-search-by-tag-dired-ivy)
 (global-set-key (kbd "C-c d m") #'denote-menu-list-notes)
 (global-set-key (kbd "C-c g") 'elpher)
-(global-set-key (kbd "C-c j b") 'tw/create-jekyll-post)
+(global-set-key (kbd "C-c c b") 'tw/create-jekyll-post)
 (global-set-key (kbd "C-c t t") 'tw/toggle-transparency)
 (global-set-key (kbd "C-x a s") 'async-shell-command)
 (global-set-key (kbd "C-x v t") 'multi-vterm)
@@ -602,8 +629,9 @@ tags: \n\
 (use-package denote-menu
   :ensure t
   :config
-  (setq denote-menu-title-column-width 85)
-  (setq denote-menu-title-column-width 45)
+  (setq denote-menu-title-column-width 120)
+  (setq denote-menu-title-column-width 80)
+  (setq denote-menu-title-column-width 48)
   (setq denote-menu-show-file-type nil)
 ;  (setq denote-menu-signature-column t)
 ;  (setq denote-menu-signature-column-width 5)
