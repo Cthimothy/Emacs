@@ -48,7 +48,7 @@
   (dolist (face '(eww-form-checkbox
                   eww-form-file
                   eww-form-select
-                  eww-form-submit
+                  eww-form-submitle
                   eww-form-text
                   eww-form-textarea
                   eww-invalid-certificate
@@ -59,8 +59,7 @@
                   eww-heading-2
                   eww-heading-3
                   eww-heading-4
-                  eww-heading-5
-                  eww-heading-6))
+                  eww-heading-5-heading-6))
     (when (facep face)
       (set-face-attribute face nil :inherit 'default))))
 
@@ -574,7 +573,7 @@ tags: \n\
 ;(global-set-key (kbd "C-c c c") 'org-capture) ;; FIXME :move to org use-package
 (global-set-key (kbd "C-c c c") 'dneote)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-x k") 'kil-buffer)
+(global-set-key (kbd "C-x k") 'kill-buffer)
 (global-set-key (kbd "M-n") 'scroll-up-command)
 (global-set-key (kbd "M-p") 'scroll-down-command)
 (global-set-key (kbd "M-,") 'beginning-of-buffer)
@@ -597,7 +596,9 @@ tags: \n\
 (global-set-key (kbd "C-c t h") 'tw/hide-org-tags) ;; FIXME: move to org use-package
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-x w") 'tw/ivy-switch-to-window-by-buffer)
-;(global-set-key (kbd "C-c t") (lambda () (interactive) (unless (derived-mode-p 'org-mode) (call-interactively 'tw/smart-open-line-above))))
+;(global-set-key (kbd "C-c t") (lambda () 
+;				(interactive) (unless (derived-mode-p 'org-mode) 
+;						(call-interactively 'tw/smart-open-line-above))))
 ;(global-unset-key (kbd "M-<return>"))
 ;(global-set-key (kbd "C-c d s") 'dired-mark-files-regexp)
 ;(global-set-key (kbd "C-c y") 'clipboard-yank)
@@ -718,7 +719,7 @@ tags: \n\
              easysession-load-including-geometry)
 
   :custom
-  (easysession-mode-line-misc-info t))  ; Display the session in the modeline
+  (easysession-mode-line-misc-info t)  ; Display the session in the modeline
 ;  (easysession-save-interval (* 10 60))  ; Save every 10 minutes
 
   :init
@@ -1041,13 +1042,10 @@ tags: \n\
   (global-set-key (kbd "C-S-<up>") 'org-move-subtree-up) 
   (global-set-key (kbd "C-S-<down>") 'org-move-subtree-down)
 
-(setq org-adapt-indentation t)
-
+  (setq org-adapt-indentation t)
   (setq org-agenda-window-setup 'current-window)
-
   (setq org-agenda-files
 	(directory-files-recursively "~/Org/" "\\.org$"))
-
   (setq org-archive-location "~/Projects/Backups/Archive.org::")
 
   (setq org-todo-keywords
@@ -1057,15 +1055,36 @@ tags: \n\
 
   (setq org-todo-keyword-faces
 	'(("TODO" . (:foreground "#CB7E65" :weight bold))
-          ("NEXT" . (:foreground "#ECBE7B" :weight bold))
+          ("NEXT" . (:foreground "#fCBE7B" :weight bold))
 	  ("IN-PROGRESS" . (:foreground "#97B277" :weight bold))
-	  ("UNSCHEDULED" . (:foreground "#44b9b1" :weight bold))
+	  ("UNSCHEDULED" . (:foreground "#a0834D" :weight bold))
 	  ("PROJECT" . (:foreground "#c678dd" :weight bold))
           ("DONE" . (:foreground "2257A0" :weight bold))
           ("CANCELLED" . (:foreground "#2257A0" :weight bold))))
   
+  (setq org-agenda-group-by-todo-state t)
+
   (setq org-agenda-sorting-strategy
 	'((todo todo-state-up)))
+
+  (setq org-agenda-block-separator nil)
+
+(setq org-agenda-custom-commands
+      '(("t" "Grouped TODOs by state"
+         ((tags-todo "+TODO=\"NEXT\""
+                     ((org-agenda-overriding-header "")))
+	  (tags-todo "+TODO=\"TODO\""
+                     ((org-agenda-overriding-header "")))
+          (tags-todo "+TODO=\"IN-PROGRESS\""
+                     ((org-agenda-overriding-header "")))
+          (tags-todo "+TODO=\"UNSCHEDULED\""
+                     ((org-agenda-overriding-header "")))
+          (tags-todo "+TODO=\"PROJECT\""
+                     ((org-agenda-overriding-header "")))
+          (tags-todo "+TODO=\"DONE\""
+                     ((org-agenda-overriding-header "")))
+          (tags-todo "+TODO=\"CANCELLED\""
+                     ((org-agenda-overriding-header "")))))))
 
   (setq org-agenda-prefix-format
 	'((agenda . " %i %?-12t% s")
@@ -1133,14 +1152,20 @@ tags: \n\
    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
    '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
   (setq org-superstar-leading-bullet ?\s)
+  (setq org-superstar-special-todo-items t)
+  (setq org-superstar-configure-like-org-bullets nil)
   (org-superstar-mode t))
+
+
+
 
 
 (use-package denote
   :ensure t
   :init
   (setq denote-directory "~/Org/")
-  (setq denote-journal-directory "~/Org/Journal/")
+;  (setq denote-journal-directory "~/Org/Journal/")
+  (setq denote-journal-directory "~/Org/")
   :config
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;; (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
@@ -1152,10 +1177,18 @@ tags: \n\
 
   (setq denote-sort-dired-extra-prompts '(sort-by-component reverse-sort))
 
+  (define-prefix-command 'my-denote-map)
+  (global-set-key (kbd "C-c d") 'my-denote-map)
+
+  (define-prefix-command 'my-denote-menu-map)
+  (define-key my-denote-map (kbd "m") 'my-denote-menu-map)
+
+  (global-set-key (kbd "C-c d m o") #'denote-menu-list-notes)
+
 ;  (global-set-key (kbd "C-c d n") 'denote-create-note)
   (global-set-key (kbd "C-c d n") 'denote)
   (global-set-key (kbd "C-c d f") 'consult-notes)
-  (global-set-key (kbd "C-c d m f") 'denote-menu-filter-by-keyword)
+;  (global-set-key (kbd "C-c d m f") 'denote-menu-filter-by-keyword)
   (global-set-key (kbd "C-c d g") 'find-grep-dired)
   (global-set-key (kbd "C-c d j o") 'denote-sort-dired)
   (global-set-key (kbd "C-c d j n") 'tw/denote-journal)
@@ -1200,7 +1233,7 @@ tags: \n\
 (defun tw/denote-journal ()
   "Open today's Denote journal if it exists, otherwise create it with a template."
   (interactive)
-  (let* ((denote-directory "~/Org/Journal/")
+  (let* ((denote-directory "~/Org/")
          (today (format-time-string "%Y%m%d"))
          (files (directory-files denote-directory t "\\.org$"))
          (existing-file (seq-find (lambda (file)
