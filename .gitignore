@@ -1,4 +1,34 @@
-*
-!init.el
-!init-macbook.el
-!init-org-mode.el
+# Compiled / package files
+elpa/
+straight/
+eln-cache/
+
+# Auto-save, backups, and caches
+auto-save-list/
+Backups/
+bookmarks
+recentf
+transient/
+tramp
+easysession/
+projects
+roguel-ike-saves/
+ielm/
+org-supertag/
+org-supertag-data/
+
+# Temporary / generated files
+*.elc
+*~
+#*#
+transcript.txt
+
+# ChatGPT and custom state
+.chatgpt-shell.el
+awesome-chatgpt-prompts/
+
+# Ignore custom.el (if generated)
+custom.el
+
+# Ignore org-id cache
+.org-id-locations
