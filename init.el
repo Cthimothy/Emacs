@@ -469,6 +469,11 @@ tags: \n\
 (use-package spacemacs-theme
   :ensure t
   :config
+  (set-face-attribute 'font-lock-comment-face nil
+		      :foreground "#9a9a9a"  ;; soft neutral grey
+;;                    :foreground "#a0847c"  ;; subtle warm brownish-grey
+                      :background nil
+                      :slant 'italic)
   (setq tw-light-theme 'spacemacs-light))
 
 (use-package doom-themes
@@ -915,7 +920,6 @@ tags: \n\
   (setq counsel-describe-variable-function #'helpful-variable))
 
 
-
 (use-package ace-window
   :ensure t
   :bind (("C-x C-o" . ace-window))
@@ -929,7 +933,7 @@ tags: \n\
   (setq aw-leading-char-style 'char)     ; ← centers the letter in window
   (custom-set-faces
    '(aw-leading-char-face
-     ((t (:foreground "#b35860" :weight bold :height 3.0))))))
+     ((t (:foreground "#b35860" :weight bold :box nil :height 3.0))))))
 
 
 (use-package vertico
