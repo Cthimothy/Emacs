@@ -48,10 +48,18 @@
 
 ;; (set-face-attribute 'default nil
 ;;                     :family "Maple Mono"
-;;                     :height 123
+;;                     :height 124
 ;;                     :weight 'normal
 ;;                      :slant 'normal
 ;;                      :width 'normal)
+
+
+;; (set-face-attribute 'default nil
+;;                     :family "Geist Mono"
+;;                     :height 124
+;;                     :weight 'normal
+;;                       :slant 'normal
+;;                       :width 'normal)
 
 (custom-set-faces
  '(region ((t (:background "#FFEFD5" :foreground nil)))))
