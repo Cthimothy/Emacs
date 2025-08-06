@@ -37,4 +37,4 @@ custom.el
 #init.el#
 
 # Quelpa package manager
-quelpa/
+quelpa/\#*\#
