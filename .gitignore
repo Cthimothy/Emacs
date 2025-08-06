@@ -32,3 +32,9 @@ custom.el
 
 # Ignore org-id cache
 .org-id-locations
+
+# Auto-save
+#init.el#
+
+# Quelpa package manager
+quelpa/
