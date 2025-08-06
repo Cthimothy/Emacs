@@ -50,16 +50,16 @@
 ;;                     :family "Maple Mono"
 ;;                     :height 124
 ;;                     :weight 'normal
-;;                      :slant 'normal
-;;                      :width 'normal)
+;;                     :slant 'normal
+;;                     :width 'normal)
 
 
 ;; (set-face-attribute 'default nil
 ;;                     :family "Geist Mono"
 ;;                     :height 124
 ;;                     :weight 'normal
-;;                       :slant 'normal
-;;                       :width 'normal)
+;;                     :slant 'normal
+;;                     :width 'normal)
 
 (custom-set-faces
  '(region ((t (:background "#FFEFD5" :foreground nil)))))
@@ -921,33 +921,21 @@ tags: \n\
   :bind (("C-x C-o" . ace-window))
   :config
   (setq aw-keys '(?a ?s ?q ?w ?e ?z ?x))
-  (setq aw-scope 'frame)
-  (setq aw-ignore-current t)
-  (setq aw-background t)
-  (setq aw-leading-char-style 'char)     ; ← centers the letter in window
-  (setq aw-display-mode 'pretty)           ; cleaner look
-  (custom-set-faces
-   '(aw-leading-char-face
-     ((t (:foreground "#b35860" :weight bold :height 2.0))))))
-
-
-
-(use-package ace-window
-  :ensure t
-  :bind
-  (("C-x C-o" . ace-window))
-  :config
-  (setq aw-keys '(?a ?s ?q ?w ?e ?z ?x))
 ;  (setq aw-keys '(?d ?x ?z ?w ?q ?s ?a))
 ;  (setq aw-keys '(?w ?z ?q ?s ?a))
   (setq aw-scope 'frame)
   (setq aw-ignore-current t)
   (setq aw-background t)
-(custom-set-faces
- '(aw-leading-char-face
-   ((t (:foreground "#b35860" :weight bold :height 5.0))))))
+  (setq aw-leading-char-style 'char)     ; ← centers the letter in window
+  (custom-set-faces
+   '(aw-leading-char-face
+     ((t (:foreground "#b35860" :weight bold :height 3.0))))))
 
 
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode))
 
 
 (use-package vertico-posframe
