@@ -34,7 +34,13 @@ custom.el
 .org-id-locations
 
 # Auto-save
-#init.el#
 
 # Quelpa package manager
 quelpa/\#*\#
+\#*\#
+
+# Auto-save
+\#*\#
+
+# Quelpa package manager
+quelpa/
