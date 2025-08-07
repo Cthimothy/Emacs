@@ -1132,27 +1132,27 @@ tags: \n\
 	("C-c t v" . org-tags-view))
 
   :config
-(defvar tw/org-last-agenda-command "c"
-  "Stores the last used org-agenda custom command key. Defaults to 'c'.")
+  (defvar tw/org-last-agenda-command "c"
+    "Stores the last used org-agenda custom command key. Defaults to 'c'.")
 
-(defun tw/org-store-last-agenda-command (orig-fun &rest args)
-  "Advice to store the last custom agenda command key."
-  (setq tw/org-last-agenda-command (or (nth 1 args) "c"))
-  (apply orig-fun args))
-(advice-add 'org-agenda :around #'tw/org-store-last-agenda-command)
+  (defun tw/org-store-last-agenda-command (orig-fun &rest args)
+    "Advice to store the last custom agenda command key."
+    (setq tw/org-last-agenda-command (or (nth 1 args) "c"))
+    (apply orig-fun args))
+  (advice-add 'org-agenda :around #'tw/org-store-last-agenda-command)
 
-(defun tw/org-agenda-refresh-custom-view ()
-  "Rebuild the Org Agenda in the background if visible, then switch to day view."
-  (let ((buf (get-buffer "*Org Agenda*")))
-    (when (and buf (get-buffer-window buf))
-      (let ((inhibit-message t)
-            (win (get-buffer-window buf)))
-        (with-selected-window win
-          (org-agenda nil tw/org-last-agenda-command)
-          (org-agenda-day-view)   ;; collapse to day view
-          (org-agenda-goto-today)
-          (beginning-of-line))))))
-(run-with-timer 60 60 #'tw/org-agenda-refresh-custom-view)
+  (defun tw/org-agenda-refresh-custom-view ()
+    "Rebuild the Org Agenda in the background if visible, then switch to day view."
+    (let ((buf (get-buffer "*Org Agenda*")))
+      (when (and buf (get-buffer-window buf))
+	(let ((inhibit-message t)
+              (win (get-buffer-window buf)))
+          (with-selected-window win
+            (org-agenda nil tw/org-last-agenda-command)
+            (org-agenda-day-view)   ;; collapse to day view
+            (org-agenda-goto-today)
+            (beginning-of-line))))))
+  (run-with-timer 60 60 #'tw/org-agenda-refresh-custom-view)
 
   (defun tw/org-todo-done-when-checkboxes-complete ()
     "Switch heading to DONE when all checkboxes are checked, else back to TODO."
@@ -1196,7 +1196,7 @@ tags: \n\
   (setq mouse-highlight nil)
 
   ;; Defer slow prettifiers:
-					;  (add-hook 'org-mode-hook #'so-long-minor-mode)
+;  (add-hook 'org-mode-hook #'so-long-minor-mode)
 
 
   ;; ────────────────────────────────
@@ -1217,12 +1217,13 @@ tags: \n\
      '(org-level-9  ((t (:foreground "#435470" :height 1.0 :weight normal))))
      '(org-level-10 ((t (:foreground "#aa5d45" :height 1.0 :weight normal))))
 
+
      ;; Other Org faces
      '(org-special-keyword ((t (:foreground "#cBc5c4" :slant italic))))
      '(org-drawer         ((t (:foreground "LightSlateGray" :slant italic))))
      '(org-tag            ((t (:foreground "#c6a5a3" :height 0.9 :weight normal))))
-     '(region             ((t (:background "#FFEFD5" :foreground unspecified))))))
-
+     '(region             ((t (:background "#FFEFD5" :foreground unspecified)))))
+     '(org-document-title ((t (:slant 'italic  :height 1.0)))))
 
   (setq org-hide-leading-stars        t
         org-hide-emphasis-markers     t
@@ -1389,7 +1390,6 @@ tags: \n\
                        '((:name "🌐 Work"
 				:and (:tag "work"
 					   :not (:todo ("TODO" "IN-PROGRESS" "NEXT" "WAITING")))
-
 				:order 0)
 			 (:name "🏡 Personal"
 				:and (:tag "personal"
@@ -1407,7 +1407,7 @@ tags: \n\
 
 
   ;; ────────────────────────────────
-  ;; ️ Tag Alistolla
+  ;; ️ Tag a-list
   ;; ────────────────────────────────
   (setq org-tag-alist
         '(("atheism"     . ?A) ("ada"        . ?a) ("adhd"      . ?D)
