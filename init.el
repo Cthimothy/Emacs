@@ -176,6 +176,12 @@ If LANGUAGE is not provided, prompt for it with completion."
 
 (defun unfuck-all ()
   (interactive)
+  (setq org-agenda-files
+	(list 
+	 (expand-file-name "Personal.org" org-directory)
+	 (expand-file-name "Work.org"     org-directory)
+	 (expand-file-name "Journal.org"  org-directory)))
+
   ;; (set-face-attribute 'org-special-keyword nil :foreground "#cBc5c4" :slant 'italic)
   ;; (set-face-attribute 'org-drawer         nil :foreground "LightSlateGray" :slant 'italic)
   ;; (set-face-attribute 'region             nil :background "#FFEFD5" :foreground 'unspecified)
@@ -216,9 +222,8 @@ If LANGUAGE is not provided, prompt for it with completion."
   ;; (set-face-attribute 'link nil
   ;;                     :foreground "#C45B54"
   ;;                     :underline t)
-  ;; (custom-set-faces
-  ;;  '(font-lock-comment-face ((t (:foreground "#8BB08A" :slant italic)))))
-)
+ (custom-set-faces
+  '(font-lock-comment-face ((t (:foreground "#9a9a9a" :slant italic :background nil))))))
 
 (defun search-web (start end)
   "Search the web for the selected region."
@@ -466,41 +471,130 @@ tags: \n\
 ;; -----------------------------------------------------------------------------
 ;; Alternative themes: cloud-theme, modus-themes, timu-macos-theme
 
-(use-package spacemacs-theme
-  :ensure t
-  :config
-  (set-face-attribute 'font-lock-comment-face nil
-		      :foreground "#9a9a9a"  ;; soft neutral grey
-;;                    :foreground "#a0847c"  ;; subtle warm brownish-grey
-                      :background nil
-                      :slant 'italic)
-  (setq tw-light-theme 'spacemacs-light))
 
-(use-package doom-themes
-  :ensure t
-  :config
-  (setq tw-dark-theme 'doom-spacegrey))
+(defvar tw/current-theme 'spacemacs-light
+  "Current theme, either 'spacemacs-light or 'spacemacs-dark.")
 
-;; FIXME: Combine following function into single toggle function
-(defun tw/toggle-theme-light ()
-		    (interactive)
-		    (custom-set-faces
-		     '(aw-leading-char-face
-		       ((t (:inherit ace-jump-face-foreground :height 10.0 :foreground "DarkBlue")))))
-		    (disable-theme (car custom-enabled-themes)))
+(defun tw/apply-theme (theme)
+  "Load THEME and apply any customizations."
+  (load-theme theme t)
+  (setq tw/current-theme theme)
+  (tw/apply-theme-extras theme))
+
+(defun tw/apply-theme-extras (theme)
+  "Apply extras depending on THEME."
+  (when (eq theme 'spacemacs-light)
+    (set-face-attribute 'font-lock-comment-face nil
+                        :foreground "#9a9a9a"
+                        :background 'unspecified))
+;;                        :slant 'italic))
+  (when (eq theme 'spacemacs-dark)
+    ;; Reset to theme default
+    (set-face-attribute 'font-lock-comment-face nil
+                        :foreground 'unspecified
+                        :background 'unspecified
+                        :slant 'unspecified)))
+
+(defun tw/toggle-theme ()
+  "Toggle between light and dark themes."
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes)
+  (tw/apply-theme (if (eq tw/current-theme 'spacemacs-light)
+                      'spacemacs-dark
+                    'spacemacs-light)))
+
+;; Set up the initial theme at startup
+(mapc #'disable-theme custom-enabled-themes)
+(tw/apply-theme tw/current-theme)
+
+;; Optional: Bind C-c l t to toggle theme
+(global-set-key (kbd "C-c t h") #'tw/toggle-theme)
 
 
-(defun tw/toggle-theme-dark ()
-		    (interactive)
-		    (custom-set-faces
-		     '(aw-leading-char-face
-		       ((t (:inherit ace-jump-face-foreground :height 10.0 :foreground "DarkOrange")))))
-		    (disable-theme (car custom-enabled-themes))
-		    (load-theme tw-dark-theme))
 
-(global-set-key (kbd "C-c l d") 'tw/toggle-theme-dark)
-(global-set-key (kbd "C-c l l") 'tw/toggle-theme-light)
-(load-theme tw-light-theme)
+
+;; (defvar tw/light-theme 'spacemacs-light)
+;; (defvar tw/dark-theme 'doom-spacegrey)
+;; (defvar tw/current-theme tw/light-theme)
+
+;; (defun tw/apply-custom-faces ()
+;;   ;; Comments
+;;   (set-face-attribute 'font-lock-comment-face nil
+;;                       :foreground "#9a9a9a"
+;;                       :background nil
+;;                       :slant 'italic)
+;;   ;; Mode line (active)
+;;   (set-face-attribute 'mode-line nil
+;;                       :background "#4b3b61" :foreground "white" :box nil)
+;;   ;; Mode line (inactive)
+;;   (set-face-attribute 'mode-line-inactive nil
+;;                       :background "#eaeaea" :foreground "#888888" :box nil)
+;;   ;; Ace window leading char
+;;   (set-face-attribute 'aw-leading-char-face nil
+;;                       :inherit 'ace-jump-face-foreground
+;;                       :height 10.0
+;;                       :foreground (if (eq tw/current-theme tw/dark-theme)
+;;                                       "DarkOrange"
+;;                                     "DarkBlue")))
+
+;; (add-hook 'after-load-theme-hook #'tw/apply-custom-faces)
+
+;; (defun tw/toggle-theme ()
+;;   (interactive)
+;;   (disable-theme (car custom-enabled-themes))
+;;   (setq tw/current-theme (if (eq tw/current-theme tw/light-theme)
+;;                              tw/dark-theme
+;;                            tw/light-theme))
+;;   (load-theme tw/current-theme t))  ;; triggers after-load-theme-hook
+
+;; (global-set-key (kbd "C-c l t") #'tw/toggle-theme)
+
+;; (load-theme tw/current-theme t)
+
+
+
+
+
+
+
+
+
+;; (use-package spacemacs-theme
+;;   :ensure t
+;;   :config
+;;   (set-face-attribute 'font-lock-comment-face nil
+;; 		      :foreground "#9a9a9a"  ;; soft neutral grey
+;; 		      ;;:foreground "#a0847c"  ;; subtle warm brownish-grey
+;; 		      :background nil
+;; 		      :slant 'italic)
+;;   (setq tw-light-theme 'spacemacs-light))
+
+;; (use-package doom-themes
+;;   :ensure t
+;;   :config
+;;   (setq tw-dark-theme 'doom-spacegrey))
+
+;; ;; FIXME: Combine following function into single toggle function
+;; (defun tw/toggle-theme-light ()
+;; 		    (interactive)
+;; 		    (custom-set-faces
+;; 		     '(aw-leading-char-face
+;; 		       ((t (:inherit ace-jump-face-foreground :height 10.0 :foreground "DarkBlue")))))
+;; 		    (disable-theme (car custom-enabled-themes))
+;; 		    (load-theme tw-light-theme))
+
+
+;; (defun tw/toggle-theme-dark ()
+;; 		    (interactive)
+;; 		    (custom-set-faces
+;; 		     '(aw-leading-char-face
+;; 		       ((t (:inherit ace-jump-face-foreground :height 10.0 :foreground "DarkOrange")))))
+;; 		    (disable-theme (car custom-enabled-themes))
+;; 		    (load-theme tw-dark-theme))
+
+;; (global-set-key (kbd "C-c l d") 'tw/toggle-theme-dark)
+;; (global-set-key (kbd "C-c l l") 'tw/toggle-theme-light)
+;; (load-theme tw-light-theme)
 
 ;; -----------------------------------------------------------------------------
 ;; Configure mode hooks
@@ -574,6 +668,7 @@ tags: \n\
 (global-set-key (kbd "C-c t t") 'tw/toggle-transparency)
 (global-set-key (kbd "C-x a s") 'async-shell-command)
 (global-set-key (kbd "C-x v t") 'multi-vterm)
+;(global-set-key (kbd "C-x v t") 'eshell)
 (global-set-key (kbd "C-x C-h") 'tw/highlight-line)
 (global-set-key (kbd "C-c o a") 'org-agenda) ;; FIXME: move to org use-package
 (global-set-key (kbd "C-c d f") 'tw/dired-filter-files)
@@ -659,6 +754,117 @@ tags: \n\
 ****** 🌀 Mood
 ****** ☑️ Tasks")))))
 
+
+;; ;; ------------------------------
+;; ;; Configure eshell
+;; ;; ------------------------------
+;; (require 'ansi-color)
+;; (add-hook 'eshell-preoutput-filter-functions #'ansi-color-apply)
+;; (setq eshell-term-name "xterm-256color")
+
+;; ;; === PATH Setup ===
+;; (defun tw/eshell-setup-path ()
+;;   "Set PATH and exec-path to match your .bashrc."
+;;   (let ((my-paths
+;;          '("/opt/homebrew/bin"
+;;            "/usr/local/bin"
+;;            "/System/Cryptexes/App/usr/bin"
+;;            "/usr/bin"
+;;            "/bin"
+;;            "/usr/sbin"
+;;            "/sbin"
+;;            "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin"
+;;            "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
+;;            "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
+;;            "/Applications/Privileges.app/Contents/Resources"
+;;            "/Applications/iTerm.app/Contents/Resources/utilities"
+;;            "/opt/homebrew/opt/node@18/bin")))
+;;     (dolist (p my-paths)
+;;       (add-to-list 'exec-path p))
+;;     (setenv "PATH" (string-join (reverse my-paths) ":"))))
+
+;; ;; === Prompt Faces ===
+;; (defface my-eshell-paren-face
+;;   '((t :foreground "#556B2F")) ;; dark olive green
+;;   "Face for parentheses in prompt.")
+
+;; (defface my-eshell-cwd-face
+;;   '((t :foreground "#4682B4")) ;; steel blue
+;;   "Face for current directory in prompt.")
+
+;; (defface my-eshell-prompt-face
+;;   '((t :foreground "#DAA520")) ;; goldenrod
+;;   "Face for prompt symbol.")
+
+;; ;; === Prompt Format ===
+;; (setq eshell-prompt-function
+;;       (lambda ()
+;;         (let ((cwd (abbreviate-file-name (eshell/pwd))))
+;;           (concat
+;;            "\n"
+;;            (propertize "(" 'face 'my-eshell-paren-face)
+;;            (propertize cwd 'face 'my-eshell-cwd-face)
+;;            (propertize ")" 'face 'my-eshell-paren-face)
+;;            "\n"
+;;            (propertize "λ " 'face 'my-eshell-prompt-face)
+;;            (propertize " " 'face 'default)))))
+
+;; (setq eshell-prompt-regexp "λ ")
+
+;; ;; Use Emacs Lisp ls instead of system ls
+;; (setq eshell-use-ls-lisp t)
+
+;; ;; Configure ls-lisp for better output
+;; (setq ls-lisp-use-insert-directory-program nil)
+;; (setq ls-lisp-dirs-first t)
+;; (setq ls-lisp-use-color t)
+
+
+;; ;; === Aliases ===
+
+;; (fmakunbound 'tw/eshell-set-aliases)
+;; (defun tw/eshell-set-aliases ()
+;;   "Set up aliases similar to your .bash_aliases."
+;;   (eshell/alias "ll" "ls -lhF --color=always")
+;;   (eshell/alias "ls" "ls -F --color=always")
+;;   (eshell/alias "less" "bat"))
+
+;; ;; === Eshell Init ===
+;; (defun tw/eshell-setup ()
+;;   (tw/eshell-setup-path)
+;;   (tw/eshell-set-aliases))
+
+;; (add-hook 'eshell-first-time-mode-hook #'tw/eshell-setup)
+
+;; (with-eval-after-load 'eshell
+;;   (define-key eshell-mode-map (kbd "C-p") #'eshell-previous-input)
+;;   (define-key eshell-mode-map (kbd "C-n") #'eshell-next-input))
+
+;; (with-eval-after-load 'eshell
+;;   (bind-keys*
+;;    :map eshell-mode-map
+;;    ("C-l" . (lambda ()
+;;               (interactive)
+;;               (let ((inhibit-read-only t))
+;;                 (erase-buffer)
+;;                 (eshell-insert-prompt))))))
+
+;; ;; === Eat Integration ===
+;; (use-package eat
+;;   :ensure t
+;;   :config
+;;   ;; Activate Eat modes inside eshell
+;;   (add-hook 'eshell-first-time-mode-hook #'eat-eshell-mode)
+;;   (add-hook 'eshell-first-time-mode-hook #'eat-eshell-visual-command-mode)
+
+;;   ;; Clear screen in Eat mode and force a new prompt
+;;   (with-eval-after-load 'eat
+;;     (define-key eat-mode-map (kbd "C-l")
+;;       (lambda ()
+;;         (interactive)
+;;         (let ((inhibit-read-only t))
+;;           (erase-buffer)
+;;           (eat-send "\n"))))))
 
 
 
@@ -1222,8 +1428,7 @@ tags: \n\
      '(org-special-keyword ((t (:foreground "#cBc5c4" :slant italic))))
      '(org-drawer         ((t (:foreground "LightSlateGray" :slant italic))))
      '(org-tag            ((t (:foreground "#c6a5a3" :height 0.9 :weight normal))))
-     '(region             ((t (:background "#FFEFD5" :foreground unspecified)))))
-     '(org-document-title ((t (:slant 'italic  :height 1.0)))))
+     '(region             ((t (:background "#FFEFD5" :foreground unspecified))))))
 
   (setq org-hide-leading-stars        t
         org-hide-emphasis-markers     t
@@ -1233,6 +1438,9 @@ tags: \n\
 	org-tags-column               0
         org-auto-align-tags           nil
         org-blank-before-new-entry    '((heading . nil) (plain-list-item . nil)))
+
+  (custom-set-faces
+   '(org-document-title ((t (:slant italic :height 1.0 :underline nil)))))
 
   (add-hook 'org-mode-hook #'hl-line-mode)
   (add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
@@ -1270,6 +1478,67 @@ tags: \n\
 	  ("wm" "Meeting with Outstanding Meeting Actions" entry
            (file+olp "~/Org/Work.org" "INBOX")
            "** %<%Y-%m-%d-%A> - %^{Meeting Title}\n*** Notes\n*** TODO Outstanding Actions [/]:actions:\nSCHEDULED: <%<%Y-%m-%d %a>>\n- [ ] \n%?")))
+
+  ;; ────────────────────────────────
+  ;; Capture in a new frame called from Raycast using:
+  ;;
+  ;; #!/bin/bash
+  ;;
+  ;; # Required parameters:
+  ;; # @raycast.schemaVersion 1
+  ;; # @raycast.title Org Capture
+  ;; # @raycast.mode compact
+  ;; 
+  ;; # Optional parameters:
+  ;; # @raycast.icon 🧠
+  ;; # @raycast.description Capture notes to Org mode
+  ;; 
+  ;; emacsclient -e '(tw/org-capture-frame)' > /dev/null
+  ;; ────────────────────────────────
+
+  (defun tw/org-capture-frame ()
+    "Create a clean, isolated frame for Org capture, centered on screen."
+    (interactive)
+    (let* ((frame-width 120)
+           (frame-height 50)
+           ;; Get screen dimensions
+           (screen-width (display-pixel-width))
+           (screen-height (display-pixel-height))
+           ;; Calculate character dimensions (approximate)
+           (char-width (frame-char-width))
+           (char-height (frame-char-height))
+           ;; Calculate pixel dimensions of the frame
+           (frame-pixel-width (* frame-width char-width))
+           (frame-pixel-height (* frame-height char-height))
+           ;; Calculate centered position
+           (left (/ (- screen-width frame-pixel-width) 2))
+           (top (/ (- screen-height frame-pixel-height) 2))
+           (frame (make-frame `((name . "org-capture")
+				(width . ,frame-width)
+				(height . ,frame-height)
+				(left . ,left)
+				(top . ,top)
+				(minibuffer . t)
+				(internal-border-width . 12)
+				(font . "Iosevka")
+				(auto-raise . t)
+				(z-group . above)))))
+      ;; Use select-frame instead of select-frame-set-input-focus for cleaner focus management
+      (select-frame frame)
+      (raise-frame frame)
+      (delete-other-windows)
+      (org-capture nil "i")
+      (delete-other-windows)))
+
+  (defun tw/delete-org-capture-frame ()
+    "Close the capture frame after finishing or aborting."
+    (when (equal "org-capture" (frame-parameter nil 'name))
+      (delete-frame)))
+
+  (add-hook 'org-capture-after-finalize-hook #'tw/delete-org-capture-frame)
+
+
+
 
 
   ;; ────────────────────────────────
@@ -1433,7 +1702,8 @@ tags: \n\
         org-outline-path-complete-in-steps       nil
         org-refile-allow-creating-parent-nodes   'confirm
         org-refile-use-cache                     nil
-        org-log-refile                           'note
+;        org-log-refile                           'note
+        org-log-refile                           nil
         org-reverse-note-order                   nil)
 
   ;; ────────────────────────────────
