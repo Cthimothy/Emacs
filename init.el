@@ -1406,6 +1406,13 @@ tags: \n\
     (setq cursor-type nil))
   (add-hook 'org-agenda-mode-hook #'my/org-agenda-hide-cursor)
 
+  (defun tw/org-goto-and-narrow ()
+    "Use org-goto to jump to a heading, then narrow to that subtree."
+    (interactive)
+    (call-interactively 'consult-org-heading)
+    (org-narrow-to-subtree)
+    (org-show-subtree))
+
 
   ;; (defun tw/org-find-tagged-headings ()
   ;;   "Prompt for a tag and show all matching headings in org-agenda-files using consult-grep, without vertico-posframe."
@@ -1579,9 +1586,6 @@ tags: \n\
   (add-hook 'org-capture-after-finalize-hook #'tw/delete-org-capture-frame)
 
 
-
-
-
   ;; ────────────────────────────────
   ;; 📅 Agenda Setup
   ;; ────────────────────────────────
@@ -1629,7 +1633,6 @@ tags: \n\
           (todo   . " %i ")
           (tags   . " %i ")
           (search . " %i ")))
-
   (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 
   ;; ────────────────────────────────
@@ -1660,10 +1663,7 @@ tags: \n\
   (setq org-super-agenda-header-separator
 	(concat "└" (make-string 65 ?─) "┐\n"))
 
- 
-
-
-  (setq org-agenda-custom-commands
+   (setq org-agenda-custom-commands
 	'(("c" "Scheduled Today + Weekly Agenda + Grouped TODOs"
            ((agenda ""
                     ((org-agenda-span 'week)
@@ -1691,49 +1691,6 @@ tags: \n\
 				:order 2)
 			 (:discard (:anything t))))))))))
 
-
-
-
-
-
-
-;; (setq org-agenda-custom-commands
-;;       '(("c" "Scheduled Today + Weekly Agenda + Grouped TODOs + Habits"
-;;          ((agenda ""
-;;                   ((org-agenda-span 'week)
-;;                    (org-agenda-start-on-weekday 1)
-;;                    (org-agenda-overriding-header
-;;                     (propertize "📅 This Week’s Agenda"
-;;                                 'face '(:height 1.5 :weight bold :inherit default)))))
-
-;;           (alltodo ""
-;;                    ((org-agenda-overriding-header
-;;                      (propertize ""
-;;                                  'face '(:height 1.5 :weight bold :inherit default)))
-;;                     (org-super-agenda-groups
-;;                      '((:name "🌐 Work"
-;;                               :and (:tag "work"
-;;                                          :not (:todo ("TODO" "IN-PROGRESS" "NEXT" "WAITING")))
-;;                               :order 0)
-;;                        (:name "🏡 Personal"
-;;                               :and (:tag "personal"
-;;                                          :not (:tag "emacs"))
-;;                               :order 1)
-;;                        (:name "𝝺 Emacs"
-;;                               :and (:tag "personal"
-;;                                          :tag "emacs")
-;;                               :order 2)
-;;                        (:discard (:anything t))))))
-
-;;           Habits block at the bottom
-;;           (agenda ""
-;;                   ((org-agenda-span 1)
-;;                    (org-agenda-overriding-header
-;;                     (propertize "🔥 Habits"
-;;                                 'face '(:height 1.3 :weight bold :inherit default)))
-;;                    (org-agenda-show-log nil)
-;;                    (org-agenda-skip-function
-;;                     '(org-agenda-skip-entry-if 'notregexp ":STYLE:.*habit"))))))))
 
   ;; ────────────────────────────────
   ;; ️ Tag a-list
@@ -1776,12 +1733,13 @@ tags: \n\
   ;; ────────────────────────────────
   ;; ⌨️ Keybindings
   ;; ────────────────────────────────
-
 (with-eval-after-load 'org
-  (global-set-key (kbd "C-S-<up>")   #'org-move-subtree-up)
-  (global-set-key (kbd "C-S-<down>") #'org-move-subtree-down)
+  ;; Org-specific commands - bind to org-mode-map
+  (define-key org-mode-map (kbd "C-S-<up>")   #'org-move-subtree-up)
+  (define-key org-mode-map (kbd "C-S-<down>") #'org-move-subtree-down)
+  (define-key org-mode-map (kbd "C-c C-j") 'tw/org-goto-and-narrow))
+  ;; General commands - keep as global
   (global-set-key (kbd "C-c c c")    #'org-capture)
-  (global-set-key (kbd "C-c C-j")    #'consult-org-heading)
   (global-set-key (kbd "C-c C-i")    #'consult-imenu))
 
   ;; Refresh font-lock in all Org buffers (useful after theme change)
@@ -1799,23 +1757,10 @@ tags: \n\
    '(org-agenda-date-header     ((t (:inherit org-level-5))))))
 
 
-
 (use-package org-super-agenda
   :after org-agenda
   :config
   (org-super-agenda-mode 1))
-
-
-;; (use-package org-super-agenda
-;;   :ensure t
-;;   :init
-;;   (setq org-super-agenda-header-separator
-;;         (propertize (make-string 60 ?─) 'face 'shadow)) ; 60-char grey line
-;;   :config
-;;   (custom-set-faces
-;;    `(org-super-agenda-header ((t (:height 1.3 :weight bold
-;; 					  :foreground ,(face-foreground 'org-level-1))))))
-;;   (org-super-agenda-mode 1))
 
 
 (use-package org-superstar
