@@ -131,6 +131,15 @@
 ;; Define custom functions
 ;; NOTE: All org-mode related functions defined within (use-package org-mode)
 ;; -----------------------------------------------------------------------------
+
+;; (defun tw/org-end-then-insert-subheading ()
+;;   "Move to end of line, then insert an Org subheading."
+;;   (interactive)
+;;   (end-of-line)
+;;   (org-insert-subheading nil))
+;; (define-key org-mode-map (kbd "C-c <return>") #'tw/org-end-then-insert-subheading)
+
+
 (defun tw/find-grep-dired-ignore-case (dir pattern)
   "Run find-grep-dired in DIR searching for PATTERN, ignoring case."
   (interactive
@@ -358,7 +367,7 @@ tags: \n\
 (defun tw/dired-find-file-other-window ()
   "Open the file in a vertical split to the right."
   (interactive)
-  (Let ((File (dired-get-file-for-visit)))
+  (let ((File (dired-get-file-for-visit)))
        (select-window (split-window-right))
        (find-file file)))
 
@@ -481,15 +490,30 @@ tags: \n\
   (setq tw/current-theme theme)
   (tw/apply-theme-extras theme))
 
+
+;; (defun tw/apply-theme-extras (theme)
+;;   "Apply extras depending on THEME."
+;;   (when (eq theme 'spacemacs-light)
+;;     (set-face-attribute 'font-lock-comment-face nil
+;;                         :foreground "#9a9a9a"
+;;                         :background 'unspecified
+;;                         :slant italic))
+;;   (when (eq theme 'spacemacs-dark)
+;;     ;; Reset to theme default
+;;     (set-face-attribute 'font-lock-comment-face nil
+;;                         :foreground 'unspecified
+;;                         :background 'unspecified
+;;                         :slant 'unspecified)))
+
+
 (defun tw/apply-theme-extras (theme)
   "Apply extras depending on THEME."
   (when (eq theme 'spacemacs-light)
     (set-face-attribute 'font-lock-comment-face nil
                         :foreground "#9a9a9a"
-                        :background 'unspecified))
-;;                        :slant 'italic))
+                        :background 'unspecified
+                        :slant 'italic))  ;; quote here
   (when (eq theme 'spacemacs-dark)
-    ;; Reset to theme default
     (set-face-attribute 'font-lock-comment-face nil
                         :foreground 'unspecified
                         :background 'unspecified
@@ -871,29 +895,13 @@ tags: \n\
 ;; -----------------------------------------------------------------------------
 ;; Configure external packages
 ;; ----------------------------------------------------------------------------
-(use-package org-super-agenda
+(use-package elfeed
   :ensure t
-  :init
-  (setq org-super-agenda-header-separator
-        (propertize (make-string 60 ?─) 'face 'shadow)) ; 60-char grey line
   :config
-  (custom-set-faces
-   `(org-super-agenda-header ((t (:height 1.3 :weight bold
-					  :foreground ,(face-foreground 'org-level-1))))))
-  (org-super-agenda-mode 1))
+  (elfeed-load-opml "~/.emacs.d/elfeed.opml"))
 
-(defun tw/org-end-then-insert-subheading ()
-  "Move to end of line, then insert an Org subheading."
-  (interactive)
-  (end-of-line)
-  (org-insert-subheading nil))
-(define-key org-mode-map (kbd "C-c <return>") #'tw/org-end-then-insert-subheading)
+(unload-feature 'elfeed t)
 
-
-;; (use-package elfeed
-;;   :ensure t
-;;   :config
-;;   (elfeed-load-opml "~/.emacs.d/elfeed.opml"))
 
 (use-package markdown-mode
   :ensure t
@@ -1049,12 +1057,12 @@ tags: \n\
   (ultra-scroll-mode 1))
 
 
-  (use-package mastodon
-    :ensure t
-    :config
-    (setq mastodon-instance-url "https://dice.camp"
-          mastodon-active-user "Cthimothy")
-    (mastodon-discover))
+  ;; (use-package mastodon
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq mastodon-instance-url "https://dice.camp"
+  ;;         mastodon-active-user "Cthimothy")
+  ;;   (mastodon-discover))
  
 
 (use-package elpher
@@ -1233,6 +1241,7 @@ tags: \n\
   :ensure t
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
+(remove-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode)
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region)
@@ -1330,14 +1339,31 @@ tags: \n\
   :mode ("\\.org\\'" . org-mode)
   :ensure t
   :after org
-  :bind
-  (:map org-agenda-mode-map
-        ("d" . my-org-agenda-today-day-view)
-        ("D" . org-agenda-day-view)
-	("C-c t f" . my/org-find-tagged-headings)
-	("C-c t v" . org-tags-view))
+  ;; :bind
+  ;; (:map org-agenda-mode-map
+  ;;       ("d" . my-org-agenda-today-day-view)
+  ;;       ("D" . org-agenda-day-view)
+  ;; 	("C-c t f" . my/org-find-tagged-headings)
+  ;; 	("C-c t v" . org-tags-view))
 
   :config
+  (add-to-list 'org-modules 'org-habit)
+  (setq org-habit-graph-column 20)   ;; adjust column where graph appears
+  (setq org-habit-show-habits-only-for-today t) ;; show streaks across agenda
+  (setq org-habit-today-glyph ?○)
+  (setq org-habit-completed-glyph ?●)
+  (setq org-habit-missed-glyph ?✘)
+  (setq org-habit-graph-glyph ?⎯)
+  (setq org-habit-preceding-days 2)
+  (setq org-habit-following-days 0)
+;  (setq org-habit-show-habits-only-for-today t)
+;  (setq org-habit-following-days 3)
+
+  (with-eval-after-load 'org-agenda
+    (define-key org-agenda-mode-map (kbd "d") #'my-org-agenda-today-day-view)
+    (define-key org-agenda-mode-map (kbd "D") #'org-agenda-day-view)
+    (define-key org-agenda-mode-map (kbd "C-c t f") #'my/org-find-tagged-headings)
+    (define-key org-agenda-mode-map (kbd "C-c t v") #'org-tags-view))
   (defvar tw/org-last-agenda-command "c"
     "Stores the last used org-agenda custom command key. Defaults to 'c'.")
 
@@ -1409,6 +1435,11 @@ tags: \n\
   ;; ✨ Appearance
   ;; ────────────────────────────────
   ;; General look and feel
+
+  ;; Set face for code snippets in org
+  (custom-set-faces
+   '(org-code ((t (:family "Courier" :height 1.0 :foreground "#006400")))))
+
   (with-eval-after-load 'org
     (custom-set-faces
      ;; Studio Oils theme colours
@@ -1454,6 +1485,16 @@ tags: \n\
 	`(("i" "Inbox" entry
            (file ,org-default-notes-file)
            "\n* TODO %?\n  Captured: %U\n")
+
+
+          ("h" "New Habit" entry
+           ;; Use a lambda to dynamically evaluate the file path
+           (file+headline
+            (lambda () (expand-file-name "Personal.org" org-directory))
+            "Habits")
+           "* HABIT %?\n  SCHEDULED: <%<%Y-%m-%d> +1d>\n  :PROPERTIES:\n  :STYLE:    habit\n  :END:\n"
+           :empty-lines 1)
+
 
           ("p" "Personal")
 
@@ -1600,7 +1641,6 @@ tags: \n\
            "|"
            "CANCELLED(c)" "DONE(d)")))
 
-
   (setq org-todo-keyword-faces
 	'(("TODO"        . (:foreground "#2f72b8" :weight bold))     ; blue
           ("NEXT"        . (:foreground "#b35860" :weight bold))     ; muted rose
@@ -1620,26 +1660,7 @@ tags: \n\
   (setq org-super-agenda-header-separator
 	(concat "└" (make-string 65 ?─) "┐\n"))
 
-  ;; (setq org-agenda-custom-commands
-  ;;      '(("c" "Scheduled Today + Weekly Agenda + Grouped TODOs"
-  ;;         ((agenda ""
-  ;;                  ((org-agenda-span 'week)
-  ;;                   (org-agenda-start-on-weekday 1)
-  ;;                   (org-agenda-overriding-header
-  ;;                    (propertize "📅 This Week’s Agenda"
-  ;;                                'face '(:height 1.5 :weight bold :inherit default)))))
-
-  ;;          (alltodo ""
-  ;;                   ((org-agenda-overriding-header
-  ;;                     (propertize ""
-  ;;                                 'face '(:height 1.5 :weight bold :inherit default)))
-  ;;                    (org-super-agenda-groups
-  ;;                     '((:name "🌐 Work"     :tag "work" :order 0)
-  ;;                       (:name "🏡 Personal" :and (:tag "personal" :not (:tag "emacs")) :order 1)
-  ;;                       (:name "𝝺 Emacs"    :and (:tag "personal" :tag "emacs")        :order 2)
-  ;;                       (:discard (:anything t))))))))))
-
-
+ 
 
 
   (setq org-agenda-custom-commands
@@ -1675,13 +1696,53 @@ tags: \n\
 
 
 
+
+;; (setq org-agenda-custom-commands
+;;       '(("c" "Scheduled Today + Weekly Agenda + Grouped TODOs + Habits"
+;;          ((agenda ""
+;;                   ((org-agenda-span 'week)
+;;                    (org-agenda-start-on-weekday 1)
+;;                    (org-agenda-overriding-header
+;;                     (propertize "📅 This Week’s Agenda"
+;;                                 'face '(:height 1.5 :weight bold :inherit default)))))
+
+;;           (alltodo ""
+;;                    ((org-agenda-overriding-header
+;;                      (propertize ""
+;;                                  'face '(:height 1.5 :weight bold :inherit default)))
+;;                     (org-super-agenda-groups
+;;                      '((:name "🌐 Work"
+;;                               :and (:tag "work"
+;;                                          :not (:todo ("TODO" "IN-PROGRESS" "NEXT" "WAITING")))
+;;                               :order 0)
+;;                        (:name "🏡 Personal"
+;;                               :and (:tag "personal"
+;;                                          :not (:tag "emacs"))
+;;                               :order 1)
+;;                        (:name "𝝺 Emacs"
+;;                               :and (:tag "personal"
+;;                                          :tag "emacs")
+;;                               :order 2)
+;;                        (:discard (:anything t))))))
+
+;;           Habits block at the bottom
+;;           (agenda ""
+;;                   ((org-agenda-span 1)
+;;                    (org-agenda-overriding-header
+;;                     (propertize "🔥 Habits"
+;;                                 'face '(:height 1.3 :weight bold :inherit default)))
+;;                    (org-agenda-show-log nil)
+;;                    (org-agenda-skip-function
+;;                     '(org-agenda-skip-entry-if 'notregexp ":STYLE:.*habit"))))))))
+
   ;; ────────────────────────────────
   ;; ️ Tag a-list
   ;; ────────────────────────────────
   (setq org-tag-alist
         '(("atheism"     . ?A) ("ada"        . ?a) ("adhd"      . ?D)
           ("discuss"     . ?d) ("emacs"      . ?e) ("workflow"  . ?f)
-          ("programming" . ?g) ("thoughts"   . ?h) ("house"     . ?H)
+          ("programming" . ?g) ("thoughts"   . ?h) ("habit"     . ?i)
+	  ("house"     . ?H)
           ("inbox"       . ?I) ("blog"       . ?L) ("meeting"   . ?m)
           ("homelab"     . ?o) ("personal"   . ?p) ("project"   . ?P)
           ("occult"      . ?c) ("rpg"        . ?R) ("timesheet" . ?s)
@@ -1715,11 +1776,13 @@ tags: \n\
   ;; ────────────────────────────────
   ;; ⌨️ Keybindings
   ;; ────────────────────────────────
+
+(with-eval-after-load 'org
   (global-set-key (kbd "C-S-<up>")   #'org-move-subtree-up)
   (global-set-key (kbd "C-S-<down>") #'org-move-subtree-down)
   (global-set-key (kbd "C-c c c")    #'org-capture)
-  (global-set-key (kbd "C-c C-j")    #'consult-imenu)
-  (global-set-key (kbd "C-c C-i")    #'consult-imenu)
+  (global-set-key (kbd "C-c C-j")    #'consult-org-heading)
+  (global-set-key (kbd "C-c C-i")    #'consult-imenu))
 
   ;; Refresh font-lock in all Org buffers (useful after theme change)
   (dolist (buf (buffer-list))
@@ -1734,6 +1797,25 @@ tags: \n\
    '(org-agenda-date-today      ((t (:inherit org-level-3))))
    '(org-agenda-date-weekend    ((t (:inherit org-level-4))))
    '(org-agenda-date-header     ((t (:inherit org-level-5))))))
+
+
+
+(use-package org-super-agenda
+  :after org-agenda
+  :config
+  (org-super-agenda-mode 1))
+
+
+;; (use-package org-super-agenda
+;;   :ensure t
+;;   :init
+;;   (setq org-super-agenda-header-separator
+;;         (propertize (make-string 60 ?─) 'face 'shadow)) ; 60-char grey line
+;;   :config
+;;   (custom-set-faces
+;;    `(org-super-agenda-header ((t (:height 1.3 :weight bold
+;; 					  :foreground ,(face-foreground 'org-level-1))))))
+;;   (org-super-agenda-mode 1))
 
 
 (use-package org-superstar
