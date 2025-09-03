@@ -185,11 +185,14 @@ If LANGUAGE is not provided, prompt for it with completion."
 
 (defun unfuck-all ()
   (interactive)
+
   (setq org-agenda-files
 	(list 
 	 (expand-file-name "Personal.org" org-directory)
 	 (expand-file-name "Work.org"     org-directory)
-	 (expand-file-name "Journal.org"  org-directory)))
+	 (expand-file-name "Journal.org"  org-directory)
+	 (expand-file-name "british-calendar.org" org-directory)))
+
 
   ;; (set-face-attribute 'org-special-keyword nil :foreground "#cBc5c4" :slant 'italic)
   ;; (set-face-attribute 'org-drawer         nil :foreground "LightSlateGray" :slant 'italic)
@@ -1411,6 +1414,19 @@ tags: \n\
     (org-show-subtree))
 
 
+
+  (defun my-highlight-almanac-entries ()
+    "Highlight all types of Almanac entries in org-agenda."
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward
+              "\\(\\(?:Saints Almanac\\|Christian Feast\\|Celtic Festival\\|Folklore Almanac\\|Solar Almanac\\|Farming Almanac\\):\\)"
+              nil t)
+	(add-text-properties (match-beginning 1) (match-end 1)
+                             '(face (:foreground "#8fbc8f" :weight bold :height 1.0))))))
+  (add-hook 'org-agenda-finalize-hook 'my-highlight-almanac-entries)
+
+
   ;; (defun tw/org-find-tagged-headings ()
   ;;   "Prompt for a tag and show all matching headings in org-agenda-files using consult-grep, without vertico-posframe."
   ;;   (interactive)
@@ -1581,15 +1597,6 @@ tags: \n\
       (delete-frame)))
   (add-hook 'org-capture-after-finalize-hook #'tw/delete-org-capture-frame)
 
-  (defun my-highlight-almanac-entries ()
-    "Highlight 'Almanac:' text in org-agenda."
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "\\(Almanac:\\)" nil t)
-	(add-text-properties (match-beginning 1) (match-end 1)
-			     '(face (:foreground "#8fbc8f" :weight bold :height 1.0))))))  
-  (add-hook 'org-agenda-finalize-hook 'my-highlight-almanac-entries)
-
   ;; ────────────────────────────────
   ;; 📅 Agenda Setup
   ;; ────────────────────────────────
@@ -1668,10 +1675,6 @@ tags: \n\
   (setq org-super-agenda-header-separator
 	(concat "└" (make-string 65 ?─) "┐\n"))
 
-(defface org-agenda-almanac-face
-  '((t :foreground "#8fbc8f" :weight bold :height 0.9))
-  "Face for almanac entries in org-agenda")
-
    (setq org-agenda-custom-commands
 	'(("c" "Scheduled Today + Weekly Agenda + Grouped TODOs"
            ((agenda ""
@@ -1746,7 +1749,7 @@ tags: \n\
   ;; Org-specific commands - bind to org-mode-map
   (define-key org-mode-map (kbd "C-S-<up>")   #'org-move-subtree-up)
   (define-key org-mode-map (kbd "C-S-<down>") #'org-move-subtree-down)
-  (define-key org-mode-map (kbd "C-c C-j") 'tw/org-goto-and-narrow))
+  (define-key org-mode-map (kbd "C-c C-j") 'tw/org-goto-and-narrow)
   ;; General commands - keep as global
   (global-set-key (kbd "C-c c c")    #'org-capture)
   (global-set-key (kbd "C-c C-i")    #'consult-imenu))
