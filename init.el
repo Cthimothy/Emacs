@@ -534,9 +534,6 @@ tags: \n\
 ;; Optional: Bind C-c l t to toggle theme
 (global-set-key (kbd "C-c t h") #'tw/toggle-theme)
 
-
-
-
 ;; (defvar tw/light-theme 'spacemacs-light)
 ;; (defvar tw/dark-theme 'doom-spacegrey)
 ;; (defvar tw/current-theme tw/light-theme)
@@ -1582,9 +1579,16 @@ tags: \n\
     "Close the capture frame after finishing or aborting."
     (when (equal "org-capture" (frame-parameter nil 'name))
       (delete-frame)))
-
   (add-hook 'org-capture-after-finalize-hook #'tw/delete-org-capture-frame)
 
+  (defun my-highlight-almanac-entries ()
+    "Highlight 'Almanac:' text in org-agenda."
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "\\(Almanac:\\)" nil t)
+	(add-text-properties (match-beginning 1) (match-end 1)
+			     '(face (:foreground "#8fbc8f" :weight bold :height 1.0))))))  
+  (add-hook 'org-agenda-finalize-hook 'my-highlight-almanac-entries)
 
   ;; ────────────────────────────────
   ;; 📅 Agenda Setup
@@ -1593,7 +1597,8 @@ tags: \n\
 	(list 
 	 (expand-file-name "Personal.org" org-directory)
 	 (expand-file-name "Work.org"     org-directory)
-	 (expand-file-name "Journal.org"  org-directory)))
+	 (expand-file-name "Journal.org"  org-directory)
+	 (expand-file-name "british-calendar.org" org-directory)))
 
   (setq org-agenda-prefix-format
 	'((agenda . "│ %?-12t% s")
@@ -1662,6 +1667,10 @@ tags: \n\
   ;; Complete agenda view
   (setq org-super-agenda-header-separator
 	(concat "└" (make-string 65 ?─) "┐\n"))
+
+(defface org-agenda-almanac-face
+  '((t :foreground "#8fbc8f" :weight bold :height 0.9))
+  "Face for almanac entries in org-agenda")
 
    (setq org-agenda-custom-commands
 	'(("c" "Scheduled Today + Weekly Agenda + Grouped TODOs"
