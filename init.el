@@ -73,6 +73,11 @@
 ; (set-face-attribute 'link nil :foreground "#C45B54" :underline t)
 
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
+(tab-bar-mode 1)
+(setq tab-bar-show nil)
+(desktop-save-mode 1)
+(setq desktop-restore-frames t)
+(global-set-key (kbd "C-c s s") 'tab-switcher)
 
 ;; -----------------------------------------------------------------------------
 ;; Make Ielm Great Again
@@ -127,10 +132,46 @@
 ;; (require 'denote-keyword-browser)
 ;; (global-set-key (kbd "C-c d k") #'tw/denote-keyword-browser)
 
+
 ;; -----------------------------------------------------------------------------
 ;; Define custom functions
 ;; NOTE: All org-mode related functions defined within (use-package org-mode)
 ;; -----------------------------------------------------------------------------
+
+(defun tw/org-insert-random-quote ()
+  "Insert a random quote from Quotes.org at point, prepending the author.
+If an author has multiple quotes, only one is chosen."
+  (interactive)
+  (let* ((quote-file "~/Org/Quotes.org") ;; adjust path
+         (quotes (with-temp-buffer
+                   (insert-file-contents quote-file)
+                   (org-element-map (org-element-parse-buffer) 'headline
+                     (lambda (h)
+                       (let ((author (org-element-property :raw-value h))
+                             (begin (org-element-property :contents-begin h))
+                             (end (org-element-property :contents-end h)))
+                         (when (and begin end)
+                           (let* ((lines (split-string
+                                          (buffer-substring-no-properties begin end)
+                                          "\n" t "[[:space:]]+"))
+                                  (quote (nth (random (length lines)) lines)))
+                             (format "%s: %s" author quote))))))))
+         (quotes (delq nil quotes)))
+    (when quotes
+      (insert (format "#+begin_quote\n%s\n#+end_quote\n"
+                      (nth (random (length quotes)) quotes))))))
+
+(defun org-dblock-write:random-quote (params)
+  "Dynamic block to insert a random quote."
+  (tw/org-insert-random-quote))
+
+(defun my/update-random-quote-on-open ()
+  (when (and buffer-file-name
+             (string-match-p "Personal.org$" buffer-file-name))
+    (org-update-all-dblocks)))
+
+(add-hook 'find-file-hook #'my/update-random-quote-on-open)
+
 
 ;; (defun tw/org-end-then-insert-subheading ()
 ;;   "Move to end of line, then insert an Org subheading."
@@ -230,6 +271,7 @@ If LANGUAGE is not provided, prompt for it with completion."
 
   (vertico-mode)
   (vertico-posframe-cleanup)
+  (vertico-grid-mode)
 
   ;; (set-face-attribute 'link nil
   ;;                     :foreground "#C45B54"
@@ -898,9 +940,13 @@ tags: \n\
 (use-package elfeed
   :ensure t
   :config
-  (elfeed-load-opml "~/.emacs.d/elfeed.opml"))
+;  (elfeed-load-opml "~/.emacs.d/elfeed.opml"))
+  (setq shr-use-fonts nil)
+  (setq elfeed-search-filter "@1-days-ago +unread")
+  (elfeed-load-opml "~/.emacs.d/osr-planet.opml"))
 
-(unload-feature 'elfeed t)
+;(setq elfeed-feeds nil)
+;(unload-feature 'elfeed t)
 
 
 (use-package markdown-mode
@@ -1150,6 +1196,16 @@ tags: \n\
      ((t (:foreground "#b35860" :weight bold :box nil :height 3.0))))))
 
 
+(use-package marginalia
+  :after vertico
+  :ensure t
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+
+
+
 (use-package vertico
   :ensure t
   :init
@@ -1160,13 +1216,17 @@ tags: \n\
   :after vertico
   :hook (vertico-mode . vertico-posframe-mode)
   :config
-  (setq vertico-posframe-width 200)
-  (setq vertico-posframe-border-width 1)
-  (setq vertico-posframe-parameters
-        '((left-fringe . 8)
-          (right-fringe . 8)))
+  ;; make the popup wide enough
+  (setq vertico-posframe-width 180   ;; nil = full frame width
+        vertico-posframe-height 16
+        vertico-posframe-border-width 1
+        vertico-posframe-parameters
+        '((left-fringe . 20)
+          (right-fringe . 20)))
   :init
   (vertico-posframe-mode))
+
+
 
 
 (use-package orderless
@@ -1339,31 +1399,35 @@ tags: \n\
   :mode ("\\.org\\'" . org-mode)
   :ensure t
   :after org
+  ;; binds moved to with-eval-after-load 'org-agenda
   ;; :bind
   ;; (:map org-agenda-mode-map
   ;;       ("d" . my-org-agenda-today-day-view)
   ;;       ("D" . org-agenda-day-view)
   ;; 	("C-c t f" . my/org-find-tagged-headings)
-  ;; 	("C-c t v" . org-tags-view))
+  ;;	("C-c c-c c-t ". org-tags-view)
 
   :config
-  (add-to-list 'org-modules 'org-habit)
-  (setq org-habit-graph-column 20)   ;; adjust column where graph appears
-  (setq org-habit-show-habits-only-for-today t) ;; show streaks across agenda
-  (setq org-habit-today-glyph ?○)
-  (setq org-habit-completed-glyph ?●)
-  (setq org-habit-missed-glyph ?✘)
-  (setq org-habit-graph-glyph ?⎯)
-  (setq org-habit-preceding-days 2)
-  (setq org-habit-following-days 0)
-;  (setq org-habit-show-habits-only-for-today t)
-;  (setq org-habit-following-days 3)
+  ;; (add-to-list 'org-modules 'org-habit)
+  ;; (setq org-habit-graph-column 20)   ;; adjust column where graph appears
+  ;; (setq org-habit-show-habits-only-for-today t) ;; show streaks across agenda
+  ;; (setq org-habit-today-glyph ?○)
+  ;; (setq org-habit-completed-glyph ?●)
+  ;; (setq org-habit-missed-glyph ?✘)
+  ;; (setq org-habit-graph-glyph ?⎯)
+  ;; (setq org-habit-preceding-days 2)
+  ;; (setq org-habit-following-days 0)
+  ;; (setq org-habit-show-habits-only-for-today t)
+  ;; (setq org-habit-following-days 3)
+
+  (custom-set-faces
+   '(org-agenda-done ((t (:foreground "LightSlateGray" :strike-through t)))))
 
   (with-eval-after-load 'org-agenda
     (define-key org-agenda-mode-map (kbd "d") #'my-org-agenda-today-day-view)
-    (define-key org-agenda-mode-map (kbd "D") #'org-agenda-day-view)
+    (define-key org-agenda-mode-map (kbd "D") #'org-agenda-day-view) 
     (define-key org-agenda-mode-map (kbd "C-c t f") #'my/org-find-tagged-headings)
-    (define-key org-agenda-mode-map (kbd "C-c t v") #'org-tags-view))
+    (define-key org-agenda-mode-map (kbd "C-c c-v") #'org-tags-view))
   (defvar tw/org-last-agenda-command "c"
     "Stores the last used org-agenda custom command key. Defaults to 'c'.")
 
@@ -1413,6 +1477,22 @@ tags: \n\
     (org-narrow-to-subtree)
     (org-show-subtree))
 
+  ;; (defun my-highlight-almanac-entries ()
+  ;;   "Highlight 'Almanac:' text in org-agenda."
+  ;;   (save-excursion
+  ;;     (goto-char (point-min))
+  ;;     (while (re-search-forward "\\(Almanac:\\)" nil t)
+  ;; 	(add-text-properties (match-beginning 1) (match-end 1)
+  ;; 			     '(face (:foreground "#8fbc8f" :weight bold :height 1.0))))))  
+
+;; (defun my-highlight-almanac-entries ()
+;;   "Highlight 'Almanac:' and 'Farming Almanac:' text in org-agenda."
+;;   (save-excursion
+;;     (goto-char (point-min))
+;;     (while (re-search-forward "\\(\\(?:Farming \\)?Almanac:\\)" nil t)
+;;       (add-text-properties (match-beginning 1) (match-end 1)
+;;                            '(face (:foreground "#8fbc8f" :weight bold :height 1.0))))))
+;; (add-hook 'org-agenda-finalize-hook 'my-highlight-almanac-entries)
 
 
   (defun my-highlight-almanac-entries ()
@@ -1526,6 +1606,13 @@ tags: \n\
            (file+olp ,(expand-file-name "Personal.org" org-directory) "Tasks")
            "* UNSCHEDULED %?\n  Captured on: %U\n")
 
+	  ("pa"                          ; key to trigger capture
+           "Daily Tarot"                ; description
+           entry                         ; type
+           (file+headline "~/Org/Personal.org" "Occult")  ; target under * Occult
+           "**** %<%Y-%m-%d-%A>\n- RWS: \n- Thoth: \n- Reflection: " ; template content
+           :empty-lines 1)             ; add an empty line after capture
+
           ("w" "Work")
 
           ("wn" "New Note" entry
@@ -1637,7 +1724,7 @@ tags: \n\
 	'((daily today require-timed)
           (800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800) ;; <-- hours visible
           "  "
-	  " ﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒﹒ "))
+	  " ·················"))
 
 
   (setq org-agenda-prefix-format
@@ -1670,7 +1757,6 @@ tags: \n\
   ;; ────────────────────────────────
   ;; 🧠 Agenda Custom Commands
   ;; ────────────────────────────────
-
   ;; Complete agenda view
   (setq org-super-agenda-header-separator
 	(concat "└" (make-string 65 ?─) "┐\n"))
@@ -1682,7 +1768,7 @@ tags: \n\
                      (org-agenda-start-on-weekday 1)
                      (org-agenda-overriding-header
                       (propertize "📅 This Week’s Agenda"
-                                  'face '(:height 1.5 :weight bold :inherit default)))))
+                                  'face '(:height 2.5 :weight bold :inherit default)))))
 
             (alltodo ""
                      ((org-agenda-overriding-header
@@ -1695,7 +1781,8 @@ tags: \n\
 				:order 0)
 			 (:name "🏡 Personal"
 				:and (:tag "personal"
-					   :not (:tag "emacs"))
+					   :not (:tag "emacs")
+					   :not (:tag "christmas"))
 				:order 1)
 			 (:name "𝝺 Emacs"
 				:and (:tag "personal"
@@ -1704,14 +1791,59 @@ tags: \n\
 			 (:discard (:anything t))))))))))
 
 
-  ;; ────────────────────────────────
+(setq org-agenda-custom-commands
+      '(("c" "Scheduled Today + Weekly Agenda + Grouped TODOs"
+         ((agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-on-weekday 1)
+                   (org-agenda-overriding-header
+                    (propertize "📅 This Week’s Agenda"
+                                'face '(:height 2.5 :weight bold :inherit default)))))
+
+          (alltodo ""
+                   ((org-agenda-overriding-header
+                     (propertize ""
+                                 'face '(:height 1.5 :weight bold :inherit default)))
+                    (org-super-agenda-groups
+                     '((:name "🌐 Work"
+                              :and (:tag "work"
+                                         :not (:todo ("TODO" "IN-PROGRESS" "NEXT" "WAITING")))
+                              :order 0)
+                       (:name "🏡 Personal"
+                              :and (:tag "personal"
+                                         :not (:tag "emacs"))
+                              :order 1)
+                       (:name "𝝺 Emacs"
+                              :and (:tag "personal"
+                                         :tag "emacs")
+                              :order 2)
+                       (:discard (:anything t))))))
+
+          ;; New section for TODOs from Inbox.org
+          (alltodo ""
+                   ((org-agenda-overriding-header
+                     (propertize "📥 Inbox TODOs"
+                                 'face '(:height 1.5 :weight bold :inherit default)))
+                    (org-super-agenda-groups
+                     '((:name "Inbox"
+                              :order 0)))))))))
+
+
+
+
+
+
+
+
+
+  ;; ───────────────────────────────
   ;; ️ Tag a-list
   ;; ────────────────────────────────
   (setq org-tag-alist
         '(("atheism"     . ?A) ("ada"        . ?a) ("adhd"      . ?D)
           ("discuss"     . ?d) ("emacs"      . ?e) ("workflow"  . ?f)
           ("programming" . ?g) ("thoughts"   . ?h) ("habit"     . ?i)
-	  ("house"     . ?H)
+	  ("house"       . ?H)
           ("inbox"       . ?I) ("blog"       . ?L) ("meeting"   . ?m)
           ("homelab"     . ?o) ("personal"   . ?p) ("project"   . ?P)
           ("occult"      . ?c) ("rpg"        . ?R) ("timesheet" . ?s)
