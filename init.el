@@ -1715,8 +1715,8 @@ tags: \n\
         org-agenda-entry-text-leaders                    ""
         org-agenda-entry-text-cleanup-hook               nil
 	org-agenda-skip-deadline-prewarning-if-scheduled t
-	org-agenda-skip-scheduled-if-done                t
-	org-agenda-skip-deadline-if-done                 t
+	org-agenda-skip-scheduled-if-done                nil
+	org-agenda-skip-deadline-if-done                 nil
 	org-agenda-start-on-weekday                      1
 	org-agenda-start-hour                            8
 	org-deadline-warning-days                        0
