@@ -44,3 +44,32 @@ quelpa/\#*\#
 
 # Quelpa package manager
 quelpa/
+
+# Other nonsense
+.emacs.desktop
+.emacs.desktop.lock
+eshell/history
+eshell/lastdir
+ielm-history.el
+equake-persistent-display
+*.opml
+org-d3.js
+org-grapher.html
+
+init-backup.el
+init-broken.el
+new-init.el
+init.el-*
+
+.emacs.desktop
+.emacs.desktop.lock
+eshell/history
+eshell/lastdir
+ielm-history.el
+ielm-history.eld
+equake-persistent-display
+
+init.el-*
+init-backup.el
+init-broken.el
+new-init.el
