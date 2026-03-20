@@ -1,75 +1,85 @@
-# Compiled / package files
-elpa/
-straight/
-eln-cache/
+# ignore everything
+*
 
-# Auto-save, backups, and caches
-auto-save-list/
-Backups/
-bookmarks
-recentf
-transient/
-tramp
-easysession/
-projects
-roguel-ike-saves/
-ielm/
-org-supertag/
-org-supertag-data/
+# allow this file
+!init.el
 
-# Temporary / generated files
-*.elc
-*~
-#*#
-transcript.txt
+# allow git metadata
+!.gitignore
 
-# ChatGPT and custom state
-.chatgpt-shell.el
-awesome-chatgpt-prompts/
 
-# Ignore custom.el (if generated)
-custom.el
+# # Compiled / package files
+# elpa/
+# straight/
+# eln-cache/
 
-# Ignore org-id cache
-.org-id-locations
+# # Auto-save, backups, and caches
+# auto-save-list/
+# Backups/
+# bookmarks
+# recentf
+# transient/
+# tramp
+# easysession/
+# projects
+# roguel-ike-saves/
+# ielm/
+# org-supertag/
+# org-supertag-data/
 
-# Auto-save
+# # Temporary / generated files
+# *.elc
+# *~
+# #*#
+# transcript.txt
 
-# Quelpa package manager
-quelpa/\#*\#
-\#*\#
+# # ChatGPT and custom state
+# .chatgpt-shell.el
+# awesome-chatgpt-prompts/
 
-# Auto-save
-\#*\#
+# # Ignore custom.el (if generated)
+# custom.el
 
-# Quelpa package manager
-quelpa/
+# # Ignore org-id cache
+# .org-id-locations
 
-# Other nonsense
-.emacs.desktop
-.emacs.desktop.lock
-eshell/history
-eshell/lastdir
-ielm-history.el
-equake-persistent-display
-*.opml
-org-d3.js
-org-grapher.html
+# # Auto-save
 
-init-backup.el
-init-broken.el
-new-init.el
-init.el-*
+# # Quelpa package manager
+# quelpa/\#*\#
+# \#*\#
 
-.emacs.desktop
-.emacs.desktop.lock
-eshell/history
-eshell/lastdir
-ielm-history.el
-ielm-history.eld
-equake-persistent-display
+# # Auto-save
+# \#*\#
 
-init.el-*
-init-backup.el
-init-broken.el
-new-init.el
+# # Quelpa package manager
+# quelpa/
+
+# # Other nonsense
+# .emacs.desktop
+# .emacs.desktop.lock
+# eshell/history
+# eshell/lastdir
+# ielm-history.el
+# equake-persistent-display
+# *.opml
+# org-d3.js
+# org-grapher.html
+
+# init-backup.el
+# init-broken.el
+# new-init.el
+# init.el-*
+
+# .emacs.desktop
+# .emacs.desktop.lock
+# eshell/history
+# eshell/lastdir
+# ielm-history.el
+# ielm-history.eld
+# equake-persistent-display
+
+# init.el-*
+# init-backup.el
+# init-broken.el
+# new-init.el
