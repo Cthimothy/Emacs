@@ -171,13 +171,17 @@ If LANGUAGE is not provided, prompt for it with completion."
     (recenter)))
 
 (defun tw/toggle-transparency ()
-  "Toggle between light and dark frame transparency."
   (interactive)
-  (let* ((current-alpha (frame-parameter nil 'alpha))
-         (current-alpha (if (consp current-alpha) (car current-alpha) current-alpha)))
-    (if (equal current-alpha 95)
-        (set-frame-parameter nil 'alpha '(100 100))
-      (set-frame-parameter nil 'alpha '(93 94)))))
+  (let* ((alpha (frame-parameter nil 'alpha))
+         (alpha (cond
+                 ((numberp alpha) alpha)
+                 ((consp alpha) (car alpha))
+                 (t 100))))
+    (set-frame-parameter
+     nil 'alpha
+     (if (<= alpha 95)
+         '(100 . 100)
+       '(95 . 95)))))
 
 (defun tw/auth-get-openai-key ()
   "Return OpenAI API key from auth-source."
