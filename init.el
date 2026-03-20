@@ -665,9 +665,46 @@ Keeps the rest of the file visible as an outline."
 (use-package pdf-tools
   :ensure t
   :config
+  (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-height)
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
-  (pdf-tools-install))
+  (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
+  
+  ;; Modified navigation
+  (defun tw/pdf-view-next-page-top ()
+    "Go to the next PDF page and show it from the top."
+    (interactive)
+    (pdf-view-goto-page
+     (min (pdf-cache-number-of-pages)
+          (1+ (pdf-view-current-page))))
+    (run-at-time
+     0 nil
+     (lambda (window)
+       (when (window-live-p window)
+         (with-selected-window window
+           (set-window-vscroll window 0 t)
+           (set-window-hscroll window 0))))
+     (selected-window)))
+
+  (defun tw/pdf-view-previous-page-bottom ()
+    "Go to the previous PDF page and show it from the bottom."
+    (interactive)
+    (pdf-view-goto-page
+     (max 1
+          (1- (pdf-view-current-page))))
+    (run-at-time
+     0 nil
+     (lambda (window)
+       (when (window-live-p window)
+         (with-selected-window window
+           (image-eob)
+           (set-window-hscroll window 0))))
+     (selected-window)))
+
+  (with-eval-after-load 'pdf-view
+    (define-key pdf-view-mode-map (kbd "<right>") #'tw/pdf-view-next-page-top)
+    (define-key pdf-view-mode-map (kbd "<left>")  #'tw/pdf-view-previous-page-bottom)
+    (define-key pdf-view-mode-map (kbd "<down>")  #'image-next-line)
+    (define-key pdf-view-mode-map (kbd "<up>")    #'image-previous-line)))
 
 (use-package nerd-icons
   :ensure t)
