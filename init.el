@@ -360,6 +360,23 @@ Keeps the rest of the file visible as an outline."
 
 ;;
 ;;;External packages
+
+(global-set-key (kbd "C-x C-l") 'avy-goto-line)
+(global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
+
+(use-package avy
+  :ensure t
+  :bind
+  (("C-x C-l" . avy-goto-line)
+   ("C-x C-x" . avy-goto-char-timer))
+  :config
+  ;; sensible defaults
+  (setq avy-background t
+        avy-style 'at-full
+        avy-timeout-seconds 0.3
+        avy-all-windows t
+	avy-keys '(?a ?s ?d ?c ?e))
+
 (use-package org-modern
   :ensure t
   :hook
@@ -448,20 +465,7 @@ Keeps the rest of the file visible as an outline."
 (use-package auto-dark
   :ensure t
   :custom
-  ;;  (auto-dark-themes '((spacemacs-dark) (spacemacs-light)))
-  ;;  (auto-dark-themes '((doom-one) (doom-one-light)))
-  ;;  (auto-dark-themes '((catpuccin) (doom-one-light)))
-  ;;  (auto-dark-themes '((doom-tomorrow-night) (spacemacs-light)))
-  ;;  (auto-dark-themes '((kanagawa-dragon) (spacemacs-light)))
-  ;;  (auto-dark-themes '((doom-spacegrey) (spacemacs-light)))
-  ;;  (auto-dark-themes '((doom-old-hope) (spacemacs-light)))
-  ;;  (auto-dark-themes '((flatland) (spacemacs-light)))
-  ;;  (auto-dark-themes '((jazz) (spacemacs-light)))
-  ;;  (auto-dark-themes '((seti) (spacemacs-light)))
-  ;; (auto-dark-themes '((gruvbox-dark-hard) (spacemacs-light)))
-  ;; (auto-dark-themes '((doric-fire) (doric-earth)))
   (auto-dark-themes '((gruvbox-dark-medium) (doric-earth)))
-  ;; (auto-dark-themes '((doom-miramare) (doric-earth)))
   (auto-dark-polling-interval-seconds 5)
   (auto-dark-allow-osascript nil)
   (auto-dark-allow-powershell nil)
@@ -496,16 +500,6 @@ Keeps the rest of the file visible as an outline."
 	)))
   :init
   (auto-dark-mode))
-
-;;
-;; Themes for auto-dark
-
-
-
-
-
-
-
 
 (use-package marginalia
   :after vertico
