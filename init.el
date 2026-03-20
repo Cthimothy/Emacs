@@ -209,91 +209,25 @@ If LANGUAGE is not provided, prompt for it with completion."
   (setq cursor-type 'box))
 (add-hook 'deactivate-mark-hook 'th-deactivate-mark-init)
 
-(defun tw/insert-todays-journal-entry ()
-  (interactive)
-  (goto-char (point-max))
-  (unless (bolp) (insert "\n"))
-  (let ((date (format-time-string "%d-%A"))) ; e.g., "15-Tuesday"
-    (insert (concat "*** _" date "_\n"
-		    "**** Memoranda
-- 
+;; (defun tw/insert-todays-journal-entry ()
+;;   (interactive)
+;;   (goto-char (point-max))
+;;   (unless (bolp) (insert "\n"))
+;;   (let ((date (format-time-string "%d-%A"))) ; e.g., "15-Tuesday"
+;;     (insert (concat "*** _" date "_\n"
+;; 		    "**** Memoranda
+;; - 
 
-**** Habits
-- [ ] Workout/Weights
+;; **** Habits
+;; - [ ] Workout/Weights
 
-**** Tasks"))))
+;; **** Tasks"))))
 
 (defun tw/highlight-line ()
   (interactive)
   (move-beginning-of-line 1)
   (set-mark-command nil)
   (move-end-of-line 1))
-
-;; (defun tw/org-jump ()
-;;   "Jump to an Org heading without narrowing or expanding the whole subtree."
-;;   (interactive)
-;;   (consult-org-heading)
-;;   (org-show-context)
-;;   (org-show-entry))
-
-;; (defun tw/org-jump-and-focus ()
-;;   "Fold the buffer, jump to a heading, and show only its direct children.
-;; Keeps the rest of the file visible (as an outline)."
-;;   (interactive)
-;;   (widen)
-;;   (org-overview)
-;;   (consult-org-heading)
-;;   (org-show-context)
-;;   (org-show-children))
-
-;; (defun tw/org-jump-and-narrow ()
-;;   "Jump to an Org heading and narrow to its subtree."
-;;   (interactive)
-;;   (consult-org-heading)
-;;   (org-narrow-to-subtree)
-;;   (org-show-subtree))
-
-;; (with-eval-after-load 'org
-;;   (define-key org-mode-map (kbd "C-c j") #'tw/org-jump)
-;;   (define-key org-mode-map (kbd "C-c C-j") #'tw/org-jump-and-narrow)
-;;   (define-key org-mode-map (kbd "C-c C-J") #'tw/org-jump-and-focus))
-
-
-;; (defun tw/org-jump ()
-;;   "Jump to an Org heading without narrowing or expanding the whole subtree."
-;;   (interactive)
-;;   (consult-org-heading)
-;;   (org-show-context)
-;;   (org-show-entry))
-
-;; (defun tw/org-jump-and-focus ()
-;;   "Jump to a heading and show only its direct children.
-;; Keeps the rest of the file visible as an outline."
-;;   (interactive)
-;;   (widen)
-;;   (consult-org-heading)
-;;   (widen)
-;;   (org-overview)
-;;   (org-show-context)
-;;   (org-show-children))
-
-;; (defun tw/org-jump-and-narrow ()
-;;   "Jump to an Org heading and narrow to its subtree."
-;;   (interactive)
-;;   (widen)
-;;   (consult-org-heading)
-;;   (org-narrow-to-subtree)
-;;   (org-show-subtree))
-;;
-;; (with-eval-after-load 'org
-;;   (define-key org-mode-map (kbd "C-c j")   #'tw/org-jump)
-;;   (define-key org-mode-map (kbd "C-c J")   #'tw/org-jump-and-focus)
-;;   (define-key org-mode-map (kbd "C-c M-j") #'tw/org-jump-and-narrow))
-
-;; (global-set-key (kbd "C-c j") #'tw/org-jump
-;; Yeah this won't work as org minor mode overrides. Set in org config instead.
-;; (global-set-key (kbd "C-c C-j") #'tw/org-jump-and-focus)
-;; (global-set-key (kbd "C-c J") #'tw/org-jump-and-narrow)
 
 (defun tw/consult-org-heading-with-initial (initial)
   "Call `consult-org-heading' with INITIAL inserted in the minibuffer."
@@ -337,20 +271,6 @@ Keeps the rest of the file visible as an outline."
   (define-key org-mode-map (kbd "C-c J")   #'tw/org-jump)
   (define-key org-mode-map (kbd "C-c M-j") #'tw/org-jump-and-narrow))
 
-;; --- Tabs + session restore (ONE copy only) -------------------------------
-;; (require 'tab-bar)
-;; (tab-bar-mode nil)
-;; (tab-bar-history-mode 1)
-
-;; ;; Never show the tab bar line (even though tab-bar-mode is enabled)
-;; (add-to-list 'default-frame-alist '(tab-bar-lines . 0))
-;; (set-frame-parameter nil 'tab-bar-lines 0)
-
-;; (setq tab-bar-show nil
-;;       tab-bar-tab-hints t
-;;       tab-bar-close-button-show nil
-;;       tab-bar-new-tab-choice "*scratch*")
-					; (global-set-key (kbd "C-c s s") #'tab-bar-switch-to-tab)
 
 (setq ibuffer-default-sorting-mode 'recency)
 (setq split-width-threshold nil)
@@ -491,66 +411,6 @@ Keeps the rest of the file visible as an outline."
   ;;   `server-after-make-frame-hook' when running in daemon mode.
   ;; - To save the session at regular intervals, and when Emacs exits.
   (easysession-setup))
-
-
-;; (use-package org-journal
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   ;; Change default prefix key; needs to be set before loading org-journal
-;;   (setq org-journal-prefix-key "C-c j ")
-;;   :config
-;;   (setq 
-;;    org-journal-file-header "#+TITLE: Journal %Y\n#+STARTUP: folded\n"
-;;    org-journal-dir "~/Org/Journal/"
-;;    org-journal-date-format "%Y-%m-%d, %A"
-;;    org-journal-file-format "Journal-%a-%Y-%m-%d.org"
-;;    org-journal-file-type 'yearly)
-;;   (global-set-key (kbd "C-c j n") #'org-journal-new-entry)
-
-;;   (defun my-dired-org-journal ()
-;;     (interactive)
-;;     (dired org-journal-dir))
-;;   (global-set-key (kbd "C-c j d") #'my-dired-org-journal))
-
-
-;; (setq org-journal-file-header
-;;       "#+TITLE: Journal %Y\n#+STARTUP: folded\n")
-;; (setq org-journal-file-type 'yearly)
-
-;; (use-package org-journal
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   ;; Must be set before load
-;;   (setq org-journal-prefix-key "C-c j ")
-
-;;   :config
-;;   (setq org-journal-dir "~/Org/Journal/"
-;;         org-journal-file-type 'yearly
-;;         org-journal-date-format "%Y-%m-%d, %A"
-;;         org-journal-file-format "Journal-%Y.org"
-;;         org-journal-file-header "#+TITLE: Journal %Y\n#+STARTUP: folded\n")
-
-;;   (defun tw/org-journal-indent ()
-;;     (setq-local org-indent-indentation-per-level 3)
-;;     (org-indent-mode 1))
-
-;;   (remove-hook 'org-journal-mode-hook #'tw/org-journal-indent)
-;;   (add-hook 'org-journal-mode-hook #'tw/org-journal-indent)
-;;   ;; Big "journal margin" indent (buffer-local)
-;;   (add-hook 'org-journal-mode-hook
-;;             (lambda ()
-;;               (setq-local org-indent-indentation-per-level 3) ; tweak this number
-;;               (org-indent-mode 1)))
-;;   (global-set-key (kbd "C-c j n") #'org-journal-new-entry)
-
-;;   (defun my-dired-org-journal ()
-;;     (interactive)
-;;     (dired org-journal-dir))
-;;   (global-set-key (kbd "C-c j d") #'my-dired-org-journal))
-
-
 
 (use-package org-journal
   :ensure t
@@ -1132,158 +992,6 @@ Keeps the rest of the file visible as an outline."
 
 (setq org-default-notes-file (expand-file-name "Inbox.org" org-directory))
 
-;; (setq org-agenda-custom-commands
-;;       '(
-;; ;("d" "Dashboard"
-;; ;         ((agenda "" ((org-agenda-span 1)))
-;; ;          (tags "PRIORITY=\"A\"")
-;; ;          (todo "PLANNED")))
-
-;; 	;; ("d" "Dashboard"
-;; 	;;  ((agenda ""
-;; 	;; 	  ((org-agenda-span 1)
-;; 	;; 	   (org-agenda-overriding-header "DASHBOARD - Work + Personal + Emacs")))
-	  
-;; 	;;   (tags "PRIORITY=\"A\""
-;; 	;; 	((org-agenda-overriding-header "HIGH PRIORITY")))
-	  
-;; 	;;   (todo "PLANNED"
-;; 	;; 	((org-agenda-overriding-header "BACKLOG")))))
-
-
-
-;; 	("d" "Dashboard"
-;; 	 ((agenda ""
-;; 		  ((org-agenda-span 1)
-;; 		   (org-agenda-overriding-header
-;; 		    "DASHBOARD - Work + Personal + Emacs")))
-
-;; 	  (tags "PRIORITY=\"A\""
-;; 		((org-agenda-overriding-header "HIGH PRIORITY")))
-
-;; 	  (tags-todo ""
-;; 		     ((org-agenda-files '("~/Org/Inbox.org"))
-;; 		      (org-agenda-overriding-header "INBOX")))
-
-;; 	  (todo "PLANNED"
-;; 		((org-agenda-overriding-header "BACKLOG")))))
-
-
-
-;;         ("n" "Agenda + Planned"
-;;          ((agenda "")
-;;           (todo "PLANNED")))
-
-;;         ("p" "Personal agenda + tasks"
-;;          ((agenda ""
-;;                   ((org-agenda-span 7)
-;;                    (org-agenda-files
-;;                     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Personal.org"))
-;;                    (org-agenda-overriding-header
-;;                     "PERSONAL DASHBOARD — Week Agenda")))
-;;           (todo "PLANNED"
-;;                 ((org-agenda-files
-;;                   '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Personal.org"))
-;;                  (org-agenda-overriding-header "Personal Tasks")))))
-
-;;         ("w" "Work agenda + tasks"
-;;          ((agenda ""
-;;                   ((org-agenda-span 7)
-;;                    (org-agenda-files
-;;                     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Work.org"))
-;;                    (org-agenda-overriding-header
-;;                     "WORK DASHBOARD — Week Agenda")))
-;;           (todo "PLANNED"
-;;                 ((org-agenda-files
-;;                   '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Work.org"))
-;;                  (org-agenda-overriding-header "Work Tasks")))))
-
-;;         ("e" "Emacs agenda + tasks"
-;;          ((agenda ""
-;;                   ((org-agenda-span 7)
-;;                    (org-agenda-files
-;;                     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Emacs.org"))
-;;                    (org-agenda-overriding-header
-;;                     "EMACS DASHBOARD — Week Agenda")))
-;;           (todo "PLANNED"
-;;                 ((org-agenda-files
-;;                   '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Emacs.org"))
-;;                  (org-agenda-overriding-header "Emacs Tasks")))))))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;; (setq org-agenda-custom-commands
-;;       '(("d" "Dashboard"
-;;          ((agenda ""
-;;                   ((org-agenda-span 1)
-;;                    (org-agenda-overriding-header
-;;                     "DASHBOARD - Work + Personal + Emacs
-                        (D)eadlines (d)ashboard (p)ersonal (e)macs (w)ork")))
-;;           (tags-todo ""
-;;                      ((org-agenda-files '("~/Org/Inbox.org"))
-;;                       (org-agenda-overriding-header "INBOX")))
-;;           (tags "PRIORITY=\"A\""
-;;                 ((org-agenda-overriding-header "HIGH PRIORITY")))
-;;           (todo "PLANNED"
-;;                 ((org-agenda-overriding-header "BACKLOG")))))
-
-;;         ("n" "Agenda + Planned"
-;;          ((agenda "")
-;;           (todo "PLANNED")))
-
-;;         ("p" "Personal agenda + tasks"
-;;          ((agenda ""
-;;                   ((org-agenda-span 7)
-;;                    (org-agenda-files
-;;                     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Personal.org"))
-;;                    (org-agenda-overriding-header
-;;                     "PERSONAL DASHBOARD — Week Agenda")))
-;;           (todo "PLANNED"
-;;                 ((org-agenda-files
-;;                   '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Personal.org"))
-;;                  (org-agenda-overriding-header "Personal Tasks")))))
-
-;;         ("w" "Work agenda + tasks"
-;;          ((agenda ""
-;;                   ((org-agenda-span 7)
-;;                    (org-agenda-files
-;;                     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Work.org"))
-;;                    (org-agenda-overriding-header
-;;                     "WORK DASHBOARD — Week Agenda")))
-;;           (todo "PLANNED"
-;;                 ((org-agenda-files
-;;                   '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Work.org"))
-;;                  (org-agenda-overriding-header "Work Tasks")))))
-
-;;         ("e" "Emacs agenda + tasks"
-;;          ((agenda ""
-;;                   ((org-agenda-span 7)
-;;                    (org-agenda-files
-;;                     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Emacs.org"))
-;;                    (org-agenda-overriding-header
-;;                     "EMACS DASHBOARD — Week Agenda")))
-;;           (todo "PLANNED"
-;;                 ((org-agenda-files
-;;                   '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Emacs.org"))
-;;                  (org-agenda-overriding-header "Emacs Tasks")))))))
-
-
-
 (remove-hook 'org-agenda-finalize-hook
           (lambda ()
             (with-current-buffer org-agenda-buffer-name
@@ -1421,73 +1129,6 @@ Keeps the rest of the file visible as an outline."
 	("wm" "Meeting with Outstanding Meeting Actions" entry
          (file+olp "~/Org/Work.org" "Meetings")
          "** %<%Y-%m-%d-%A> - %^{Meeting Title}\n*** Notes\n*** TODO Outstanding Actions [/]:actions:\nSCHEDULED: <%<%Y-%m-%d %a>>\n- [ ] \n%?")))
-
-
-;; (defun tw/org-capture-frame ()
-;;   "Create a clean, isolated frame for Org capture, centered on screen."
-;;   ;; ────────────────────────────────
-;;   ;; Capture in a new frame called from Raycast using:
-;;   ;;
-;;   ;; #!/bin/bash
-;;   ;;
-;;   ;; # Required parameters:
-;;   ;; # @raycast.schemaVersion 1
-;;   ;; # @raycast.title Org Capture
-;;   ;; # @raycast.mode compact
-;;   ;; 
-;;   ;; # Optional parameters:
-;;   ;; # @raycast.icon 🧠
-;;   ;; # @raycast.description Capture notes to Org mode
-;;   ;; 
-;;   ;; emacsclient -e '(tw/org-capture-frame)' > /dev/null
-;;   ;; ────────────────────────────────
-
-;;   (interactive)
-;;   (let* ((frame-width 120)
-;;          (frame-height 50)
-;;          ;; Get screen dimensions
-;;          (screen-width (display-pixel-width))
-;;          (screen-height (display-pixel-height))
-;;          ;; Calculate character dimensions (approximate)
-;;          (char-width (frame-char-width))
-;;          (char-height (frame-char-height))
-;;          ;; Calculate pixel dimensions of the frame
-;;          (frame-pixel-width (* frame-width char-width))
-;;          (frame-pixel-height (* frame-height char-height))
-;;          ;; Calculate centered position
-;;          (left (/ (- screen-width frame-pixel-width) 2))
-;;          (top (/ (- screen-height frame-pixel-height) 2))
-;;          (frame (make-frame `((name . "org-capture")
-;; 			      (width . ,frame-width)
-;; 			      (height . ,frame-height)
-;; 			      (left . ,left)
-;; 			      (top . ,top)
-;; 			      (minibuffer . t)
-;; 			      (internal-border-width . 1)
-;; 			      (font . "JetBrains Mono-12")
-;; 					;			      (font . "Iosevka")
-;; 			      (auto-raise . t)
-;; 			      (z-group . above)))))
-;;     ;; Use select-frame instead of select-frame-set-input-focus for cleaner focus management
-;;     (redisplay)
-;;     (select-frame-set-input-focus frame)
-
-;;     (raise-frame frame)
-;;     (delete-other-windows)
-;;     (org-capture nil "i")
-;;     (delete-other-windows)))
-
-;; (defun tw/delete-org-capture-frame ()
-;;   "Close the capture frame after finishing or aborting."
-;;   (interactive)
-;;   (when (equal "org-capture" (frame-parameter nil 'name))
-;;     (delete-frame)))
-
-
-;;;; Org Capture in its own frame (Raycast-friendly)
-;;;; - Always shows only the capture buffer (no splits)
-;;;; - Auto-closes frame on finalize (C-c C-c) or abort (C-c C-k)
-;;;; - Prompts for capture template (Option A)
 
 (require 'org)
 (require 'org-capture)
