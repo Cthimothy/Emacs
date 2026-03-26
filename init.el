@@ -466,6 +466,7 @@ Keeps the rest of the file visible as an outline."
   :ensure t
   :custom
   (auto-dark-themes '((gruvbox-dark-medium) (doric-earth)))
+  ;; (auto-dark-themes '((base16-gruvbox-dark-medium) (doric-earth)))
   (auto-dark-polling-interval-seconds 5)
   (auto-dark-allow-osascript nil)
   (auto-dark-allow-powershell nil)
