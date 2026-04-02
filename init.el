@@ -375,7 +375,7 @@ Keeps the rest of the file visible as an outline."
         avy-style 'at-full
         avy-timeout-seconds 0.3
         avy-all-windows t
-	avy-keys '(?a ?s ?d ?c ?e))
+	avy-keys '(?a ?s ?d ?c ?e)))
 
 (use-package org-modern
   :ensure t
@@ -465,7 +465,9 @@ Keeps the rest of the file visible as an outline."
 (use-package auto-dark
   :ensure t
   :custom
-  (auto-dark-themes '((gruvbox-dark-medium) (doric-earth)))
+  ;; (auto-dark-themes '((gruvbox-dark-medium) (doric-oak)))
+  ;; (auto-dark-themes '((doric-fire) (doric-earth)))
+  (auto-dark-themes '((doric-fire) (doom-solarized-light)))
   ;; (auto-dark-themes '((base16-gruvbox-dark-medium) (doric-earth)))
   (auto-dark-polling-interval-seconds 5)
   (auto-dark-allow-osascript nil)
@@ -491,7 +493,7 @@ Keeps the rest of the file visible as an outline."
 
 
     	(set-face-attribute 'aw-leading-char-face nil
-                            :height 10.0
+                            :height 6.0
                             :weight 'bold
                             :foreground "#af3a03")
 	;;(set-face-attribute 'aw-posframe-face nil
@@ -966,19 +968,20 @@ Keeps the rest of the file visible as an outline."
 (setq org-agenda-window-setup 'current-window)
 (setq org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/Org/")
 (setq org-agenda-files
-      (append
+      (append 
        (list 
 	(expand-file-name "Personal.org" org-directory)
-	(expand-file-name ".org"         org-directory)
+	(expand-file-name "RPG.org"         org-directory)
 	(expand-file-name "Work.org"     org-directory)
 	(expand-file-name "Emacs.org"    org-directory)
-;;	(expand-file-name "Journal.org"  org-directory)
+	(expand-file-name "Journal/Journal-2026.org"  org-directory)
 	(expand-file-name "middle-earth-timeline.org" org-directory)
 	(expand-file-name "middle-earth-personae.org" org-directory)
 	(expand-file-name "middle-earth-places.org" org-directory)
 	(expand-file-name "middle-earth-timeline.org" org-directory)
 	(expand-file-name "british-calendar.org" org-directory))
-       (directory-files "~/Org/Journal/" t "\\.org$")))
+;;       (directory-files "~/Org/Journal/" t "\\.org$")
+))
 
 (setq org-agenda-window-setup 'current-window
       org-agenda-inhibit-startup t
@@ -1043,10 +1046,22 @@ Keeps the rest of the file visible as an outline."
 	  (tags "PRIORITY=\"A\""
 		((org-agenda-overriding-header "HIGH PRIORITY")))
 
+	  (agenda ""
+		  ((org-agenda-span 14)
+		   (org-agenda-start-day "+1d")
+		   (org-agenda-entry-types '(:scheduled))
+		   (org-agenda-show-all-dates nil)
+		   (org-agenda-overriding-header "UPCOMING TASKS (NEXT 14 DAYS)")))
+
 	  (alltodo ""
 		   ((org-agenda-files
 		     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Inbox.org"))
 		    (org-agenda-overriding-header "INBOX")))
+
+	  (alltodo ""
+		   ((org-agenda-files
+		     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Journal/Journal-2026.org"))
+		    (org-agenda-overriding-header "JOURNAL")))
 
 	  (todo "PLANNED"
 		((org-agenda-overriding-header "BACKLOG")))))
@@ -1062,9 +1077,9 @@ Keeps the rest of the file visible as an outline."
 
 	("i" "Inbox"
 	 ((alltodo ""
-		  ((org-agenda-files
-		    '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Inbox.org"))
-		   (org-agenda-overriding-header "INBOX")))))
+		   ((org-agenda-files
+		     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Inbox.org"))
+		    (org-agenda-overriding-header "INBOX")))))
 
         ("n" "Agenda + Planned"
          ((agenda "")
@@ -1124,7 +1139,7 @@ Keeps the rest of the file visible as an outline."
         ("p" "Personal")
 
         ("pn" "New Note" entry
-         (file+olp ,(expand-file-name "Personal.org" org-directory) "Miscellaneous Notes")
+         (file+olp ,(expand-file-name "Personal.org" org-directory) "Commonplace Book")
          "* %?\n  Captured on: %U\n")
 
         ("pt" "New Task" entry
@@ -1240,9 +1255,9 @@ Keeps the rest of the file visible as an outline."
 (global-set-key (kbd "<M-S-up>") 'text-scale-increase)
 (global-set-key (kbd "<M-S-down>") 'text-scale-decrease)
 (global-set-key (kbd "C-c s l") 'org-store-link)
-(global-set-key (kbd "C-\\") 'undo-redo)
-					;(global-set-key (kbd "C-c j") (lambda () (interactive) (info "/usr/local/share/info/jargon.info.gz")))
-					;(global-unset-key (kbd "C-c j"))
+(global-set-key (kbd "C-\\") 'undo)
+;; (global-set-key (kbd "C-c j") (lambda () (interactive) (info "/usr/local/share/info/jargon.info.gz")))
+;; (global-unset-key (kbd "C-c j"))
 (global-set-key (kbd "C-c i c b") 'tw/insert-src-block)
 (global-set-key (kbd "C-c w") #'search-web)
 (global-set-key (kbd "C-x ]") 'enlarge-window)
