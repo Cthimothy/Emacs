@@ -140,19 +140,16 @@
 
 ;;
 ;;; Define custom functions
-(defun my/hl-line-on ()
-  (hl-line-mode 1))
-
-(defun my/hl-line-off ()
-  (hl-line-mode -1))
-
-(add-hook 'buffer-list-update-hook #'my/hl-line-on)
 (add-hook 'window-selection-change-functions
           (lambda (_)
             (walk-windows
              (lambda (w)
                (with-current-buffer (window-buffer w)
-                 (if (eq w (selected-window))
+                 (if (and (eq w (selected-window))
+                          (not (derived-mode-p 'vterm-mode
+                                               'term-mode
+                                               'shell-mode
+                                               'eshell-mode)))
                      (hl-line-mode 1)
                    (hl-line-mode -1))))
              nil t)))
@@ -380,11 +377,14 @@ Keeps the rest of the file visible as an outline."
 (use-package org-modern
   :ensure t
   :hook
-  (org-mode-hook . org-modern-mode)
-  (org-agenda-finalize-hook . org-modern-agenda)
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda)
   :config
-  (setq org-modern-star nil))
+  (setq org-modern-star nil)
   (setq org-agenda-tags-column 0)
+  (setq org-modern-todo-faces
+        '(("TODO" . (:background "#cb4b16" :foreground "white" :weight bold))
+          ("PLANNED" . (:background "#6c7086" :foreground "white" :weight bold)))))
 
 ;; (use-package olivetti
 ;;   :ensure t
@@ -728,11 +728,8 @@ Keeps the rest of the file visible as an outline."
   :ensure t)
 
 (use-package vterm
-  :config
-  (defun turn-off-chrome ()
-    (global-hl-line-mode -1))
   :hook
-  (vterm-mode . turn-off-chrome))
+  (vterm-mode . (lambda () (hl-line-mode -1))))
 
 (use-package paredit
   :ensure t
@@ -898,6 +895,7 @@ Keeps the rest of the file visible as an outline."
          "|"
          "DONE(d)")))
 
+
 (setq org-use-speed-commands t)
 
 (setq org-agenda-todo-ignore-scheduled nil)
@@ -1046,13 +1044,6 @@ Keeps the rest of the file visible as an outline."
 	  (tags "PRIORITY=\"A\""
 		((org-agenda-overriding-header "HIGH PRIORITY")))
 
-	  (agenda ""
-		  ((org-agenda-span 14)
-		   (org-agenda-start-day "+1d")
-		   (org-agenda-entry-types '(:scheduled))
-		   (org-agenda-show-all-dates nil)
-		   (org-agenda-overriding-header "UPCOMING TASKS (NEXT 14 DAYS)")))
-
 	  (alltodo ""
 		   ((org-agenda-files
 		     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Inbox.org"))
@@ -1063,8 +1054,15 @@ Keeps the rest of the file visible as an outline."
 		     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Journal/Journal-2026.org"))
 		    (org-agenda-overriding-header "JOURNAL")))
 
+	  (todo "TODO"
+		((org-agenda-overriding-header "UNSCHEDULED TASKS (NON-PRIORITY)")
+		 (org-agenda-skip-function
+		  '(org-agenda-skip-entry-if
+		    'scheduled 'deadline
+		    'regexp "\\[#A\\]"))))
+
 	  (todo "PLANNED"
-		((org-agenda-overriding-header "BACKLOG")))))
+		((org-agenda-overriding-header "BACKLOG TASKS")))))
 
         ("D" "Deadlines in next 30 days"
          ((agenda ""
@@ -1092,6 +1090,7 @@ Keeps the rest of the file visible as an outline."
                     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Personal.org"))
                    (org-agenda-overriding-header
                     "PERSONAL DASHBOARD - Week Agenda")))
+
           (todo "PLANNED"
                 ((org-agenda-files
                   '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Personal.org"))
