@@ -22,7 +22,7 @@
 (load "server")
 (unless (server-running-p)
   (server-start))
-(setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark)))
+;;(setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark)))
 (setq process-adaptive-read-buffering nil)
 (setq read-process-output-max (* 4 1024 1024))
 (setq frame-resize-pixelwise t)
@@ -114,6 +114,11 @@
 ;;
 ;; Look & Feel
 ;;
+(set-face-attribute 'default nil
+                    :family "JetBrains Mono"
+                    :height 120)
+
+(add-to-list 'default-frame-alist '(font . "JetBrains Mono-12"))
 
 ;; (when (member "Iosevka" (font-family-list))
 ;;   (set-face-attribute 'default nil
@@ -125,21 +130,39 @@
 ;;    (add-to-list 'default-frame-alist '(font . "Iosevka")))
 
 ;; Use JetBrains Mono as the default font
-(when (member "JetBrains Mono" (font-family-list))
-  (set-face-attribute 'default nil
-                      :family "JetBrains Mono"
-                      :height 115
-                      :weight 'normal
-                      :slant 'normal
-                      :width 'normal)
+;; (when (member "JetBrains Mono" (font-family-list))
+;;   (set-face-attribute 'default nil
+;;                       :family "JetBrains Mono"
+;;                       :height 115
+;;                       :weight 'normal
+;;                       :slant 'normal
+;;                       :width 'normal)
 
   ;; Ensure new frames also use JetBrains Mono (daemon support)
-  (add-to-list 'default-frame-alist '(font . "JetBrains Mono-13")))
+;;  (add-to-list 'default-frame-alist '(font . "JetBrains Mono-13")))
 
-;;
+;; Frame defaults for both the first frame and future frames
+;; (dolist (alist '(default-frame-alist initial-frame-alist))
+;;   (add-to-list alist '(ns-transparent-titlebar . t))
+;;   (add-to-list alist '(ns-appearance . dark))
+;;   (add-to-list alist '(font . "JetBrains Mono-12")))
+
+;; (defun tw/apply-default-font (&optional frame)
+;;   "Apply my default font to FRAME or the selected frame."
+;;   (with-selected-frame (or frame (selected-frame))
+;;     (when (member "JetBrains Mono" (font-family-list))
+;;       (set-face-attribute 'default frame
+;;                           :family "JetBrains Mono"
+;;                           :weight 'normal
+;;                           :slant 'normal
+;;                           :width 'normal))))
+
+;; (add-hook 'emacs-startup-hook #'tw/apply-default-font)
+;; (add-hook 'after-make-frame-functions #'tw/apply-default-font)
 
 ;;
 ;;; Define custom functions
+;;
 (add-hook 'window-selection-change-functions
           (lambda (_)
             (walk-windows
@@ -357,9 +380,15 @@ Keeps the rest of the file visible as an outline."
 
 ;;
 ;;;External packages
-
-(global-set-key (kbd "C-x C-l") 'avy-goto-line)
-(global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
+(use-package ember-theme
+  :vc (:url "https://github.com/ember-theme/emacs")
+  :config
+  (add-to-list 'custom-theme-load-path
+               (file-name-directory (locate-library "ember-theme")))
+;;  (load-theme 'ember-light t)
+)
+;; (global-set-key (kbd "C-x C-l") 'avy-goto-line)
+;; (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
 
 (use-package avy
   :ensure t
@@ -381,10 +410,10 @@ Keeps the rest of the file visible as an outline."
   (org-agenda-finalize . org-modern-agenda)
   :config
   (setq org-modern-star nil)
-  (setq org-agenda-tags-column 0)
-  (setq org-modern-todo-faces
-        '(("TODO" . (:background "#cb4b16" :foreground "white" :weight bold))
-          ("PLANNED" . (:background "#6c7086" :foreground "white" :weight bold)))))
+  (setq org-agenda-tags-column 0))
+  ;; (setq org-modern-todo-faces
+  ;;       '(("TODO" . (:background "#cb4b16" :foreground "white" :weight bold))
+  ;;         ("PLANNED" . (:background "#6c7086" :foreground "lightgrey" :weight bold)))))
 
 ;; (use-package olivetti
 ;;   :ensure t
@@ -433,33 +462,56 @@ Keeps the rest of the file visible as an outline."
   ;; - To save the session at regular intervals, and when Emacs exits.
   (easysession-setup))
 
+;; (use-package org-journal
+;;   :ensure t
+;;   :defer t
+;;   :config
+;;   (setq org-journal-dir "~/Org/Journal/"
+;; 	org-journal-enable-entry-properties nil
+;; ;;        org-journal-file-type 'yearly
+;;         org-journal-file-type 'monthly
+;;         org-journal-date-format "%Y-%m-%d, %A"
+;;         org-journal-file-format "Journal-%Y.org"
+;; 	org-journal-find-file #'find-file
+;;         org-journal-file-header "#+TITLE: Journal %Y\n#+STARTUP: folded\n")
+
+;;   (defun tw/org-journal-indent ()
+;;     (setq-local org-indent-indentation-per-level 3)
+;;     (org-indent-mode 1))
+;;   (add-hook 'org-journal-mode-hook #'tw/org-journal-indent)
+
+;;   (defun tw/dired-org-journal ()
+;;     (interactive)
+;;     (dired org-journal-dir)))
+
+;; (define-prefix-command 'tw/journal-map)
+;; (global-set-key (kbd "C-c o j") 'tw/journal-map)
+;; (define-key tw/journal-map (kbd "n") #'org-journal-new-entry)
+;; (define-key tw/journal-map (kbd "d") #'tw/dired-org-journal)
+
 (use-package org-journal
   :ensure t
   :defer t
   :config
   (setq org-journal-dir "~/Org/Journal/"
-	org-journal-enable-entry-properties nil
-;;        org-journal-file-type 'yearly
+        org-journal-enable-entry-properties nil
         org-journal-file-type 'monthly
         org-journal-date-format "%Y-%m-%d, %A"
-        org-journal-file-format "Journal-%Y.org"
-	org-journal-find-file #'find-file
-        org-journal-file-header "#+TITLE: Journal %Y\n#+STARTUP: folded\n")
+        org-journal-file-format "Journal-%Y-%m.org"
+        org-journal-find-file #'find-file
+        org-journal-file-header
+        "#+TITLE: Journal %Y-%B
+#+STARTUP: folded
+")
 
   (defun tw/org-journal-indent ()
     (setq-local org-indent-indentation-per-level 3)
     (org-indent-mode 1))
   (add-hook 'org-journal-mode-hook #'tw/org-journal-indent)
 
-  (defun my-dired-org-journal ()
+  (defun tw/dired-org-journal ()
     (interactive)
     (dired org-journal-dir)))
-
-(define-prefix-command 'tw/journal-map)
-(global-set-key (kbd "C-c o j") 'tw/journal-map)
-(define-key tw/journal-map (kbd "n") #'org-journal-new-entry)
-;; (define-key tw/journal-map (kbd "d") #'my-dired-org-journal)
-
 
 (setq spacemacs-theme-org-height nil)
 (use-package auto-dark
@@ -467,8 +519,9 @@ Keeps the rest of the file visible as an outline."
   :custom
   ;; (auto-dark-themes '((gruvbox-dark-medium) (doric-oak)))
   ;; (auto-dark-themes '((doric-fire) (doric-earth)))
-  (auto-dark-themes '((doric-fire) (doom-solarized-light)))
+  ;; (auto-dark-themes '((doric-fire) (doom-solarized-light)))
   ;; (auto-dark-themes '((base16-gruvbox-dark-medium) (doric-earth)))
+  (auto-dark-themes '((ember-soft) (ember-light)))
   (auto-dark-polling-interval-seconds 5)
   (auto-dark-allow-osascript nil)
   (auto-dark-allow-powershell nil)
@@ -477,10 +530,10 @@ Keeps the rest of the file visible as an outline."
     . (lambda ()
 	(with-eval-after-load 'org
 	  (set-face-attribute 'org-tag nil :slant 'italic :weight 'normal :inherit 'shadow))
-	(set-face-attribute 'aw-leading-char-face nil
-                            :height 6.0
-                            :weight 'bold
-                            :foreground "#83a598")
+	;; (set-face-attribute 'aw-leading-char-face nil
+        ;;                     :height 6.0
+        ;;                     :weight 'bold
+        ;;                     :foreground "#83a598")
 	;;(set-face-attribute 'aw-posframe-face nil
         ;;                    :height 5.0
         ;;                    :weight 'bold
@@ -490,12 +543,10 @@ Keeps the rest of the file visible as an outline."
     . (lambda ()
 	(with-eval-after-load 'org
 	  (set-face-attribute 'org-tag nil :slant 'italic :weight 'normal :inherit 'shadow))
-
-
-    	(set-face-attribute 'aw-leading-char-face nil
-                            :height 6.0
-                            :weight 'bold
-                            :foreground "#af3a03")
+    	;; (set-face-attribute 'aw-leading-char-face nil
+        ;;                     :height 6.0
+        ;;                     :weight 'bold
+        ;;                     :foreground "#af3a03")
 	;;(set-face-attribute 'aw-posframe-face nil
         ;;                    :height 5.0
         ;;                    :weight 'bold
@@ -565,19 +616,34 @@ Keeps the rest of the file visible as an outline."
   ;; Timestamps without clutter
   (setq erc-stamp-format "[%H:%M] "))
 
+;; (use-package ace-window
+;;   :ensure t
+;;   :bind (("C-x C-o" . ace-window))
+;;   :config
+;;   (ace-window-posframe-mode t)
+;;   (setq aw-leading-char-style 'char)     ; ← centers the letter in window
+;;   (setq aw-keys '(?a ?s ?q ?w ?e ?z ?x))
+;; 					;  (setq aw-keys '(?d ?x ?z ?w ?q ?s ?a))
+;; 					;  (setq aw-keys '(?w ?z ?q ?s ?a))
+;;   (setq aw-scope 'frame)
+;;   (setq aw-ignore-current t)
+;;   (setq aw-background t))
+;;(ace-window-posframe-mode)
+
+
 (use-package ace-window
   :ensure t
   :bind (("C-x C-o" . ace-window))
   :config
   (ace-window-posframe-mode t)
-  (setq aw-leading-char-style 'char)     ; ← centers the letter in window
+  (setq aw-leading-char-style 'char)
   (setq aw-keys '(?a ?s ?q ?w ?e ?z ?x))
-					;  (setq aw-keys '(?d ?x ?z ?w ?q ?s ?a))
-					;  (setq aw-keys '(?w ?z ?q ?s ?a))
   (setq aw-scope 'frame)
   (setq aw-ignore-current t)
   (setq aw-background t))
-;;(ace-window-posframe-mode)
+
+
+
 
 (use-package org-superstar
   :ensure t
@@ -753,8 +819,8 @@ Keeps the rest of the file visible as an outline."
   (popper-mode +1)
   (popper-echo-mode +1))
 
-(use-package noflet
-  :ensure t)
+;(use-package noflet
+;  :ensure t)
 
 (use-package xclip
   :ensure t
