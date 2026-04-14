@@ -231,11 +231,8 @@ Keeps the rest of the file visible as an outline."
     (org-show-subtree)))
 
 (with-eval-after-load 'org
-  ;; move org-goto to C-c j
   (define-key org-mode-map (kbd "C-c j") #'org-goto)
-  ;; put your main jump on the stronger key
   (define-key org-mode-map (kbd "C-c C-j") #'tw/org-jump-and-focus)
-  ;; keep your others
   (define-key org-mode-map (kbd "C-c J")   #'tw/org-jump)
   (define-key org-mode-map (kbd "C-c M-j") #'tw/org-jump-and-narrow))
 
@@ -997,9 +994,7 @@ Keeps the rest of the file visible as an outline."
          "* HABIT %?\n  SCHEDULED: <%<%Y-%m-%d> +1d>\n  :PROPERTIES:\n  :STYLE:    habit\n  :END:\n"
          :empty-lines 1)
 
-
         ("p" "Personal")
-
         ("pn" "New Note" entry
          (file+olp ,(expand-file-name "Personal.org" org-directory) "Commonplace Book")
          "* %?\n  Captured on: %U\n")
@@ -1026,7 +1021,6 @@ Keeps the rest of the file visible as an outline."
          "* %? %a\n")
 
         ("w" "Work")
-
         ("wn" "New Note" entry
          (file+olp ,(expand-file-name "Work.org" org-directory) "Notes")
          "* %?\n  Captured on: %U\n")
@@ -1090,7 +1084,6 @@ Keeps the rest of the file visible as an outline."
     (delete-other-windows)
     ;; No key here => Org prompts for template.
     (org-capture)))
-
 
 ;;
 ;; Configure custom global key bindings keyboard shortcuts
