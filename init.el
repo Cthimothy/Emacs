@@ -11,6 +11,12 @@
 
 (setq debug-on-quit nil)
 
+(setq gc-cons-threshold most-positive-fixnum)
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 16 1024 1024))))
+
 (setq ring-bell-function 'ignore
       visible-bell 'ignore)
 
@@ -475,7 +481,7 @@ Keeps the rest of the file visible as an outline."
   :config
 ;;  (ace-window-posframe-mode t)
   (setq aw-leading-char-style 'char)
-  (setq aw-keys '(?a ?s ?q ?w ?e ?z ?x))
+  (setq aw-keys '(?a ?s ?d ?q ?w ?e ?z ?x))
   (setq aw-scope 'frame)
   (setq aw-ignore-current t)
   (setq aw-background t))
@@ -550,7 +556,6 @@ Keeps the rest of the file visible as an outline."
     (setq-local completion-at-point-functions
                 (delq 'dabbrev-capf completion-at-point-functions))
     (setq-local company-idle-delay nil))
-
   (add-hook 'git-commit-setup-hook #'tw/git-commit-company-fix))
 
 (use-package which-key
@@ -566,12 +571,13 @@ Keeps the rest of the file visible as an outline."
 
 (use-package pdf-tools
   :ensure t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :init
+  (pdf-loader-install)
   :config
-  (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-height)
   (define-key pdf-view-mode-map (kbd "C-s") #'isearch-forward)
-  
-  ;; Modified navigation
+
   (defun tw/pdf-view-next-page-top ()
     "Go to the next PDF page and show it from the top."
     (interactive)
