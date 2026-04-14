@@ -4,7 +4,11 @@
 
 ;(setq debug-on-error nil)
 (setq debug-on-error t)
-(add-hook 'emacs-startup-hook (lambda () (setq debug-on-error nil)))
+
+(defun tw/disable-debug-on-startup ()
+  (setq debug-on-error nil))
+(add-hook 'emacs-startup-hook #'tw/disable-debug-on-startup)
+
 (setq debug-on-quit nil)
 
 (setq ring-bell-function 'ignore
@@ -23,10 +27,10 @@
 (global-prettify-symbols-mode 1)
 (electric-indent-mode -1)
 
-(load "server")
+(require 'server)
 (unless (server-running-p)
   (server-start))
-;;(setq default-frame-alist '((ns-transparent-titlebar . t) (ns-appearance . dark)))
+
 (setq process-adaptive-read-buffering nil)
 (setq read-process-output-max (* 4 1024 1024))
 (setq frame-resize-pixelwise t)
@@ -34,7 +38,7 @@
 (setq browse-url-browser-function 'browse-url-default-browser)
 (setq ns-use-proxy-icon nil) ;; Remove icon in centre of title bar
 (setenv "PATH" (concat (getenv "PATH") ":/opt/homebrew/bin"))
-(setq exec-path (append exec-path '("/opt/homebrew/bin")))
+(add-to-list 'exec-path "/opt/homebrew/bin")
 (setq cursor-in-non-selected-windows nil)
 (with-eval-after-load 'org-agenda
   (setq org-agenda-highlight-mouse-over nil))
@@ -53,13 +57,6 @@
   (setq use-package-always-ensure t
         use-package-expand-minimally t))
 
-;; (setq backup-directory-alist
-;;       `(("." . "~/.emacs.d/Backups/")))
-;; (setq auto-save-file-name-transforms
-;;       `((".*" "~/.emacs.d/Backups/" t)))
-;; (setq create-lockfiles t)
-
-
 ;; Backups (versioned) in one place
 (setq backup-by-copying t
       backup-directory-alist '(("." . "~/.emacs.d/Backups/"))
@@ -74,19 +71,10 @@
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/Backups/" t))) 
 
-;; Optional: keep lockfiles ON unless you have a specific reason
-;; (setq create-lockfiles nil)
-
-
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
-;;(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-;;(when (file-exists-p custom-file)
-;;  (load custom-file))
-;;(setq custom-file (locate-user-emacs-file "custom.el"))  
-;;(load custom-file :no-error-if-file-is-missing)
 
 ;;
-;;Always split compialtion output in buffer below current
+;;Always split compilation output in buffer below current
 ;;
 (add-to-list
  'display-buffer-alist
@@ -96,18 +84,18 @@
 
 (require 'auth-source)
 (require 'epa-file)
-(epa-file-enable)
+(unless epa-file-handler
+  (epa-file-enable))
+
 ;;(setq auth-sources '("~/.authinfo.gpg"))
 (setq auth-sources '("~/.authinfo" "~/.netrc"))
-
-
 
 (setq lock-file-name-transforms
       '((".*" "~/.emacs.d/lockfiles/" t)))
 
 (setq inhibit-startup-screen t)
 
-;; Some Macos nonsense
+;; macOS keyboard/input adjustments
 (setq mac-command-modifier 'meta)
 (define-key key-translation-map (kbd "M-3") (kbd "#"))
 (define-key key-translation-map (kbd "H-3") (kbd "#"))
@@ -123,46 +111,6 @@
                     :height 120)
 
 (add-to-list 'default-frame-alist '(font . "JetBrains Mono-12"))
-
-;; (when (member "Iosevka" (font-family-list))
-;;   (set-face-attribute 'default nil
-;;                       :family "JetBrains Mono"
-;;                       :height 115
-;;                       :weight 'medium
-;;                       :slant 'normal
-;;                       :width 'normal)
-;;    (add-to-list 'default-frame-alist '(font . "Iosevka")))
-
-;; Use JetBrains Mono as the default font
-;; (when (member "JetBrains Mono" (font-family-list))
-;;   (set-face-attribute 'default nil
-;;                       :family "JetBrains Mono"
-;;                       :height 115
-;;                       :weight 'normal
-;;                       :slant 'normal
-;;                       :width 'normal)
-
-  ;; Ensure new frames also use JetBrains Mono (daemon support)
-;;  (add-to-list 'default-frame-alist '(font . "JetBrains Mono-13")))
-
-;; Frame defaults for both the first frame and future frames
-;; (dolist (alist '(default-frame-alist initial-frame-alist))
-;;   (add-to-list alist '(ns-transparent-titlebar . t))
-;;   (add-to-list alist '(ns-appearance . dark))
-;;   (add-to-list alist '(font . "JetBrains Mono-12")))
-
-;; (defun tw/apply-default-font (&optional frame)
-;;   "Apply my default font to FRAME or the selected frame."
-;;   (with-selected-frame (or frame (selected-frame))
-;;     (when (member "JetBrains Mono" (font-family-list))
-;;       (set-face-attribute 'default frame
-;;                           :family "JetBrains Mono"
-;;                           :weight 'normal
-;;                           :slant 'normal
-;;                           :width 'normal))))
-
-;; (add-hook 'emacs-startup-hook #'tw/apply-default-font)
-;; (add-hook 'after-make-frame-functions #'tw/apply-default-font)
 
 ;;
 ;;; Define custom functions
@@ -237,20 +185,6 @@ If LANGUAGE is not provided, prompt for it with completion."
   (setq cursor-type 'box))
 (add-hook 'deactivate-mark-hook 'th-deactivate-mark-init)
 
-;; (defun tw/insert-todays-journal-entry ()
-;;   (interactive)
-;;   (goto-char (point-max))
-;;   (unless (bolp) (insert "\n"))
-;;   (let ((date (format-time-string "%d-%A"))) ; e.g., "15-Tuesday"
-;;     (insert (concat "*** _" date "_\n"
-;; 		    "**** Memoranda
-;; - 
-
-;; **** Habits
-;; - [ ] Workout/Weights
-
-;; **** Tasks"))))
-
 (defun tw/highlight-line ()
   (interactive)
   (move-beginning-of-line 1)
@@ -305,9 +239,6 @@ Keeps the rest of the file visible as an outline."
 (setq split-height-threshold nil)
 (setq use-short-answers t)
 (setq confirm-nonexistent-file-or-buffer nil)
-					;(setq scroll-conservatively 10
-					;      scroll-margin 15)
-					;(pixel-scroll-precision-mode 1)
 (setq pixel-scroll-precision-large-scroll-height 40)
 
 (setq magit-display-buffer-function
@@ -317,9 +248,7 @@ Keeps the rest of the file visible as an outline."
 (setq right-margin-width 1)
 (setq insert-directory-program "/opt/homebrew/bin/gls")
 (setq dired-use-ls-dired t)
-;;(setq dired-listing-switches "-lGh1v --reverse --group-directories-first")
 (setq dired-listing-switches "-lGh1v --group-directories-first")
-;;(setq dired-listing-switches "-alh --group-directories-first --ignore-case")
 (setq large-file-warning-threshold 50000000)
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq org-use-sub-superscripts nil)
@@ -374,26 +303,15 @@ Keeps the rest of the file visible as an outline."
       gnus-auto-select-first nil
       gnus-configure-windows 'horizontal)
 
+;;
+;;External packages
 (require 'gnus-usenet)
 
-;; (require 'imenu-list)
-;; (setq imenu-list-position 'right
-;;       imenu-list-size 40)
-
-;; (imenu-list-minor-mode t)
-
-;;
-;;;External packages
 (use-package ember-theme
   :vc (:url "https://github.com/ember-theme/emacs")
   :config
   (add-to-list 'custom-theme-load-path
-               (file-name-directory (locate-library "ember-theme")))
-;;  (load-theme 'ember-light t)
-)
-;; (global-set-key (kbd "C-x C-l") 'avy-goto-line)
-;; (global-set-key (kbd "C-x C-x") 'avy-goto-char-timer)
-
+               (file-name-directory (locate-library "ember-theme"))))
 (use-package avy
   :ensure t
   :bind
@@ -415,21 +333,10 @@ Keeps the rest of the file visible as an outline."
   :config
   (setq org-modern-star nil)
   (setq org-agenda-tags-column 0)
-
   ;; (setq org-modern-todo-faces
   ;;       '(("TODO" . (:background "#cb4b16" :foreground "white" :weight bold))
   ;;         ("PLANNED" . (:background "#6c7086" :foreground "lightgrey" :weight bold))))
   )
-
-
-;; (use-package olivetti
-;;   :ensure t
-;;   :hook
-;;   (text-mode . olivetti-mode)
-;;   (org-mode . olivetti-mode)
-;;   :custom
-;;   (olivetti-body-width 162)
-;;   (olivetti-style 'margins))
 
 (use-package easysession
   :ensure t
@@ -469,33 +376,6 @@ Keeps the rest of the file visible as an outline."
   ;; - To save the session at regular intervals, and when Emacs exits.
   (easysession-setup))
 
-;; (use-package org-journal
-;;   :ensure t
-;;   :defer t
-;;   :config
-;;   (setq org-journal-dir "~/Org/Journal/"
-;; 	org-journal-enable-entry-properties nil
-;; ;;        org-journal-file-type 'yearly
-;;         org-journal-file-type 'monthly
-;;         org-journal-date-format "%Y-%m-%d, %A"
-;;         org-journal-file-format "Journal-%Y.org"
-;; 	org-journal-find-file #'find-file
-;;         org-journal-file-header "#+TITLE: Journal %Y\n#+STARTUP: folded\n")
-
-;;   (defun tw/org-journal-indent ()
-;;     (setq-local org-indent-indentation-per-level 3)
-;;     (org-indent-mode 1))
-;;   (add-hook 'org-journal-mode-hook #'tw/org-journal-indent)
-
-;;   (defun tw/dired-org-journal ()
-;;     (interactive)
-;;     (dired org-journal-dir)))
-
-;; (define-prefix-command 'tw/journal-map)
-;; (global-set-key (kbd "C-c o j") 'tw/journal-map)
-;; (define-key tw/journal-map (kbd "n") #'org-journal-new-entry)
-;; (define-key tw/journal-map (kbd "d") #'tw/dired-org-journal)
-
 (use-package org-journal
   :ensure t
   :defer t
@@ -524,10 +404,6 @@ Keeps the rest of the file visible as an outline."
 (use-package auto-dark
   :ensure t
   :custom
-  ;; (auto-dark-themes '((gruvbox-dark-medium) (doric-oak)))
-  ;; (auto-dark-themes '((doric-fire) (doric-earth)))
-  ;; (auto-dark-themes '((doric-fire) (doom-solarized-light)))
-  ;; (auto-dark-themes '((base16-gruvbox-dark-medium) (doric-earth)))
   (auto-dark-themes '((ember-soft) (ember-light)))
   (auto-dark-polling-interval-seconds 5)
   (auto-dark-allow-osascript nil)
@@ -537,27 +413,11 @@ Keeps the rest of the file visible as an outline."
     . (lambda ()
 	(with-eval-after-load 'org
 	  (set-face-attribute 'org-tag nil :slant 'italic :weight 'normal :inherit 'shadow))
-	;; (set-face-attribute 'aw-leading-char-face nil
-        ;;                     :height 6.0
-        ;;                     :weight 'bold
-        ;;                     :foreground "#83a598")
-	;;(set-face-attribute 'aw-posframe-face nil
-        ;;                    :height 5.0
-        ;;                    :weight 'bold
-        ;;                    :foreground "#83a598")
 	))
    (auto-dark-light-mode
     . (lambda ()
 	(with-eval-after-load 'org
 	  (set-face-attribute 'org-tag nil :slant 'italic :weight 'normal :inherit 'shadow))
-    	;; (set-face-attribute 'aw-leading-char-face nil
-        ;;                     :height 6.0
-        ;;                     :weight 'bold
-        ;;                     :foreground "#af3a03")
-	;;(set-face-attribute 'aw-posframe-face nil
-        ;;                    :height 5.0
-        ;;                    :weight 'bold
-        ;;                    :foreground "#af3a03")
 	)))
   :init
   (auto-dark-mode))
@@ -577,20 +437,6 @@ Keeps the rest of the file visible as an outline."
   (setq vertico-resize nil)
   (setq vertico-count 30)
   (vertico-mode))
-
-;; (use-package vertico-posframe
-;;   :after vertico
-;;   :hook (vertico-mode . vertico-posframe-mode)
-;;   :config
-;;   ;; make the popup wide enough
-;;   (setq vertico-posframe-width 150   ;; nil = full frame width
-;;         vertico-posframe-height 32
-;;         vertico-posframe-border-width 10
-;;         vertico-posframe-parameters
-;;         '((left-fringe . 5)
-;;           (right-fringe . 5)))
-;;   :init
-;;   (vertico-posframe-mode))
 
 (use-package orderless
   :ensure t
@@ -623,21 +469,6 @@ Keeps the rest of the file visible as an outline."
   ;; Timestamps without clutter
   (setq erc-stamp-format "[%H:%M] "))
 
-;; (use-package ace-window
-;;   :ensure t
-;;   :bind (("C-x C-o" . ace-window))
-;;   :config
-;;   (ace-window-posframe-mode t)
-;;   (setq aw-leading-char-style 'char)     ; ← centers the letter in window
-;;   (setq aw-keys '(?a ?s ?q ?w ?e ?z ?x))
-;; 					;  (setq aw-keys '(?d ?x ?z ?w ?q ?s ?a))
-;; 					;  (setq aw-keys '(?w ?z ?q ?s ?a))
-;;   (setq aw-scope 'frame)
-;;   (setq aw-ignore-current t)
-;;   (setq aw-background t))
-;;(ace-window-posframe-mode)
-
-
 (use-package ace-window
   :ensure t
   :bind (("C-x C-o" . ace-window))
@@ -648,9 +479,6 @@ Keeps the rest of the file visible as an outline."
   (setq aw-scope 'frame)
   (setq aw-ignore-current t)
   (setq aw-background t))
-
-
-
 
 (use-package org-superstar
   :ensure t
@@ -673,11 +501,6 @@ Keeps the rest of the file visible as an outline."
   :init
   ;; Supply key via function → avoids load-order problems
   (setq chatgpt-shell-openai-key #'tw/auth-get-openai-key)
-
-  ;; Optional — only if you actually use these
-  ;; (setq chatgpt-shell-openai-project "proj_XXXX")
-  ;; (setq chatgpt-shell-openai-organization "org_XXXX")
-
   :config
   ;; Fail loudly if key missing (prevents silent half-loads)
   (unless (funcall chatgpt-shell-openai-key)
@@ -710,17 +533,6 @@ Keeps the rest of the file visible as an outline."
   (visual-fill-column-width 120)
   (visual-fill-column-center-text nil))
 
-;; (use-package company
-;;   :defer 2
-;;   :diminish
-;;   :custom
-;;   (company-begin-commands '(self-insert-command))
-;;   (company-idle-delay .1)
-;;   (company-minimum-prefix-length 2)
-;;   (company-show-numbers t)
-;;   (company-tooltip-align-annotations 't)
-;;   (global-company-mode t))
-
 (use-package company
   :defer 2
   :diminish
@@ -732,6 +544,14 @@ Keeps the rest of the file visible as an outline."
   (company-tooltip-align-annotations t)
   :config
   (global-company-mode 1))
+
+(with-eval-after-load 'git-commit
+  (defun tw/git-commit-company-fix ()
+    (setq-local completion-at-point-functions
+                (delq 'dabbrev-capf completion-at-point-functions))
+    (setq-local company-idle-delay nil))
+
+  (add-hook 'git-commit-setup-hook #'tw/git-commit-company-fix))
 
 (use-package which-key
   :ensure t
@@ -794,19 +614,15 @@ Keeps the rest of the file visible as an outline."
 (use-package nerd-icons-dired
   :ensure nil
   :disabled t
-  :hook
-;;  (dired-mode . nerd-icons-dired-mode))
-)
+  :hook)
  
 (use-package nerd-icons-ibuffer
   :ensure t
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
-;; (remove-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode)
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region)
   :config
-  ;;(set-face-attribute 'region nil :background "#666")
   (delete-selection-mode 1))
 
 (use-package popup-kill-ring
@@ -850,9 +666,6 @@ Keeps the rest of the file visible as an outline."
   :ensure nil
   :init
   (recentf-mode 1))
-
-;;(setq recentf-exclude
-;;      (delete "\\.org_archive\\'" recentf-exclude))
 
 (use-package consult
   :ensure t)
@@ -913,14 +726,6 @@ Keeps the rest of the file visible as an outline."
 (use-package diredc
   :load-path "~/.emacs.d/lisp"
   :commands (diredc))
-
-;; (use-package undo-tree
-;;   :ensure t
-;;   :init
-;;   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo-history")))
-;;   (setq undo-tree-auto-save-history t)
-;;   :config
-;;   (global-undo-tree-mode 1))
 
 (use-package undo-tree
   :ensure t
@@ -1000,16 +805,6 @@ Keeps the rest of the file visible as an outline."
                  outline-up-heading))
     (put cmd 'repeat-map 'outline-navigation-repeat-map)))
 
-;; (with-eval-after-load 'org
-;;   (let ((bg (face-background 'default nil t)))
-;;     (set-face-attribute 'org-hide   nil :foreground bg :background bg)
-;;     (set-face-attribute 'org-indent nil :foreground bg :background bg)))
-
-;; (with-eval-after-load 'org
-;;   (let ((bg (or (face-background 'default nil t)
-;;                 (face-background 'default))))
-;;     (set-face-attribute 'org-indent nil :foreground bg :background 'unspecified)))
-
 (setq diary-file "~/Org/diary")
 (setq org-agenda-include-diary t)
 (setq diary-show-holidays-flag nil)
@@ -1024,23 +819,6 @@ Keeps the rest of the file visible as an outline."
 (setq org-agenda-deadline-leaders
       '("Due: " "Due in %3d d: " "Over %3d d: "))
 
-;; (setq org-agenda-prefix-format
-;;       '((agenda . " %?-12t% s")
-;;         (todo   . " ")
-;;         (tags   . " ")
-;;         (search . " ")))
-
-;; (setq org-agenda-prefix-format
-;;       '((agenda . " %-10:c %?-5t ")
-;;         (todo   . " %-10:c ")
-;;         (tags   . " %-10:c ")
-;;         (search . " %-10:c ")))
-
-;; (setq org-agenda-prefix-format
-;;       '((agenda . " %i %-12:c%?-12t% s")
-;;         (todo   . " %i %-12:c")
-;;         (tags   . " %i %-12:c")
-;;         (search . " %i %-12:c")))
 
 (setq org-agenda-prefix-format
       '((agenda . " %-10:c%?-10t% s")
@@ -1048,29 +826,22 @@ Keeps the rest of the file visible as an outline."
         (tags   . " %-10:c")
         (search . " %-10:c")))
 
-;(setq org-tags-exclude-from-inheritance
-;      '("meeting" "project" "work" "personal" "rpg" "emacs"))
-
 (setq org-tags-exclude-from-inheritance
       '("meeting" "project" "work" "personal" "rpg" "emacs"))
 
 (setq org-agenda-window-setup 'current-window)
 (setq org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/Org/")
+
 (setq org-agenda-files
-      (append 
-       (list 
-	(expand-file-name "Personal.org" org-directory)
-	(expand-file-name "RPG.org"         org-directory)
-	(expand-file-name "Work.org"     org-directory)
-	(expand-file-name "Emacs.org"    org-directory)
-	(expand-file-name "Journal/Journal-2026.org"  org-directory)
-	(expand-file-name "middle-earth-timeline.org" org-directory)
-	(expand-file-name "middle-earth-personae.org" org-directory)
-	(expand-file-name "middle-earth-places.org" org-directory)
-	(expand-file-name "middle-earth-timeline.org" org-directory)
-	(expand-file-name "british-calendar.org" org-directory))
-;;       (directory-files "~/Org/Journal/" t "\\.org$")
-))
+      (append
+       (list
+        (expand-file-name "Personal.org" org-directory)
+        (expand-file-name "RPG.org" org-directory)
+        (expand-file-name "Work.org" org-directory)
+        (expand-file-name "Emacs.org" org-directory)
+        (expand-file-name "british-calendar.org" org-directory))
+       (directory-files (expand-file-name "Journal/" org-directory) t "\\.org$")))
+
 
 (setq org-agenda-window-setup 'current-window
       org-agenda-inhibit-startup t
@@ -1119,11 +890,6 @@ Keeps the rest of the file visible as an outline."
       org-reverse-note-order                   nil)
 
 (setq org-default-notes-file (expand-file-name "Inbox.org" org-directory))
-
-;; (remove-hook 'org-agenda-finalize-hook
-;;           (lambda ()
-;;             (with-current-buffer org-agenda-buffer-name
-;;               (goto-char (point-min)))))
 
 (setq org-agenda-custom-commands
       '(("d" "Dashboard"
@@ -1242,10 +1008,6 @@ Keeps the rest of the file visible as an outline."
          "**** %<%Y-%m-%d-%A>\n- RWS: \n- Thoth: \n- Reflection: " ; template content
          :empty-lines 1)
 
-	("pj" "Journal entry" plain (function org-journal-find-location)
-                               "** %(format-time-string org-journal-time-format)%^{Title}\n%i%?"
-                               :jump-to-captured t :immediate-finish t)
-
 	("pf" 
 	 "Film log" entry
          (file+olp ,(expand-file-name "Personal.org" org-directory) "Media" "Films" "Watched")
@@ -1333,7 +1095,6 @@ Keeps the rest of the file visible as an outline."
 
 (global-set-key (kbd "C-c c r g") 'consult-ripgrep)
 (global-set-key (kbd "C-c o t") 'org-tags-view)
-;(global-set-key (kbd "M-o") 'dired-omit-mode)
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
@@ -1343,8 +1104,6 @@ Keeps the rest of the file visible as an outline."
 (global-set-key (kbd "<M-S-down>") 'text-scale-decrease)
 (global-set-key (kbd "C-c s l") 'org-store-link)
 (global-set-key (kbd "C-\\") 'undo)
-;; (global-set-key (kbd "C-c j") (lambda () (interactive) (info "/usr/local/share/info/jargon.info.gz")))
-;; (global-unset-key (kbd "C-c j"))
 (global-set-key (kbd "C-c i c b") 'tw/insert-src-block)
 (global-set-key (kbd "C-c w") #'search-web)
 (global-set-key (kbd "C-x ]") 'enlarge-window)
@@ -1381,17 +1140,11 @@ Keeps the rest of the file visible as an outline."
 (global-set-key (kbd "C-c t h") 'tw/hide-org-tags) ;; FIXME: move to org use-package
 (global-set-key (kbd "C-c i d") 'tw/insert-current-date)
 (global-set-key (kbd "C-c i t") 'tw/insert-current-time)
-(global-set-key (kbd "C-c i j") #'tw/insert-todays-journal-entry)
 (global-set-key (kbd "C-c i r") #'string-insert-rectangle)
 (global-set-key (kbd "C-c c h") #'consult-org-heading)
 (global-set-key (kbd "C-c c c") #'org-capture)
 (global-set-key (kbd "C-c C-i") #'consult-imenu)
 (global-set-key (kbd "C-x c") #'compile)
-
-;;(global-set-key (kbd "C-c d") #'diredc)
-;;(global-set-key (kbd "C-c d i g") #'tw/find-grep-dired-ignore-case)
-;;(global-set-key (kbd "C-x w") 'tw/vertico-switch-to-window-by-buffer)
-;;(global-set-key (kbd "C-x b") #'switch-to-buffer)
 
 ;;
 ;; Sanity check init comletion
