@@ -1,7 +1,8 @@
 ; -----------------------------------------------------------------------------
 ;; Initial Configuration
 ;; -----------------------------------------------------------------------------
-					;(setq debug-on-error nil)
+
+;(setq debug-on-error nil)
 (setq debug-on-error t)
 (add-hook 'emacs-startup-hook (lambda () (setq debug-on-error nil)))
 (setq debug-on-quit nil)
@@ -9,13 +10,16 @@
 (setq ring-bell-function 'ignore
       visible-bell 'ignore)
 
-(setq custom-file (make-temp-file "emacs-custom"))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+(setq custom-safe-themes t)
+
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (blink-cursor-mode 0) 
 (show-paren-mode t)
-(prettify-symbols-mode)
 (global-prettify-symbols-mode 1)
 (electric-indent-mode -1)
 
@@ -410,10 +414,13 @@ Keeps the rest of the file visible as an outline."
   (org-agenda-finalize . org-modern-agenda)
   :config
   (setq org-modern-star nil)
-  (setq org-agenda-tags-column 0))
+  (setq org-agenda-tags-column 0)
+
   ;; (setq org-modern-todo-faces
   ;;       '(("TODO" . (:background "#cb4b16" :foreground "white" :weight bold))
-  ;;         ("PLANNED" . (:background "#6c7086" :foreground "lightgrey" :weight bold)))))
+  ;;         ("PLANNED" . (:background "#6c7086" :foreground "lightgrey" :weight bold))))
+  )
+
 
 ;; (use-package olivetti
 ;;   :ensure t
@@ -635,7 +642,7 @@ Keeps the rest of the file visible as an outline."
   :ensure t
   :bind (("C-x C-o" . ace-window))
   :config
-  (ace-window-posframe-mode t)
+;;  (ace-window-posframe-mode t)
   (setq aw-leading-char-style 'char)
   (setq aw-keys '(?a ?s ?q ?w ?e ?z ?x))
   (setq aw-scope 'frame)
@@ -703,16 +710,28 @@ Keeps the rest of the file visible as an outline."
   (visual-fill-column-width 120)
   (visual-fill-column-center-text nil))
 
+;; (use-package company
+;;   :defer 2
+;;   :diminish
+;;   :custom
+;;   (company-begin-commands '(self-insert-command))
+;;   (company-idle-delay .1)
+;;   (company-minimum-prefix-length 2)
+;;   (company-show-numbers t)
+;;   (company-tooltip-align-annotations 't)
+;;   (global-company-mode t))
+
 (use-package company
   :defer 2
   :diminish
   :custom
   (company-begin-commands '(self-insert-command))
-  (company-idle-delay .1)
+  (company-idle-delay 0.1)
   (company-minimum-prefix-length 2)
   (company-show-numbers t)
-  (company-tooltip-align-annotations 't)
-  (global-company-mode t))
+  (company-tooltip-align-annotations t)
+  :config
+  (global-company-mode 1))
 
 (use-package which-key
   :ensure t
@@ -721,9 +740,9 @@ Keeps the rest of the file visible as an outline."
   (which-key-mode t))
 
 (use-package winner
-  :ensure t
+  :ensure nil
   :config
-  (winner-mode t))
+  (winner-mode 1))
 
 (use-package pdf-tools
   :ensure t
@@ -828,9 +847,9 @@ Keeps the rest of the file visible as an outline."
   (xclip-mode t))
 
 (use-package recentf
+  :ensure nil
   :init
-  (recentf-mode 1)
-  :config)
+  (recentf-mode 1))
 
 ;;(setq recentf-exclude
 ;;      (delete "\\.org_archive\\'" recentf-exclude))
@@ -895,15 +914,21 @@ Keeps the rest of the file visible as an outline."
   :load-path "~/.emacs.d/lisp"
   :commands (diredc))
 
+;; (use-package undo-tree
+;;   :ensure t
+;;   :init
+;;   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo-history")))
+;;   (setq undo-tree-auto-save-history t)
+;;   :config
+;;   (global-undo-tree-mode 1))
+
 (use-package undo-tree
   :ensure t
   :init
   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo-history")))
-  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-auto-save-history nil)
   :config
   (global-undo-tree-mode 1))
-
-
 
 ;; Configure package archives
 
@@ -1095,10 +1120,10 @@ Keeps the rest of the file visible as an outline."
 
 (setq org-default-notes-file (expand-file-name "Inbox.org" org-directory))
 
-(remove-hook 'org-agenda-finalize-hook
-          (lambda ()
-            (with-current-buffer org-agenda-buffer-name
-              (goto-char (point-min)))))
+;; (remove-hook 'org-agenda-finalize-hook
+;;           (lambda ()
+;;             (with-current-buffer org-agenda-buffer-name
+;;               (goto-char (point-min)))))
 
 (setq org-agenda-custom-commands
       '(("d" "Dashboard"
@@ -1245,9 +1270,6 @@ Keeps the rest of the file visible as an outline."
 	("wm" "Meeting with Outstanding Meeting Actions" entry
          (file+olp "~/Org/Work.org" "Meetings")
          "** %<%Y-%m-%d-%A> - %^{Meeting Title}\n*** Notes\n*** TODO Outstanding Actions [/]:actions:\nSCHEDULED: <%<%Y-%m-%d %a>>\n- [ ] \n%?")))
-
-(require 'org)
-(require 'org-capture)
 
 (defvar tw/org-capture-frame-name "org-capture"
   "Name used for the temporary Org capture frame.")
