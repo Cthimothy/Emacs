@@ -791,6 +791,11 @@ Keeps the rest of the file visible as an outline."
 (require 'org)
 (require 'org-capture)
 
+(setq org-startup-folded nil)
+(add-hook 'org-journal-mode-hook
+          (lambda ()
+            (org-overview)))
+
 (setq org-archive-location
       (concat "~/Projects/Backup/Org/"
               (file-relative-name (buffer-file-name) "~/Org/")
