@@ -233,6 +233,7 @@ Keeps the rest of the file visible as an outline."
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-c j") #'org-goto)
   (define-key org-mode-map (kbd "C-c C-j") #'tw/org-jump-and-focus)
+
   (define-key org-mode-map (kbd "C-c J")   #'tw/org-jump)
   (define-key org-mode-map (kbd "C-c M-j") #'tw/org-jump-and-narrow))
 
@@ -382,6 +383,9 @@ Keeps the rest of the file visible as an outline."
 (use-package org-journal
   :ensure t
   :defer t
+:bind
+  (("C-c o j n" . org-journal-new-entry)
+   ("C-c o j d" . tw/dired-org-journal))
   :config
   (setq org-journal-dir "~/Org/Journal/"
         org-journal-enable-entry-properties nil
@@ -403,7 +407,7 @@ Keeps the rest of the file visible as an outline."
     (interactive)
     (dired org-journal-dir)))
 
-(setq spacemacs-theme-org-height nil)
+
 (use-package auto-dark
   :ensure t
   :custom
@@ -786,6 +790,11 @@ Keeps the rest of the file visible as an outline."
 ;;; Org-mode config
 (require 'org)
 (require 'org-capture)
+
+(setq org-archive-location
+      (concat "~/Projects/Backup/Org/"
+              (file-relative-name (buffer-file-name) "~/Org/")
+              "_archive::"))
 
 (setq org-todo-keywords
       '((sequence
