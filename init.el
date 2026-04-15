@@ -395,8 +395,8 @@ Keeps the rest of the file visible as an outline."
         org-journal-find-file #'find-file
         org-journal-file-header
         "#+TITLE: Journal %Y-%B
-#+STARTUP: folded
-")
+         #+STARTUP: folded
+         #+CATEGORY: Journal")
 
   (defun tw/org-journal-indent ()
     (setq-local org-indent-indentation-per-level 3)
@@ -925,8 +925,11 @@ Keeps the rest of the file visible as an outline."
 
 	  (alltodo ""
 		   ((org-agenda-files
-		     '("~/Library/Mobile Documents/com~apple~CloudDocs/Org/Journal/Journal-2026.org"))
+		     (directory-files-recursively
+		      "~/Library/Mobile Documents/com~apple~CloudDocs/Org/Journal/"
+		      "^Journal-[0-9]\\{4\\}-[0-9]\\{2\\}\\.org$"))
 		    (org-agenda-overriding-header "JOURNAL")))
+
 
 	  (todo "TODO"
 		((org-agenda-overriding-header "UNSCHEDULED TASKS (NON-PRIORITY)")
