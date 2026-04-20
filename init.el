@@ -121,6 +121,30 @@
 ;;
 ;;; Define custom functions
 ;;
+
+(defun tw/create-jekyll-post ()
+  "Create a new Jekyll blog post in ~/Projects/cthimothy.github.io/_posts/."
+  (interactive)
+  (let* ((title (read-string "Post title: "))
+         (slug (replace-regexp-in-string "[^a-z0-9-]" "" (downcase (replace-regexp-in-string " " "-" title))))
+         (date (format-time-string "%Y-%m-%d"))
+         (filename (expand-file-name (format "%s-%s.md" date slug)
+                                     "~/Projects/cthimothy.github.io/_posts/")))
+    (if (file-exists-p filename)
+        (message "File already exists: %s" filename)
+      (find-file filename)
+      (insert (format
+               "---\n\
+layout: post\n\
+title: \"%s\"\n\
+date: %s\n\
+categories: blog\n\
+tags: \n\
+---\n\n"
+               title date))
+      (save-buffer)
+      (message "Created new Jekyll post: %s" filename))))
+
 (add-hook 'window-selection-change-functions
           (lambda (_)
             (walk-windows
@@ -329,18 +353,6 @@ Keeps the rest of the file visible as an outline."
         avy-all-windows t
 	avy-keys '(?a ?s ?d ?c ?e)))
 
-(use-package org-modern
-  :ensure t
-  :hook
-  (org-mode . org-modern-mode)
-  (org-agenda-finalize . org-modern-agenda)
-  :config
-  (setq org-modern-star nil)
-  (setq org-agenda-tags-column 0)
-  ;; (setq org-modern-todo-faces
-  ;;       '(("TODO" . (:background "#cb4b16" :foreground "white" :weight bold))
-  ;;         ("PLANNED" . (:background "#6c7086" :foreground "lightgrey" :weight bold))))
-  )
 
 (use-package easysession
   :ensure t
@@ -411,7 +423,8 @@ Keeps the rest of the file visible as an outline."
 (use-package auto-dark
   :ensure t
   :custom
-  (auto-dark-themes '((ember-soft) (ember-light)))
+;;  (auto-dark-themes '((ember-soft) (ember-light)))
+  (auto-dark-themes '((ember-soft) (folio)))
   (auto-dark-polling-interval-seconds 5)
   (auto-dark-allow-osascript nil)
   (auto-dark-allow-powershell nil)
@@ -487,20 +500,18 @@ Keeps the rest of the file visible as an outline."
   (setq aw-ignore-current t)
   (setq aw-background t))
 
-(use-package org-superstar
+
+(use-package org-modern
   :ensure t
-  :hook (org-mode . org-superstar-mode)
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda)
   :config
-  (setq org-superstar-leading-bullet ?\s)
-  (setq org-superstar-special-todo-items nil)
-  (setq org-superstar-configure-like-org-bullets nil)
-;  (setq org-superstar-headline-bullets-list
-;	'("¶" "α" "β" "γ" "δ" "ε" "ζ" "η" "θ" "ι" "κ"))
-  (setq org-superstar-headline-bullets-list
-        '("☰" "◉" "○" "•" "◦" "·" "⋅")))
-;        '("§" "◉" "○" "•" "◦" "·" "⋅")))
-; ▷
-; ▶
+  (setq org-modern-star "☰"
+        org-modern-list '((?- . "•")
+                          (?+ . "◦")
+                          (?* . "▪"))
+        org-agenda-tags-column 10))
 
 (use-package chatgpt-shell
   :ensure t
@@ -796,10 +807,13 @@ Keeps the rest of the file visible as an outline."
           (lambda ()
             (org-overview)))
 
-(setq org-archive-location
-      (concat "~/Projects/Backup/Org/"
-              (file-relative-name (buffer-file-name) "~/Org/")
-              "_archive::"))
+
+
+
+
+
+
+
 
 (setq org-todo-keywords
       '((sequence
