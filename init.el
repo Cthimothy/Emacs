@@ -179,7 +179,7 @@ If LANGUAGE is not provided, prompt for it with completion."
                  ((numberp alpha) alpha)
                  ((consp alpha) (car alpha))
                  (t 100))))
-    (set-frame-parameter
+    (set-frame-parameterqqqqqq
      nil 'alpha
      (if (<= alpha 95)
          '(100 . 100)
@@ -513,6 +513,27 @@ Keeps the rest of the file visible as an outline."
                           (?* . "▪"))
         org-agenda-tags-column 10))
 
+(use-package org-modern
+  :ensure t
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda)
+  :config
+  (setq org-modern-star "☰"
+        org-modern-list '((?- . "•")
+                          (?+ . "◦")
+                          (?* . "▪"))
+        org-agenda-tags-column 10))
+
+(defun tw/org-modern-disable-tag-in-org-buffers ()
+  "Disable org-modern tag styling in Org file buffers only."
+  (setq-local org-modern-tag nil)
+  (when (bound-and-true-p org-modern-mode)
+    (org-modern-mode -1)
+    (org-modern-mode 1)))
+(add-hook 'org-mode-hook #'tw/org-modern-disable-tag-in-org-buffers)
+
+
 (use-package chatgpt-shell
   :ensure t
   :commands (chatgpt-shell chatgpt-shell-prompt-compose)
@@ -678,7 +699,9 @@ Keeps the rest of the file visible as an outline."
 (use-package xclip
   :ensure t
   :config
-  (xclip-mode t))
+  (xclip-mode -1))
+
+(setq select-enable-clipboard t)
 
 (use-package recentf
   :ensure nil
@@ -687,6 +710,8 @@ Keeps the rest of the file visible as an outline."
 
 (use-package consult
   :ensure t)
+(with-eval-after-load 'consult
+  (add-to-list 'consult-buffer-filter "_archive\\'"))
 
 (use-package ultra-scroll
   :vc (:url "https://github.com/jdtsmith/ultra-scroll")
@@ -703,10 +728,17 @@ Keeps the rest of the file visible as an outline."
   :config
   (add-hook 'elpher-mode 'hl-line-mode))
 
+
+;; (use-package magit
+;;   :ensure t
+;;   :bind ("C-x g" . magit-status))
+
 (use-package magit
   :ensure t
+  :bind ("C-x g" . magit-status)
   :config
-  (global-set-key (kbd "C-x g") 'magit))
+  (require 'magit-autorevert)
+  (magit-auto-revert-mode 1))
 
 
 
@@ -806,14 +838,6 @@ Keeps the rest of the file visible as an outline."
 (add-hook 'org-journal-mode-hook
           (lambda ()
             (org-overview)))
-
-
-
-
-
-
-
-
 
 (setq org-todo-keywords
       '((sequence
